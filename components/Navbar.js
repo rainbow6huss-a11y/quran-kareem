@@ -10,18 +10,15 @@ export default function Navbar({ toggleDark, dark, showToast, onAuth }) {
 
   function shareSite() {
     const url = window.location.origin;
-    if (navigator.share) {
-      navigator.share({ title: 'القرآن الكريم', url });
-    } else {
-      navigator.clipboard.writeText(url);
-      showToast('📋 تم نسخ الرابط');
-    }
+    if (navigator.share) navigator.share({ title: 'القرآن الكريم', url });
+    else { navigator.clipboard.writeText(url); showToast('📋 تم نسخ الرابط'); }
   }
 
   const links = [
     { href: '/', label: '📖 القرآن' },
     { href: '/juz', label: '🗂 الأجزاء' },
     { href: '/khatma', label: '🌙 الختمة' },
+    { href: '/bookmarks', label: '🔖 علاماتي' },
     { href: '/hadya', label: '🤲 إهداء' },
   ];
 
@@ -31,7 +28,6 @@ export default function Navbar({ toggleDark, dark, showToast, onAuth }) {
         <Link href="/" className={styles.logo}>
           <span className={styles.logoAr}>القرآن الكريم</span>
         </Link>
-
         <div className={styles.links}>
           {links.map(l => (
             <Link key={l.href} href={l.href}
@@ -40,15 +36,13 @@ export default function Navbar({ toggleDark, dark, showToast, onAuth }) {
             </Link>
           ))}
         </div>
-
         <div className={styles.controls}>
           <Auth onAuth={onAuth} showToast={showToast} />
-          <button className={styles.ctrl} onClick={toggleDark} title="وضع ليلي">{dark ? '☀️' : '🌙'}</button>
-          <button className={styles.ctrl} onClick={shareSite} title="مشاركة">📤</button>
+          <button className={styles.ctrl} onClick={toggleDark}>{dark ? '☀️' : '🌙'}</button>
+          <button className={styles.ctrl} onClick={shareSite}>📤</button>
           <button className={styles.ctrl} onClick={() => setMenuOpen(v => !v)} id="menuToggle">☰</button>
         </div>
       </div>
-
       {menuOpen && (
         <div className={styles.mobileMenu}>
           {links.map(l => (
