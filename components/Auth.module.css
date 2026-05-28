@@ -1,0 +1,83 @@
+.signInBtn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  background: white;
+  color: #333;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: .83rem;
+  cursor: pointer;
+  transition: all .2s;
+  white-space: nowrap;
+  font-weight: 600;
+}
+.signInBtn:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  transform: translateY(-1px);
+}
+
+.userWrap { position: relative; }
+
+.avatar {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  border: 2px solid var(--gold);
+  background: var(--green);
+  color: white;
+  font-weight: 700;
+  font-size: .9rem;
+  cursor: pointer;
+  overflow: hidden;
+  padding: 0;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s;
+}
+.avatar:hover { transform: scale(1.05); }
+.avatarImg { width: 100%; height: 100%; object-fit: cover; }
+
+.menu {
+  position: absolute;
+  top: 42px; left: 50%;
+  transform: translateX(-50%);
+  background: var(--parchment);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 12px;
+  min-width: 200px;
+  box-shadow: 0 8px 24px var(--shadow);
+  z-index: 200;
+  text-align: center;
+}
+.menuName {
+  font-weight: 700;
+  color: var(--brown);
+  font-size: .9rem;
+  margin-bottom: 2px;
+}
+.menuEmail {
+  font-size: .75rem;
+  color: var(--text-soft);
+  margin-bottom: 8px;
+  direction: ltr;
+}
+.menuDivider {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 8px 0;
+}
+.menuBtn {
+  width: 100%;
+  padding: 8px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: .85rem;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: all .2s;
+}
+.menuBtn:hover { background: var(--gold-pale); color: var(--brown); }
