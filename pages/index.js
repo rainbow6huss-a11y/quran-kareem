@@ -85,7 +85,7 @@ export default function Home({ toggleDark, dark, showToast, user, onAuth }) {
         {(lastRead || khatmaPct > 0) && (
           <div className={styles.userCards}>
             {lastRead && (
-              <Link href={`/surah/${lastRead.surah}`} className={styles.userCard}>
+              <Link href={`/surah/${lastRead.surah}#v${lastRead.verse}`} className={styles.userCard}>
                 <div className={styles.userCardIcon}>📖</div>
                 <div>
                   <div className={styles.userCardLabel}>آخر قراءة</div>
