@@ -3,6 +3,7 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import { supabase } from '../lib/supabase';
+import { SurahListSkeleton } from '../components/Skeleton';
 import styles from '../styles/Home.module.css';
 
 const DAILY_AYAHS = [
@@ -127,7 +128,7 @@ export default function Home({ toggleDark, dark, showToast, user, onAuth }) {
         </div>
 
         {loading ? (
-          <div className="loading"><div className="loader" /><div>جارٍ التحميل...</div></div>
+          <SurahListSkeleton />
         ) : (
           <div className={styles.grid}>
             {filtered.map(s => (
