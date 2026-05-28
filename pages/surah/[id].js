@@ -45,7 +45,7 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
 
   useEffect(() => {
     if (!surahNum) return;
-    setLoading(true); setVerses([]); setSurah(null); setCurrentVerse(null);
+    setLoading(true); setVerses([]); setSurah(null); setPlayingVerse(null);
     const saved = JSON.parse(localStorage.getItem('q_bookmarks') || '[]');
     setBookmarks(saved);
 
