@@ -1,8 +1,9 @@
 .page { max-width: 860px; margin: 0 auto; padding: 24px 20px 60px; position: relative; z-index: 1; }
 
+/* HERO */
 .hero {
   background: var(--card); border: 1px solid var(--border);
-  border-radius: 16px; padding: 28px 24px; margin-bottom: 24px;
+  border-radius: 16px; padding: 28px 20px; margin-bottom: 16px;
   text-align: center; position: relative; overflow: hidden;
 }
 .hero::before {
@@ -10,51 +11,79 @@
   background: linear-gradient(90deg, transparent, var(--gold), transparent);
 }
 .title { font-family: 'Amiri', serif; font-size: 1.8rem; color: var(--brown); font-weight: 700; margin-bottom: 4px; }
-.sub { color: var(--text-soft); font-size: .87rem; margin-bottom: 20px; }
+.sub { color: var(--text-soft); font-size: .87rem; margin-bottom: 8px; }
+.syncBadge { display: inline-block; font-size: .75rem; color: var(--gold); background: var(--gold-pale); padding: 3px 10px; border-radius: 20px; margin-bottom: 8px; }
 
-.ringWrap { display: flex; flex-direction: column; align-items: center; position: relative; margin: 0 auto 16px; width: 130px; }
-.ringText { font-family: 'Amiri', serif; font-size: 1.6rem; color: var(--brown); font-weight: 700; margin-top: -8px; }
+/* RING */
+.ringWrap { display: flex; flex-direction: column; align-items: center; position: relative; margin: 0 auto 16px; width: 140px; }
+.ringText { font-family: 'Amiri', serif; font-size: 1.8rem; color: var(--brown); font-weight: 700; margin-top: -6px; }
 .ringSub { font-size: .8rem; color: var(--text-soft); }
 
-.plans { display: flex; gap: 8px; justify-content: center; margin: 16px 0; flex-wrap: wrap; }
+/* STATS */
+.statsRow { display: flex; gap: 8px; justify-content: center; margin: 14px 0; flex-wrap: wrap; }
+.statCard {
+  padding: 10px 14px; background: var(--parchment);
+  border: 1px solid var(--border); border-radius: 10px;
+  text-align: center; min-width: 80px; flex: 1;
+}
+.statNum { font-family: 'Amiri', serif; font-size: 1.4rem; color: var(--brown); font-weight: 700; line-height: 1.2; }
+.statLabel { font-size: .7rem; color: var(--text-soft); margin-top: 2px; }
+
+/* PLANS */
+.plans { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
 .planBtn {
   display: flex; flex-direction: column; align-items: center;
-  padding: 10px 16px; border: 2px solid var(--border); border-radius: 12px;
-  background: var(--card); cursor: pointer; transition: all .2s; min-width: 70px;
+  padding: 8px 12px; border: 2px solid var(--border); border-radius: 10px;
+  background: var(--card); cursor: pointer; transition: all .2s; min-width: 65px;
 }
 .planBtn:hover { border-color: var(--gold); }
 .planActive { border-color: var(--green) !important; background: rgba(45,90,61,.1) !important; }
-.planDays { font-family: 'Amiri', serif; font-size: 1.4rem; color: var(--brown); font-weight: 700; line-height: 1; }
-.planLabel { font-size: .72rem; color: var(--text-soft); margin-top: 3px; }
+.planDays { font-family: 'Amiri', serif; font-size: 1.3rem; color: var(--brown); font-weight: 700; line-height: 1; }
+.planLabel { font-size: .7rem; color: var(--text-soft); margin-top: 2px; }
+.planPages { font-size: .65rem; color: var(--green); margin-top: 1px; font-weight: 700; }
 
-.wird {
-  background: linear-gradient(135deg, rgba(45,90,61,.1), rgba(184,151,58,.06));
-  border: 1px solid var(--border); border-radius: 12px;
-  padding: 14px 16px; margin: 14px 0; text-align: right;
+/* WIRD */
+.wirdCard {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 14px; padding: 18px 20px; margin-bottom: 16px;
+  transition: all .3s;
 }
-.wird h3 { font-family: 'Amiri', serif; font-size: 1rem; color: var(--brown); margin-bottom: 10px; text-align: center; }
-.wirdRow { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
-.wirdBadge {
-  padding: 6px 12px; background: var(--card); border: 1px solid var(--border);
-  border-radius: 8px; font-size: .82rem; color: var(--text-soft);
+.wirdDone { background: rgba(45,90,61,.08) !important; border-color: var(--green) !important; }
+.wirdHeader { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+.wirdIcon { font-size: 1.2rem; }
+.wirdTitle { font-family: 'Amiri', serif; font-size: 1.1rem; color: var(--brown); font-weight: 700; flex: 1; }
+.wirdBadgeDone { font-size: .78rem; background: var(--green); color: white; padding: 3px 10px; border-radius: 20px; }
+.wirdBody { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
+.wirdInfo { display: flex; flex-wrap: wrap; gap: 8px; }
+.wirdItem {
+  padding: 6px 12px; background: var(--parchment);
+  border: 1px solid var(--border); border-radius: 8px;
+  font-size: .82rem; color: var(--text-soft);
 }
-.wirdBadge strong { color: var(--green); }
-
-.btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+.wirdItem strong { color: var(--green); margin-right: 4px; }
+.startBtn {
+  padding: 8px 18px; background: var(--green); color: white;
+  border-radius: 10px; font-family: 'Tajawal', sans-serif;
+  font-size: .88rem; font-weight: 700; transition: all .2s; white-space: nowrap;
+  display: inline-block;
+}
+.startBtn:hover { background: var(--green-light); transform: translateY(-1px); }
+.wirdActions { display: flex; gap: 8px; flex-wrap: wrap; }
 .completeBtn {
-  padding: 12px 24px; background: var(--green); color: white;
+  flex: 1; padding: 10px; background: var(--green); color: white;
   border: none; border-radius: 10px; font-family: 'Tajawal', sans-serif;
-  font-size: .95rem; cursor: pointer; transition: all .2s; font-weight: 700;
+  font-size: .9rem; cursor: pointer; transition: all .2s; font-weight: 700;
 }
-.completeBtn:hover:not(:disabled) { background: var(--green-light); transform: translateY(-1px); }
+.completeBtn:hover:not(:disabled) { background: var(--green-light); }
 .completeBtn:disabled { opacity: .5; cursor: default; }
 .resetBtn {
-  padding: 12px 18px; background: transparent; color: var(--text-soft);
-  border: 1px solid var(--border); border-radius: 10px; font-family: 'Tajawal', sans-serif;
-  font-size: .9rem; cursor: pointer; transition: all .2s;
+  padding: 10px 16px; background: transparent; color: var(--text-soft);
+  border: 1px solid var(--border); border-radius: 10px;
+  font-family: 'Tajawal', sans-serif; font-size: .85rem; cursor: pointer; transition: all .2s;
 }
 .resetBtn:hover { border-color: var(--gold); color: var(--brown); }
 
+/* GRID */
 .gridTitle { font-family: 'Amiri', serif; color: var(--brown); font-size: 1rem; margin-bottom: 12px; }
 .surahGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 6px; }
 .surahBtn {
@@ -62,16 +91,22 @@
   padding: 8px 6px; border: 1px solid var(--border); border-radius: 9px;
   background: var(--card); cursor: pointer; transition: all .15s;
   font-family: 'Tajawal', sans-serif; font-size: .78rem; color: var(--text-soft);
+  position: relative;
 }
 .surahBtn:hover { border-color: var(--gold); }
 .surahDone { background: rgba(45,90,61,.15) !important; border-color: var(--green) !important; color: var(--green) !important; font-weight: 700; }
+.surahToday { border-color: var(--gold) !important; background: var(--gold-pale) !important; color: var(--brown) !important; }
 .surahBtnNum {
   width: 22px; height: 22px; background: var(--gold-pale); border-radius: 50%;
   display: flex; align-items: center; justify-content: center;
   font-size: .65rem; font-weight: 700; color: var(--brown);
 }
+.todayDot { position: absolute; top: 4px; left: 4px; width: 6px; height: 6px; background: var(--gold); border-radius: 50%; }
 
 @media (max-width: 600px) {
   .surahGrid { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); }
-  .hero { padding: 20px 16px; }
+  .statsRow { gap: 6px; }
+  .statCard { min-width: 70px; padding: 8px 10px; }
+  .hero { padding: 20px 14px; }
+  .wirdBody { flex-direction: column; }
 }
