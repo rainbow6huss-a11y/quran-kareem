@@ -20,7 +20,7 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
   const [fontSize, setFontSize] = useState(1.75);
   const [bookmarks, setBookmarks] = useState([]);
   const [showTrans, setShowTrans] = useState(true);
-  const [currentVerse, setCurrentVerse] = useState(null);
+  const [playingVerse, setPlayingVerse] = useState(null);
   const [saving, setSaving] = useState(false);
   const saveTimerRef = useRef(null);
   const observerRef = useRef(null);
@@ -198,7 +198,7 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
                 <div className={styles.verses}>
                   {verses.map(v => (
                     <div key={v.number} id={`v${v.number}`} data-verse={v.number}
-                      className={`${styles.verse} ${currentVerse === v.number ? styles.playing : ''}`}>
+                      className={`${styles.verse} ${playingVerse === v.number ? styles.playing : ''}`}>
                       <div className={styles.verseTop}>
                         <div className={styles.verseNum}>{v.number}</div>
                         <div className={styles.verseBody}>
@@ -206,9 +206,9 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
                           {showTrans && v.tafsir && <div className={styles.verseTrans}>{v.tafsir}</div>}
                         </div>
                         <button
-                          className={`${styles.playBtn} ${currentVerse === v.number ? styles.playBtnActive : ''}`}
-                          onClick={() => { setCurrentVerse(v.number); }}>
-                          {currentVerse === v.number ? '🔊' : '▶'}
+                          className={`${styles.playBtn} ${playingVerse === v.number ? styles.playBtnActive : ''}`}
+                          onClick={() => setPlayingVerse(v.number)}>
+                          {playingVerse === v.number ? '🔊' : '▶'}
                         </button>
                       </div>
                       <div className={styles.verseActions}>
@@ -266,8 +266,8 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
         surahNum={surahNum}
         surahName={surah?.name}
         verses={verses}
-        currentVerse={currentVerse}
-        onVerseChange={setCurrentVerse}
+        playingVerse={playingVerse}
+        onVerseChange={setPlayingVerse}
       />
     </>
   );
