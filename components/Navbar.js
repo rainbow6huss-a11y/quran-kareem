@@ -1,9 +1,10 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
+import Auth from './Auth';
 import styles from './Navbar.module.css';
 
-export default function Navbar({ toggleDark, dark, showToast }) {
+export default function Navbar({ toggleDark, dark, showToast, onAuth }) {
   const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -31,7 +32,6 @@ export default function Navbar({ toggleDark, dark, showToast }) {
           <span className={styles.logoAr}>القرآن الكريم</span>
         </Link>
 
-        {/* Desktop links */}
         <div className={styles.links}>
           {links.map(l => (
             <Link key={l.href} href={l.href}
@@ -42,13 +42,13 @@ export default function Navbar({ toggleDark, dark, showToast }) {
         </div>
 
         <div className={styles.controls}>
+          <Auth onAuth={onAuth} showToast={showToast} />
           <button className={styles.ctrl} onClick={toggleDark} title="وضع ليلي">{dark ? '☀️' : '🌙'}</button>
           <button className={styles.ctrl} onClick={shareSite} title="مشاركة">📤</button>
           <button className={styles.ctrl} onClick={() => setMenuOpen(v => !v)} id="menuToggle">☰</button>
         </div>
       </div>
 
-      {/* Mobile menu */}
       {menuOpen && (
         <div className={styles.mobileMenu}>
           {links.map(l => (
