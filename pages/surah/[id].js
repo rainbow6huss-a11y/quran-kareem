@@ -5,6 +5,7 @@ import { useRouter } from 'next/router';
 import Navbar from '../../components/Navbar';
 import AudioPlayer from '../../components/AudioPlayer';
 import { supabase } from '../../lib/supabase';
+import { SurahSkeleton } from '../../components/Skeleton';
 import styles from '../../styles/Surah.module.css';
 
 export default function SurahPage({ toggleDark, dark, showToast, user, onAuth }) {
@@ -159,7 +160,7 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
         </div>
 
         {loading ? (
-          <div className="loading"><div className="loader" /><div>جارٍ تحميل السورة...</div></div>
+          <SurahSkeleton />
         ) : surah ? (
           <>
             <div className={styles.surahHeader}>
