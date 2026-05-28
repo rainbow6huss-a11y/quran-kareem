@@ -1,6 +1,7 @@
 import '../styles/globals.css';
 import { useEffect, useState } from 'react';
 import Head from 'next/head';
+import Splash from '../components/Splash';
 
 export default function App({ Component, pageProps }) {
   const [dark, setDark] = useState(false);
@@ -34,6 +35,7 @@ export default function App({ Component, pageProps }) {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700&display=swap" rel="stylesheet" />
       </Head>
+      <Splash />
       <Component {...pageProps} toggleDark={toggleDark} dark={dark} showToast={showToast} />
       <div className={`toast ${toastVisible ? 'show' : ''}`}>{toast}</div>
     </>
