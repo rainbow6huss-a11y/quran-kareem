@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -9,7 +9,6 @@ import styles from '../../styles/Surah.module.css';
 const SURAH_START = [];
 const AYAH_COUNTS = [7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,29,15,52,60,22,6,73,52,28,44,28,56,40,31,54,31,46,38,23,18,8,17,16,11,12,3,18,12,12,30,7,6,6,8,3,5,4,5,8,4,7,3,6,3,5,4,5,6,1,5,4,6,1,3,6,6,3,5,12,5,8,9,5,6,5,9,6,3,5,4,3,3,3,3,4,3,1,4,6,5,8,3,3,6,4];
 (function() { let c = 1; for (let i = 0; i < 114; i++) { SURAH_START[i] = c; c += AYAH_COUNTS[i]; } })();
-
 function globalAyah(surah, verse) { return SURAH_START[surah - 1] + (verse - 1); }
 
 const RECITERS = [
@@ -34,13 +33,54 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
   const [playingVerse, setPlayingVerse] = useState(null);
   const [bookmarks, setBookmarks] = useState([]);
   const [showTrans, setShowTrans] = useState(true);
+  const [currentVisibleVerse, setCurrentVisibleVerse] = useState(1);
+  const [saving, setSaving] = useState(false);
   const audioRef = useRef(null);
+  const saveTimerRef = useRef(null);
+  const observerRef = useRef(null);
+
+  // حفظ آخر قراءة — مع debounce لتجنب الحفظ الكثير
+  const saveLastRead = useCallback(async (sNum, vNum) => {
+    // حفظ محلي فوري
+    localStorage.setItem('q_last_read', JSON.stringify({ surah: sNum, verse: vNum }));
+
+    // حفظ في Supabase مع تأخير 2 ثانية
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(async () => {
+      if (!user) return;
+      setSaving(true);
+      try {
+        const { data: existing } = await supabase
+          .from('last_read')
+          .select('id')
+          .eq('user_id', user.id)
+          .single();
+
+        if (existing) {
+          await supabase.from('last_read').update({
+            surah_num: sNum,
+            verse_num: vNum,
+            updated_at: new Date().toISOString()
+          }).eq('user_id', user.id);
+        } else {
+          await supabase.from('last_read').insert({
+            user_id: user.id,
+            surah_num: sNum,
+            verse_num: vNum
+          });
+        }
+      } catch(e) {}
+      setSaving(false);
+    }, 2000);
+  }, [user]);
 
   useEffect(() => {
     if (!surahNum) return;
     setLoading(true);
     setVerses([]);
     setSurah(null);
+    setCurrentVisibleVerse(1);
+
     const saved = JSON.parse(localStorage.getItem('q_bookmarks') || '[]');
     setBookmarks(saved);
 
@@ -55,31 +95,46 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
         tafsir: tafsir.data?.ayahs?.[i]?.text || '',
       })));
       setLoading(false);
-      // حفظ آخر قراءة
+      // حفظ عند فتح السورة
       saveLastRead(surahNum, 1);
     }).catch(() => setLoading(false));
+
+    return () => {
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+      if (observerRef.current) observerRef.current.disconnect();
+    };
   }, [surahNum]);
 
-  // حفظ آخر قراءة في Supabase أو localStorage
-  async function saveLastRead(sNum, vNum) {
-    localStorage.setItem('q_last_read', JSON.stringify({ surah: sNum, verse: vNum }));
-    if (user) {
-      const { data: existing } = await supabase
-        .from('last_read')
-        .select('id')
-        .eq('user_id', user.id)
-        .single();
-      if (existing) {
-        await supabase.from('last_read').update({
-          surah_num: sNum, verse_num: vNum, updated_at: new Date().toISOString()
-        }).eq('user_id', user.id);
-      } else {
-        await supabase.from('last_read').insert({
-          user_id: user.id, surah_num: sNum, verse_num: vNum
-        });
-      }
-    }
-  }
+  // Intersection Observer — يحفظ الآية عند التمرير إليها
+  useEffect(() => {
+    if (!verses.length || tab !== 'read') return;
+
+    if (observerRef.current) observerRef.current.disconnect();
+
+    observerRef.current = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const vNum = parseInt(entry.target.getAttribute('data-verse'));
+          if (vNum && vNum !== currentVisibleVerse) {
+            setCurrentVisibleVerse(vNum);
+            saveLastRead(surahNum, vNum);
+          }
+        }
+      });
+    }, { threshold: 0.5 }); // يحفظ عند ظهور 50% من الآية
+
+    // مراقبة كل الآيات
+    setTimeout(() => {
+      verses.forEach(v => {
+        const el = document.getElementById(`v${v.number}`);
+        if (el) observerRef.current.observe(el);
+      });
+    }, 500);
+
+    return () => {
+      if (observerRef.current) observerRef.current.disconnect();
+    };
+  }, [verses, tab]);
 
   useEffect(() => {
     if (tab !== 'words' || !surahNum || Object.keys(wordData).length > 0) return;
@@ -95,11 +150,6 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
   function stopAudio() {
     if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
     setPlayingVerse(null);
-  }
-
-  function getReciterId() {
-    const sel = document.getElementById('reciterSelect');
-    return sel ? sel.value : RECITERS[0].id;
   }
 
   function playSurah() {
@@ -120,8 +170,6 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
     audioRef.current = audio;
     audio.play();
     setPlayingVerse(vNum);
-    // حفظ موضع القراءة عند تشغيل آية
-    saveLastRead(surahNum, vNum);
     audio.addEventListener('ended', () => {
       setPlayingVerse(null);
       audioRef.current = null;
@@ -163,6 +211,10 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
           <Link href="/">الرئيسية</Link>
           <span>›</span>
           <span>{surah ? `سورة ${surah.name}` : '...'}</span>
+          {saving && <span style={{color:'var(--gold)',fontSize:'.75rem'}}>• جارٍ الحفظ...</span>}
+          {!saving && currentVisibleVerse > 1 && (
+            <span style={{color:'var(--green)',fontSize:'.75rem'}}>• محفوظ عند آية {currentVisibleVerse} ☁️</span>
+          )}
         </div>
 
         {loading ? (
@@ -194,7 +246,7 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
             <div className={styles.toolbar}>
               <div className={styles.toolGroup}>
                 <label>القارئ:</label>
-                <select className={styles.select} id="reciterSelect" value={reciter} onChange={e => { setReciter(e.target.value); stopAudio(); }}>
+                <select className={styles.select} value={reciter} onChange={e => { setReciter(e.target.value); stopAudio(); }}>
                   {RECITERS.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
                 </select>
                 <button className={styles.playAllBtn} onClick={playSurah}>▶ السورة كاملة</button>
@@ -213,8 +265,8 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
               {tab === 'read' && (
                 <div className={styles.verses}>
                   {verses.map(v => (
-                    <div key={v.number} id={`v${v.number}`}
-                      className={`${styles.verse} ${playingVerse === v.number ? styles.playing : ''}`}>
+                    <div key={v.number} id={`v${v.number}`} data-verse={v.number}
+                      className={`${styles.verse} ${playingVerse === v.number ? styles.playing : ''} ${currentVisibleVerse === v.number ? styles.currentVerse : ''}`}>
                       <div className={styles.verseTop}>
                         <div className={styles.verseNum}>{v.number}</div>
                         <div className={styles.verseBody}>
