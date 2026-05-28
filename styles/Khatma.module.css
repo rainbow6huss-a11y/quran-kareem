@@ -1,112 +1,91 @@
-.page { max-width: 860px; margin: 0 auto; padding: 24px 20px 60px; position: relative; z-index: 1; }
+.page { max-width: 860px; margin: 0 auto; padding: 20px 16px 60px; position: relative; z-index: 1; }
 
 /* HERO */
 .hero {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 16px; padding: 28px 20px; margin-bottom: 16px;
-  text-align: center; position: relative; overflow: hidden;
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  padding: 24px 18px; margin-bottom: 14px; text-align: center; position: relative; overflow: hidden;
 }
-.hero::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-}
-.title { font-family: 'Amiri', serif; font-size: 1.8rem; color: var(--brown); font-weight: 700; margin-bottom: 4px; }
-.sub { color: var(--text-soft); font-size: .87rem; margin-bottom: 8px; }
-.syncBadge { display: inline-block; font-size: .75rem; color: var(--gold); background: var(--gold-pale); padding: 3px 10px; border-radius: 20px; margin-bottom: 8px; }
+.hero::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+.title { font-family:'Amiri',serif; font-size:1.7rem; color:var(--brown); font-weight:700; margin-bottom:3px; }
+.sub { color:var(--text-soft); font-size:.85rem; margin-bottom:6px; }
+.syncBadge { display:inline-block; font-size:.72rem; color:var(--gold); background:var(--gold-pale); padding:2px 10px; border-radius:20px; margin-bottom:6px; }
 
 /* RING */
-.ringWrap { display: flex; flex-direction: column; align-items: center; position: relative; margin: 0 auto 16px; width: 140px; }
-.ringText { font-family: 'Amiri', serif; font-size: 1.8rem; color: var(--brown); font-weight: 700; margin-top: -6px; }
-.ringSub { font-size: .8rem; color: var(--text-soft); }
+.ringWrap { position:relative; width:150px; height:150px; margin:10px auto 8px; }
+.ringInner { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.ringPct { font-family:'Amiri',serif; font-size:2rem; color:var(--brown); font-weight:700; line-height:1; }
+.ringLabel { font-size:.72rem; color:var(--text-soft); margin-top:2px; }
+
+/* STREAK */
+.streakBadge { display:inline-block; background:linear-gradient(135deg,#ff6b35,#ff8c42); color:white; font-size:.85rem; font-weight:700; padding:5px 16px; border-radius:20px; margin-bottom:12px; }
 
 /* STATS */
-.statsRow { display: flex; gap: 8px; justify-content: center; margin: 14px 0; flex-wrap: wrap; }
-.statCard {
-  padding: 10px 14px; background: var(--parchment);
-  border: 1px solid var(--border); border-radius: 10px;
-  text-align: center; min-width: 80px; flex: 1;
-}
-.statNum { font-family: 'Amiri', serif; font-size: 1.4rem; color: var(--brown); font-weight: 700; line-height: 1.2; }
-.statLabel { font-size: .7rem; color: var(--text-soft); margin-top: 2px; }
+.statsRow { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin:10px 0; }
+.statCard { padding:10px 12px; background:var(--parchment); border:1px solid var(--border); border-radius:10px; text-align:center; min-width:75px; flex:1; max-width:120px; }
+.statIcon { font-size:1.1rem; margin-bottom:3px; }
+.statNum { font-family:'Amiri',serif; font-size:1.3rem; color:var(--brown); font-weight:700; line-height:1.1; }
+.statLabel { font-size:.65rem; color:var(--text-soft); margin-top:2px; }
 
 /* PLANS */
-.plans { display: flex; gap: 6px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
-.planBtn {
-  display: flex; flex-direction: column; align-items: center;
-  padding: 8px 12px; border: 2px solid var(--border); border-radius: 10px;
-  background: var(--card); cursor: pointer; transition: all .2s; min-width: 65px;
-}
-.planBtn:hover { border-color: var(--gold); }
-.planActive { border-color: var(--green) !important; background: rgba(45,90,61,.1) !important; }
-.planDays { font-family: 'Amiri', serif; font-size: 1.3rem; color: var(--brown); font-weight: 700; line-height: 1; }
-.planLabel { font-size: .7rem; color: var(--text-soft); margin-top: 2px; }
-.planPages { font-size: .65rem; color: var(--green); margin-top: 1px; font-weight: 700; }
+.plansWrap { margin-top:12px; }
+.plansLabel { font-size:.78rem; color:var(--text-soft); margin-bottom:7px; }
+.plans { display:flex; gap:5px; justify-content:center; flex-wrap:wrap; }
+.planBtn { display:flex; flex-direction:column; align-items:center; padding:7px 10px; border:2px solid var(--border); border-radius:10px; background:var(--card); cursor:pointer; transition:all .2s; min-width:60px; }
+.planBtn:hover { border-color:var(--gold); }
+.planActive { border-color:var(--green) !important; background:rgba(45,90,61,.12) !important; }
+.planDays { font-family:'Amiri',serif; font-size:1.2rem; color:var(--brown); font-weight:700; line-height:1; }
+.planLabel { font-size:.68rem; color:var(--text-soft); margin-top:1px; }
+.planPages { font-size:.62rem; color:var(--green); font-weight:700; margin-top:1px; }
 
 /* WIRD */
-.wirdCard {
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 14px; padding: 18px 20px; margin-bottom: 16px;
-  transition: all .3s;
-}
-.wirdDone { background: rgba(45,90,61,.08) !important; border-color: var(--green) !important; }
-.wirdHeader { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-.wirdIcon { font-size: 1.2rem; }
-.wirdTitle { font-family: 'Amiri', serif; font-size: 1.1rem; color: var(--brown); font-weight: 700; flex: 1; }
-.wirdBadgeDone { font-size: .78rem; background: var(--green); color: white; padding: 3px 10px; border-radius: 20px; }
-.wirdBody { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 12px; }
-.wirdInfo { display: flex; flex-wrap: wrap; gap: 8px; }
-.wirdItem {
-  padding: 6px 12px; background: var(--parchment);
-  border: 1px solid var(--border); border-radius: 8px;
-  font-size: .82rem; color: var(--text-soft);
-}
-.wirdItem strong { color: var(--green); margin-right: 4px; }
-.startBtn {
-  padding: 8px 18px; background: var(--green); color: white;
-  border-radius: 10px; font-family: 'Tajawal', sans-serif;
-  font-size: .88rem; font-weight: 700; transition: all .2s; white-space: nowrap;
-  display: inline-block;
-}
-.startBtn:hover { background: var(--green-light); transform: translateY(-1px); }
-.wirdActions { display: flex; gap: 8px; flex-wrap: wrap; }
-.completeBtn {
-  flex: 1; padding: 10px; background: var(--green); color: white;
-  border: none; border-radius: 10px; font-family: 'Tajawal', sans-serif;
-  font-size: .9rem; cursor: pointer; transition: all .2s; font-weight: 700;
-}
-.completeBtn:hover:not(:disabled) { background: var(--green-light); }
-.completeBtn:disabled { opacity: .5; cursor: default; }
-.resetBtn {
-  padding: 10px 16px; background: transparent; color: var(--text-soft);
-  border: 1px solid var(--border); border-radius: 10px;
-  font-family: 'Tajawal', sans-serif; font-size: .85rem; cursor: pointer; transition: all .2s;
-}
-.resetBtn:hover { border-color: var(--gold); color: var(--brown); }
+.wirdCard { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px 18px; margin-bottom:12px; }
+.wirdDone { background:rgba(45,90,61,.07) !important; border-color:var(--green) !important; }
+.wirdHeader { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.wirdTitleWrap { display:flex; align-items:center; gap:7px; }
+.wirdIcon { font-size:1.1rem; }
+.wirdTitle { font-family:'Amiri',serif; font-size:1.1rem; color:var(--brown); font-weight:700; }
+.doneBadge { font-size:.75rem; background:var(--green); color:white; padding:3px 10px; border-radius:20px; }
+.wirdStats { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:12px; padding:10px 12px; background:var(--parchment); border-radius:10px; border:1px solid var(--border); }
+.wirdStat { display:flex; flex-direction:column; align-items:center; gap:2px; flex:1; min-width:60px; }
+.wirdStatLabel { font-size:.65rem; color:var(--text-soft); }
+.wirdStat strong { font-family:'Amiri',serif; font-size:.95rem; color:var(--brown); font-weight:700; }
+.wirdDivider { color:var(--border); font-size:1rem; }
+.startReadBtn { display:block; width:100%; padding:10px; background:linear-gradient(135deg,var(--green),var(--green-light)); color:white; border-radius:10px; font-family:'Tajawal',sans-serif; font-size:.9rem; font-weight:700; text-align:center; transition:all .2s; margin-bottom:10px; }
+.startReadBtn:hover { transform:translateY(-1px); box-shadow:0 4px 12px rgba(45,90,61,.3); }
+.wirdActions { display:flex; gap:8px; }
+.completeBtn { flex:1; padding:10px; background:var(--green); color:white; border:none; border-radius:10px; font-family:'Tajawal',sans-serif; font-size:.9rem; cursor:pointer; transition:all .2s; font-weight:700; }
+.completeBtn:hover:not(:disabled) { background:var(--green-light); }
+.completeBtn:disabled { opacity:.6; cursor:default; }
+.completeBtnDone { background:rgba(45,90,61,.2) !important; color:var(--green) !important; }
+.resetBtn { padding:10px 14px; background:transparent; color:var(--text-soft); border:1px solid var(--border); border-radius:10px; font-family:'Tajawal',sans-serif; font-size:.85rem; cursor:pointer; transition:all .2s; }
+.resetBtn:hover { border-color:var(--gold); color:var(--brown); }
+
+/* LOG */
+.logCard { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:14px 16px; margin-bottom:14px; }
+.logTitle { font-family:'Amiri',serif; font-size:.95rem; color:var(--brown); margin-bottom:12px; }
+.logDays { display:flex; gap:6px; justify-content:center; }
+.logDay { flex:1; display:flex; flex-direction:column; align-items:center; gap:3px; padding:8px 4px; border:1px solid var(--border); border-radius:10px; background:var(--parchment); }
+.logDayDone { background:rgba(45,90,61,.12) !important; border-color:var(--green) !important; }
+.logDayToday { border-color:var(--gold) !important; border-width:2px !important; }
+.logDayName { font-size:.62rem; color:var(--text-soft); }
+.logDayIcon { font-size:.85rem; }
+.logDayNum { font-size:.7rem; color:var(--brown); font-weight:700; }
 
 /* GRID */
-.gridTitle { font-family: 'Amiri', serif; color: var(--brown); font-size: 1rem; margin-bottom: 12px; }
-.surahGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 6px; }
-.surahBtn {
-  display: flex; flex-direction: column; align-items: center; gap: 3px;
-  padding: 8px 6px; border: 1px solid var(--border); border-radius: 9px;
-  background: var(--card); cursor: pointer; transition: all .15s;
-  font-family: 'Tajawal', sans-serif; font-size: .78rem; color: var(--text-soft);
-  position: relative;
-}
-.surahBtn:hover { border-color: var(--gold); }
-.surahDone { background: rgba(45,90,61,.15) !important; border-color: var(--green) !important; color: var(--green) !important; font-weight: 700; }
-.surahToday { border-color: var(--gold) !important; background: var(--gold-pale) !important; color: var(--brown) !important; }
-.surahBtnNum {
-  width: 22px; height: 22px; background: var(--gold-pale); border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: .65rem; font-weight: 700; color: var(--brown);
-}
-.todayDot { position: absolute; top: 4px; left: 4px; width: 6px; height: 6px; background: var(--gold); border-radius: 50%; }
+.gridTitle { font-family:'Amiri',serif; color:var(--brown); font-size:1rem; margin-bottom:10px; }
+.surahGrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(95px,1fr)); gap:5px; }
+.surahBtn { display:flex; flex-direction:column; align-items:center; gap:2px; padding:7px 5px; border:1px solid var(--border); border-radius:9px; background:var(--card); cursor:pointer; transition:all .15s; font-family:'Tajawal',sans-serif; font-size:.76rem; color:var(--text-soft); position:relative; }
+.surahBtn:hover { border-color:var(--gold); }
+.surahDone { background:rgba(45,90,61,.14) !important; border-color:var(--green) !important; color:var(--green) !important; font-weight:700; }
+.surahToday { border-color:var(--gold) !important; background:var(--gold-pale) !important; color:var(--brown) !important; font-weight:700; }
+.surahNum { width:22px; height:22px; background:var(--gold-pale); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:.62rem; font-weight:700; color:var(--brown); }
+.surahName { font-size:.75rem; }
+.todayDot { position:absolute; top:4px; left:4px; width:6px; height:6px; background:var(--gold); border-radius:50%; }
 
-@media (max-width: 600px) {
-  .surahGrid { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); }
-  .statsRow { gap: 6px; }
-  .statCard { min-width: 70px; padding: 8px 10px; }
-  .hero { padding: 20px 14px; }
-  .wirdBody { flex-direction: column; }
+@media(max-width:600px) {
+  .statsRow { gap:5px; }
+  .statCard { min-width:65px; padding:7px 8px; }
+  .surahGrid { grid-template-columns:repeat(auto-fill,minmax(82px,1fr)); }
+  .logDays { gap:4px; }
+  .wirdStats { gap:5px; }
 }
