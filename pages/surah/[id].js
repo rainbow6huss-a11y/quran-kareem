@@ -3,28 +3,31 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Navbar from '../../components/Navbar';
-import AudioPlayer from '../../components/AudioPlayer';
-import { supabase } from '../../lib/supabase';
 import { SurahSkeleton } from '../../components/Skeleton';
+import { supabase } from '../../lib/supabase';
 import styles from '../../styles/Surah.module.css';
 
-export default function SurahPage({ toggleDark, dark, showToast, user, onAuth }) {
-  const router = useRouter();
-  const { id } = router.query;
+export default function SurahPage({
+  toggleDark, dark, showToast, user, onAuth,
+  setAudioSurah, setAudioName, setAudioVerses,
+  playingVerse, setPlayingVerse,
+}) {
+  const router   = useRouter();
+  const { id }   = router.query;
   const surahNum = parseInt(id);
 
-  const [surah, setSurah] = useState(null);
-  const [verses, setVerses] = useState([]);
+  const [surah,    setSurah]    = useState(null);
+  const [verses,   setVerses]   = useState([]);
   const [wordData, setWordData] = useState({});
-  const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState('read');
+  const [loading,  setLoading]  = useState(true);
+  const [tab,      setTab]      = useState('read');
   const [fontSize, setFontSize] = useState(1.75);
-  const [bookmarks, setBookmarks] = useState([]);
-  const [showTrans, setShowTrans] = useState(true);
-  const [playingVerse, setPlayingVerse] = useState(null);
-  const [saving, setSaving] = useState(false);
+  const [bookmarks,setBookmarks]= useState([]);
+  const [showTrans,setShowTrans]= useState(true);
+  const [saving,   setSaving]   = useState(false);
+
   const saveTimerRef = useRef(null);
-  const observerRef = useRef(null);
+  const observerRef  = useRef(null);
 
   const saveLastRead = useCallback(async (sNum, vNum) => {
     localStorage.setItem('q_last_read', JSON.stringify({ surah: sNum, verse: vNum }));
@@ -33,12 +36,9 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
       if (!user) return;
       setSaving(true);
       try {
-        const { data: existing } = await supabase.from('last_read').select('id').eq('user_id', user.id).single();
-        if (existing) {
-          await supabase.from('last_read').update({ surah_num: sNum, verse_num: vNum, updated_at: new Date().toISOString() }).eq('user_id', user.id);
-        } else {
-          await supabase.from('last_read').insert({ user_id: user.id, surah_num: sNum, verse_num: vNum });
-        }
+        const { data: ex } = await supabase.from('last_read').select('id').eq('user_id', user.id).single();
+        if (ex) await supabase.from('last_read').update({ surah_num: sNum, verse_num: vNum, updated_at: new Date().toISOString() }).eq('user_id', user.id);
+        else    await supabase.from('last_read').insert({ user_id: user.id, surah_num: sNum, verse_num: vNum });
       } catch(e) {}
       setSaving(false);
     }, 2000);
@@ -46,7 +46,7 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
 
   useEffect(() => {
     if (!surahNum) return;
-    setLoading(true); setVerses([]); setSurah(null); setPlayingVerse(null);
+    setLoading(true); setVerses([]); setSurah(null);
     const saved = JSON.parse(localStorage.getItem('q_bookmarks') || '[]');
     setBookmarks(saved);
 
@@ -54,21 +54,29 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
       fetch(`https://api.alquran.cloud/v1/surah/${surahNum}`).then(r => r.json()),
       fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/ar.muyassar`).then(r => r.json()),
     ]).then(([ar, tafsir]) => {
-      setSurah(ar.data);
-      setVerses(ar.data.ayahs.map((v, i) => ({
-        number: v.numberInSurah, text: v.text,
+      const v = ar.data.ayahs.map((a, i) => ({
+        number: a.numberInSurah, text: a.text,
         tafsir: tafsir.data?.ayahs?.[i]?.text || '',
-      })));
+      }));
+      setSurah(ar.data);
+      setVerses(v);
       setLoading(false);
       saveLastRead(surahNum, 1);
+
+      // Feed AudioPlayer in _app
+      setAudioSurah?.(surahNum);
+      setAudioName?.(ar.data.name);
+      setAudioVerses?.(v);
+
+      // Scroll to hash verse
       setTimeout(() => {
         const hash = window.location.hash;
-        if (hash && hash.startsWith('#v')) {
+        if (hash?.startsWith('#v')) {
           const el = document.querySelector(hash);
           if (el) {
             el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            el.style.transition = 'background 0.3s';
-            el.style.background = 'rgba(184,151,58,0.15)';
+            el.style.transition = 'background .3s';
+            el.style.background = 'rgba(184,151,58,.15)';
             setTimeout(() => { el.style.background = ''; }, 2000);
           }
         }
@@ -77,7 +85,7 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
 
     return () => {
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-      if (observerRef.current) observerRef.current.disconnect();
+      if (observerRef.current)  observerRef.current.disconnect();
     };
   }, [surahNum]);
 
@@ -85,11 +93,11 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
   useEffect(() => {
     if (!verses.length || tab !== 'read') return;
     if (observerRef.current) observerRef.current.disconnect();
-    observerRef.current = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const vNum = parseInt(entry.target.getAttribute('data-verse'));
-          if (vNum) saveLastRead(surahNum, vNum);
+    observerRef.current = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const v = parseInt(e.target.getAttribute('data-verse'));
+          if (v) saveLastRead(surahNum, v);
         }
       });
     }, { threshold: 0.5 });
@@ -113,24 +121,23 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
   }, [tab, surahNum]);
 
   async function toggleBookmark(vNum) {
-    const isBmNow = isBm(vNum);
+    const isBmNow = bookmarks.some(b => b.s === surahNum && b.v === vNum);
     let saved = JSON.parse(localStorage.getItem('q_bookmarks') || '[]');
     if (isBmNow) {
       saved = saved.filter(b => !(b.s === surahNum && b.v === vNum));
       showToast('تم إزالة العلامة');
     } else {
-      const verseText = verses.find(v => v.number === vNum)?.text || '';
-      saved.push({ s: surahNum, v: vNum, sName: surah?.name, t: verseText });
+      const t = verses.find(v => v.number === vNum)?.text || '';
+      saved.push({ s: surahNum, v: vNum, sName: surah?.name, t });
       showToast('🔖 تم الحفظ');
     }
     localStorage.setItem('q_bookmarks', JSON.stringify(saved));
     setBookmarks(saved);
     if (user) {
-      if (isBmNow) {
-        await supabase.from('bookmarks').delete().eq('user_id', user.id).eq('surah_num', surahNum).eq('verse_num', vNum);
-      } else {
-        const verseText = verses.find(v => v.number === vNum)?.text || '';
-        await supabase.from('bookmarks').insert({ user_id: user.id, surah_num: surahNum, verse_num: vNum, surah_name: surah?.name, verse_text: verseText });
+      if (isBmNow) await supabase.from('bookmarks').delete().eq('user_id', user.id).eq('surah_num', surahNum).eq('verse_num', vNum);
+      else {
+        const t = verses.find(v => v.number === vNum)?.text || '';
+        await supabase.from('bookmarks').insert({ user_id: user.id, surah_num: surahNum, verse_num: vNum, surah_name: surah?.name, verse_text: t });
       }
     }
   }
@@ -151,102 +158,98 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
       <Head><title>{surah ? `${surah.name} - القرآن الكريم` : 'جارٍ التحميل...'}</title></Head>
       <Navbar toggleDark={toggleDark} dark={dark} showToast={showToast} onAuth={onAuth} />
 
-      <div className={styles.page} style={{ paddingBottom: '80px' }}>
+      <div className={styles.page} style={{ paddingBottom: '90px' }}>
         <div className={styles.breadcrumb}>
           <Link href="/">الرئيسية</Link>
           <span>›</span>
           <span>{surah ? surah.name : '...'}</span>
-          {saving && <span style={{color:'var(--gold)',fontSize:'.75rem'}}>• جارٍ الحفظ...</span>}
+          {saving && <span style={{color:'var(--gold)',fontSize:'.73rem'}}>• جارٍ الحفظ...</span>}
         </div>
 
-        {loading ? (
-          <SurahSkeleton />
-        ) : surah ? (
+        {loading ? <SurahSkeleton /> : surah ? (
           <>
             <div className={styles.surahHeader}>
               <div className={styles.surahNav}>
-                {surahNum > 1 && <Link href={`/surah/${surahNum - 1}`} className={styles.navArrow}>› السابقة</Link>}
+                {surahNum > 1 && <Link href={`/surah/${surahNum-1}`} className={styles.navArrow}>› السابقة</Link>}
                 <div>
                   <h1 className={styles.surahName}>{surah.name}</h1>
                   <div className={styles.surahMeta}>
-                    <span>📍 {surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'}</span>
+                    <span>📍 {surah.revelationType==='Meccan'?'مكية':'مدنية'}</span>
                     <span>📜 {surah.numberOfAyahs} آية</span>
                     <span>🔢 رقم {surah.number}</span>
                   </div>
                 </div>
-                {surahNum < 114 && <Link href={`/surah/${surahNum + 1}`} className={styles.navArrow}>التالية ‹</Link>}
+                {surahNum < 114 && <Link href={`/surah/${surahNum+1}`} className={styles.navArrow}>التالية ‹</Link>}
               </div>
               {surahNum !== 9 && <div className={styles.bismillah}>بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>}
             </div>
 
             <div className={styles.tabs}>
-              {[['read','📖 القراءة'],['tafsir','📚 التفسير'],['words','🔤 كلمة بكلمة']].map(([v,l]) => (
-                <button key={v} className={`${styles.tab} ${tab===v?styles.tabActive:''}`} onClick={() => setTab(v)}>{l}</button>
+              {[['read','📖 القراءة'],['tafsir','📚 التفسير'],['words','🔤 كلمة بكلمة']].map(([v,l])=>(
+                <button key={v} className={`${styles.tab} ${tab===v?styles.tabActive:''}`} onClick={()=>setTab(v)}>{l}</button>
               ))}
             </div>
 
-            {tab === 'read' && (
+            {tab==='read' && (
               <div className={styles.fontControls}>
                 <label>الخط:</label>
-                <button className={styles.fontBtn} onClick={() => setFontSize(f => Math.max(1.1, f-.15))}>أ−</button>
-                <button className={styles.fontBtn} onClick={() => setFontSize(f => Math.min(2.5, f+.15))}>أ+</button>
-                <button className={`${styles.fontBtn} ${showTrans?styles.fontBtnActive:''}`} onClick={() => setShowTrans(v=>!v)}>التفسير</button>
+                <button className={styles.fontBtn} onClick={()=>setFontSize(f=>Math.max(1.1,f-.15))}>أ−</button>
+                <button className={styles.fontBtn} onClick={()=>setFontSize(f=>Math.min(2.5,f+.15))}>أ+</button>
+                <button className={`${styles.fontBtn} ${showTrans?styles.fontBtnActive:''}`} onClick={()=>setShowTrans(v=>!v)}>التفسير</button>
               </div>
             )}
 
             <div className={styles.content}>
-              {tab === 'read' && (
+              {tab==='read' && (
                 <div className={styles.verses}>
                   {verses.map(v => (
                     <div key={v.number} id={`v${v.number}`} data-verse={v.number}
-                      className={`${styles.verse} ${playingVerse === v.number ? styles.playing : ''}`}>
+                      className={`${styles.verse} ${playingVerse===v.number?styles.playing:''}`}>
                       <div className={styles.verseTop}>
                         <div className={styles.verseNum}>{v.number}</div>
                         <div className={styles.verseBody}>
-                          <div className={styles.verseText} style={{ fontSize: `${fontSize}rem` }}>{v.text}</div>
+                          <div className={styles.verseText} style={{fontSize:`${fontSize}rem`}}>{v.text}</div>
                           {showTrans && v.tafsir && <div className={styles.verseTrans}>{v.tafsir}</div>}
                         </div>
                         <button
-                          className={`${styles.playBtn} ${playingVerse === v.number ? styles.playBtnActive : ''}`}
-                          onClick={() => setPlayingVerse(v.number)}>
-                          {playingVerse === v.number ? '🔊' : '▶'}
+                          className={`${styles.playBtn} ${playingVerse===v.number?styles.playBtnActive:''}`}
+                          onClick={()=>setPlayingVerse(v.number)}>
+                          {playingVerse===v.number?'🔊':'▶'}
                         </button>
                       </div>
                       <div className={styles.verseActions}>
-                        <button className={`${styles.actionBtn} ${isBm(v.number)?styles.bmActive:''}`} onClick={() => toggleBookmark(v.number)}>
+                        <button className={`${styles.actionBtn} ${isBm(v.number)?styles.bmActive:''}`} onClick={()=>toggleBookmark(v.number)}>
                           {isBm(v.number)?'🔖 محفوظ':'🔖 حفظ'}
                         </button>
-                        <button className={styles.actionBtn} onClick={() => copyVerse(v.number)}>📋 نسخ</button>
+                        <button className={styles.actionBtn} onClick={()=>copyVerse(v.number)}>📋 نسخ</button>
                       </div>
                     </div>
                   ))}
                 </div>
               )}
 
-              {tab === 'tafsir' && (
+              {tab==='tafsir' && (
                 <div className={styles.tafsirList}>
-                  {verses.map(v => (
+                  {verses.map(v=>(
                     <div key={v.number} className={styles.tafsirItem}>
-                      <div className={styles.tafsirAyah} style={{ fontSize: `${fontSize}rem` }}>{v.text}</div>
-                      <div className={styles.tafsirBox}>
-                        <strong className={styles.tafsirNum}>[{v.number}]</strong> {v.tafsir || 'التفسير غير متوفر'}
-                      </div>
+                      <div className={styles.tafsirAyah} style={{fontSize:`${fontSize}rem`}}>{v.text}</div>
+                      <div className={styles.tafsirBox}><strong className={styles.tafsirNum}>[{v.number}]</strong> {v.tafsir||'التفسير غير متوفر'}</div>
                     </div>
                   ))}
                 </div>
               )}
 
-              {tab === 'words' && (
+              {tab==='words' && (
                 <div className={styles.wordsList}>
-                  {verses.map(v => (
+                  {verses.map(v=>(
                     <div key={v.number} className={styles.wordVerse}>
                       <div className={styles.wordVerseNum}>آية {v.number}</div>
                       <div className={styles.wordVerseText}>{v.text}</div>
                       <div className={styles.wordGrid}>
-                        {v.text.split(' ').map((word, wi) => (
+                        {v.text.split(' ').map((word,wi)=>(
                           <div key={wi} className={styles.wordCard}>
                             <div className={styles.wordAr}>{word}</div>
-                            <div className={styles.wordEn}>{wordData[v.number]?.split(' ')[wi] || '...'}</div>
+                            <div className={styles.wordEn}>{wordData[v.number]?.split(' ')[wi]||'...'}</div>
                           </div>
                         ))}
                       </div>
@@ -257,19 +260,8 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
               )}
             </div>
           </>
-        ) : (
-          <div className="loading">حدث خطأ في التحميل</div>
-        )}
+        ) : <div className="loading">حدث خطأ في التحميل</div>}
       </div>
-
-      {/* شريط الصوت الثابت */}
-      <AudioPlayer
-        surahNum={surahNum}
-        surahName={surah?.name}
-        verses={verses}
-        playingVerse={playingVerse}
-        onVerseChange={setPlayingVerse}
-      />
     </>
   );
 }
