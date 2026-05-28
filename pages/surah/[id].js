@@ -171,7 +171,7 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
     const audio = new Audio(url);
     audioRef.current = audio;
     audio.play();
-    showToast('▶ جارٍ تشغيل سورة ' + surah?.name);
+    showToast('▶ جارٍ تشغيل ' + (surah?.name?.startsWith('سورة') ? surah.name : `سورة ${surah?.name}`));
   }
 
   function playVerse(vNum) {
@@ -239,7 +239,7 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
   return (
     <>
       <Head>
-        <title>{surah ? `سورة ${surah.name} - القرآن الكريم` : 'جارٍ التحميل...'}</title>
+        <title>{surah ? `${surah.name} - القرآن الكريم` : 'جارٍ التحميل...'}</title>
       </Head>
       <Navbar toggleDark={toggleDark} dark={dark} showToast={showToast} onAuth={onAuth} />
 
@@ -247,7 +247,7 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
         <div className={styles.breadcrumb}>
           <Link href="/">الرئيسية</Link>
           <span>›</span>
-          <span>{surah ? `سورة ${surah.name}` : '...'}</span>
+          <span>{surah ? surah.name : '...'}</span>
           {saving && <span style={{color:'var(--gold)',fontSize:'.75rem'}}>• جارٍ الحفظ...</span>}
           {!saving && currentVisibleVerse > 1 && (
             <span style={{color:'var(--green)',fontSize:'.75rem'}}>• محفوظ عند آية {currentVisibleVerse} ☁️</span>
@@ -262,7 +262,7 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
               <div className={styles.surahNav}>
                 {surahNum > 1 && <Link href={`/surah/${surahNum - 1}`} className={styles.navArrow}>› السابقة</Link>}
                 <div>
-                  <h1 className={styles.surahName}>سورة {surah.name}</h1>
+                  <h1 className={styles.surahName}>{surah.name.startsWith("سورة") ? surah.name : `سورة ${surah.name}`}</h1>
                   <div className={styles.surahMeta}>
                     <span>📍 {surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'}</span>
                     <span>📜 {surah.numberOfAyahs} آية</span>
@@ -344,7 +344,7 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
                 <div className={styles.listenTab}>
                   <div className={styles.listenCard}>
                     <div className={styles.listenIcon}>🎧</div>
-                    <h3>استمع إلى سورة {surah.name}</h3>
+                    <h3>استمع إلى {surah.name.startsWith("سورة") ? surah.name : `سورة ${surah.name}`}</h3>
                     <p>بصوت {RECITERS.find(r => r.id === reciter)?.name}</p>
                     <audio controls src={`https://cdn.islamic.network/quran/audio-surah/128/${reciter}/${surahNum}.mp3`}
                       style={{ width: '100%', marginTop: '16px', direction: 'ltr' }} />
