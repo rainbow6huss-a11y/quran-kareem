@@ -131,3 +131,6 @@ body.dark .select { background: #1a2a1e; color: var(--text); }
   .verse { padding: 12px 10px; }
   .wordGrid { gap: 6px; }
 }
+
+.currentVerse { border-right: 3px solid var(--gold) !important; background: rgba(184,151,58,.04) !important; }
+
