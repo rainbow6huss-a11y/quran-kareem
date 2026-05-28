@@ -1,0 +1,77 @@
+.page { max-width: 860px; margin: 0 auto; padding: 24px 20px 60px; position: relative; z-index: 1; }
+
+.hero {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 16px; padding: 28px 24px; margin-bottom: 24px;
+  text-align: center; position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.title { font-family: 'Amiri', serif; font-size: 1.8rem; color: var(--brown); font-weight: 700; margin-bottom: 4px; }
+.sub { color: var(--text-soft); font-size: .87rem; margin-bottom: 20px; }
+
+.ringWrap { display: flex; flex-direction: column; align-items: center; position: relative; margin: 0 auto 16px; width: 130px; }
+.ringText { font-family: 'Amiri', serif; font-size: 1.6rem; color: var(--brown); font-weight: 700; margin-top: -8px; }
+.ringSub { font-size: .8rem; color: var(--text-soft); }
+
+.plans { display: flex; gap: 8px; justify-content: center; margin: 16px 0; flex-wrap: wrap; }
+.planBtn {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 10px 16px; border: 2px solid var(--border); border-radius: 12px;
+  background: var(--card); cursor: pointer; transition: all .2s; min-width: 70px;
+}
+.planBtn:hover { border-color: var(--gold); }
+.planActive { border-color: var(--green) !important; background: rgba(45,90,61,.1) !important; }
+.planDays { font-family: 'Amiri', serif; font-size: 1.4rem; color: var(--brown); font-weight: 700; line-height: 1; }
+.planLabel { font-size: .72rem; color: var(--text-soft); margin-top: 3px; }
+
+.wird {
+  background: linear-gradient(135deg, rgba(45,90,61,.1), rgba(184,151,58,.06));
+  border: 1px solid var(--border); border-radius: 12px;
+  padding: 14px 16px; margin: 14px 0; text-align: right;
+}
+.wird h3 { font-family: 'Amiri', serif; font-size: 1rem; color: var(--brown); margin-bottom: 10px; text-align: center; }
+.wirdRow { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.wirdBadge {
+  padding: 6px 12px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 8px; font-size: .82rem; color: var(--text-soft);
+}
+.wirdBadge strong { color: var(--green); }
+
+.btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 14px; }
+.completeBtn {
+  padding: 12px 24px; background: var(--green); color: white;
+  border: none; border-radius: 10px; font-family: 'Tajawal', sans-serif;
+  font-size: .95rem; cursor: pointer; transition: all .2s; font-weight: 700;
+}
+.completeBtn:hover:not(:disabled) { background: var(--green-light); transform: translateY(-1px); }
+.completeBtn:disabled { opacity: .5; cursor: default; }
+.resetBtn {
+  padding: 12px 18px; background: transparent; color: var(--text-soft);
+  border: 1px solid var(--border); border-radius: 10px; font-family: 'Tajawal', sans-serif;
+  font-size: .9rem; cursor: pointer; transition: all .2s;
+}
+.resetBtn:hover { border-color: var(--gold); color: var(--brown); }
+
+.gridTitle { font-family: 'Amiri', serif; color: var(--brown); font-size: 1rem; margin-bottom: 12px; }
+.surahGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 6px; }
+.surahBtn {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  padding: 8px 6px; border: 1px solid var(--border); border-radius: 9px;
+  background: var(--card); cursor: pointer; transition: all .15s;
+  font-family: 'Tajawal', sans-serif; font-size: .78rem; color: var(--text-soft);
+}
+.surahBtn:hover { border-color: var(--gold); }
+.surahDone { background: rgba(45,90,61,.15) !important; border-color: var(--green) !important; color: var(--green) !important; font-weight: 700; }
+.surahBtnNum {
+  width: 22px; height: 22px; background: var(--gold-pale); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .65rem; font-weight: 700; color: var(--brown);
+}
+
+@media (max-width: 600px) {
+  .surahGrid { grid-template-columns: repeat(auto-fill, minmax(85px, 1fr)); }
+  .hero { padding: 20px 16px; }
+}

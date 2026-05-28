@@ -1,0 +1,51 @@
+.page { max-width: 1000px; margin: 0 auto; padding: 28px 20px 60px; position: relative; z-index: 1; }
+
+.header { text-align: center; margin-bottom: 28px; }
+.title { font-family: 'Amiri', serif; font-size: clamp(1.8rem,4vw,2.5rem); color: var(--brown); font-weight: 700; }
+.sub { color: var(--text-soft); font-size: .9rem; margin-top: 4px; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 10px; margin-bottom: 40px; }
+
+.card {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 16px; background: var(--card);
+  border: 1px solid var(--border); border-radius: 12px;
+  transition: all .2s; cursor: pointer; position: relative; overflow: hidden;
+}
+.card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, transparent, var(--gold), transparent); }
+.card:hover { border-color: var(--gold); transform: translateY(-2px); box-shadow: 0 4px 16px var(--shadow); }
+
+.cardTop { display: flex; align-items: baseline; gap: 6px; }
+.juzNum { font-family: 'Amiri', serif; font-size: 2rem; color: var(--brown); font-weight: 700; line-height: 1; }
+.juzLabel { font-size: .75rem; color: var(--text-soft); }
+.cardBody { flex: 1; }
+.startsSurah { font-family: 'Amiri', serif; font-size: .95rem; color: var(--brown); }
+.startsVerse { font-size: .72rem; color: var(--text-soft); margin-top: 2px; }
+.cardArrow { font-size: .8rem; color: var(--gold); text-align: left; }
+
+.surahsSection { margin-top: 20px; }
+.sectionTitle { font-family: 'Amiri', serif; font-size: 1.4rem; color: var(--brown); margin-bottom: 16px; }
+
+.juzGroup { margin-bottom: 18px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+.juzGroupHeader {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px; background: linear-gradient(135deg, rgba(184,151,58,.1), rgba(45,90,61,.06));
+  border-bottom: 1px solid var(--border);
+}
+.juzGroupNum { font-family: 'Amiri', serif; font-size: 1rem; color: var(--brown); font-weight: 700; }
+.juzGroupSub { font-size: .78rem; color: var(--text-soft); }
+.juzSurahs { display: flex; flex-wrap: wrap; gap: 6px; padding: 12px 16px; }
+.surahChip {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 10px; background: var(--parchment);
+  border: 1px solid var(--border); border-radius: 20px;
+  font-size: .82rem; color: var(--text-soft); transition: all .15s;
+}
+.surahChip:hover { border-color: var(--gold); color: var(--brown); background: var(--gold-pale); }
+.chipNum { width: 20px; height: 20px; background: var(--gold-pale); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: .65rem; color: var(--brown); font-weight: 700; }
+
+@media (max-width: 600px) {
+  .grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .card { padding: 12px 10px; }
+  .juzNum { font-size: 1.5rem; }
+}
