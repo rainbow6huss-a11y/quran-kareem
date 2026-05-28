@@ -10,235 +10,218 @@ const RECITERS = [
 
 const SURAH_START = [];
 const AYAH_COUNTS = [7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,29,15,52,60,22,6,73,52,28,44,28,56,40,31,54,31,46,38,23,18,8,17,16,11,12,3,18,12,12,30,7,6,6,8,3,5,4,5,8,4,7,3,6,3,5,4,5,6,1,5,4,6,1,3,6,6,3,5,12,5,8,9,5,6,5,9,6,3,5,4,3,3,3,3,4,3,1,4,6,5,8,3,3,6,4];
-(function() { let c = 1; for (let i = 0; i < 114; i++) { SURAH_START[i] = c; c += AYAH_COUNTS[i]; } })();
-function globalAyah(surah, verse) { return SURAH_START[surah - 1] + (verse - 1); }
+(function(){ let c=1; for(let i=0;i<114;i++){SURAH_START[i]=c; c+=AYAH_COUNTS[i];} })();
+function globalAyah(s,v){ return SURAH_START[s-1]+(v-1); }
 
 export default function AudioPlayer({ surahNum, surahName, verses, playingVerse, onVerseChange }) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const [repeat, setRepeat] = useState(false);
-  const [reciter, setReciter] = useState('ar.alafasy');
-  const [loading, setLoading] = useState(false);
-  const [progress, setProgress] = useState(0);
-  const [currentTime, setCurrentTime] = useState(0);
-  const [duration, setDuration] = useState(0);
-  const [minimized, setMinimized] = useState(false);
+  const [repeat, setRepeat]       = useState(false);
+  const [reciter, setReciter]     = useState('ar.alafasy');
+  const [loading, setLoading]     = useState(false);
+  const [progress, setProgress]   = useState(0);
+  const [currentTime, setCT]      = useState(0);
+  const [duration, setDur]        = useState(0);
+  const [minimized, setMin]       = useState(false);
 
-  // مرجع واحد فقط للـ Audio
-  const audioRef = useRef(null);
-  const activeVerseRef = useRef(null);
-  const shouldPlayRef = useRef(false); // هل يجب التشغيل؟
-  const reciterRef = useRef('ar.alafasy');
-  const repeatRef = useRef(false);
-  const versesRef = useRef([]);
+  // ─── single <audio> element in DOM ───
+  const audioEl = useRef(null);
 
-  useEffect(() => { reciterRef.current = reciter; }, [reciter]);
-  useEffect(() => { repeatRef.current = repeat; }, [repeat]);
-  useEffect(() => { versesRef.current = verses || []; }, [verses]);
+  // ─── refs so callbacks always read fresh values ───
+  const activeVerse = useRef(null);
+  const repeatRef   = useRef(false);
+  const reciterRef  = useRef('ar.alafasy');
+  const versesRef   = useRef([]);
+  const playing     = useRef(false); // shadow of isPlaying for callbacks
 
-  // تنظيف عند تغيير السورة
-  useEffect(() => {
-    hardStop();
-  }, [surahNum]);
+  useEffect(()=>{ repeatRef.current  = repeat;  }, [repeat]);
+  useEffect(()=>{ reciterRef.current = reciter; }, [reciter]);
+  useEffect(()=>{ versesRef.current  = verses||[]; }, [verses]);
 
-  // عند تغيير الآية من الخارج (ضغط ▶)
-  useEffect(() => {
-    if (playingVerse && playingVerse !== activeVerseRef.current) {
-      loadAndPlay(playingVerse);
+  // ─── wire up the single audio element once ───
+  useEffect(()=>{
+    const a = audioEl.current;
+    if(!a) return;
+
+    a.oncanplay = ()=>{
+      setLoading(false);
+      if(playing.current) a.play().catch(()=>{});
+    };
+    a.ontimeupdate = ()=>{
+      setCT(a.currentTime);
+      if(a.duration) setProgress((a.currentTime/a.duration)*100);
+    };
+    a.onloadedmetadata = ()=>{ setDur(a.duration); };
+    a.onwaiting  = ()=>{ setLoading(true);  };
+    a.onplaying  = ()=>{ setLoading(false); setIsPlaying(true); playing.current=true; };
+    a.onpause    = ()=>{ setIsPlaying(false); playing.current=false; };
+    a.onerror    = ()=>{ setLoading(false);  setIsPlaying(false); playing.current=false; };
+
+    // انتهاء الآية → التالية أو تكرار
+    a.onended = ()=>{
+      if(repeatRef.current){
+        a.currentTime=0; a.play(); return;
+      }
+      const cur = activeVerse.current;
+      const next = versesRef.current.find(v=>v.number===cur+1);
+      if(next){ loadVerse(next.number); }
+      else    { stop(); onVerseChange?.(null); }
+    };
+
+    return ()=>{
+      a.oncanplay=a.ontimeupdate=a.onloadedmetadata=null;
+      a.onwaiting=a.onplaying=a.onpause=a.onerror=a.onended=null;
+    };
+  }, []);
+
+  // ─── reset on surah change ───
+  useEffect(()=>{ stop(); }, [surahNum]);
+
+  // ─── play when external verse changes ───
+  useEffect(()=>{
+    if(playingVerse && playingVerse !== activeVerse.current){
+      loadVerse(playingVerse);
     }
   }, [playingVerse]);
 
-  function hardStop() {
-    shouldPlayRef.current = false;
-    if (audioRef.current) {
-      audioRef.current.onended = null;
-      audioRef.current.ontimeupdate = null;
-      audioRef.current.oncanplay = null;
-      audioRef.current.onerror = null;
-      audioRef.current.pause();
-      audioRef.current.src = '';
-      audioRef.current.load();
-      audioRef.current = null;
-    }
-    activeVerseRef.current = null;
-    setIsPlaying(false);
-    setLoading(false);
-    setProgress(0);
-    setCurrentTime(0);
-    setDuration(0);
-  }
+  // ─── core: load a verse into the audio element ───
+  const loadVerse = useCallback((vNum)=>{
+    const a = audioEl.current;
+    if(!a || !surahNum || !vNum) return;
 
-  const loadAndPlay = useCallback((vNum) => {
-    if (!surahNum || !vNum) return;
-
-    // إيقاف القديم تماماً
-    hardStop();
-
-    activeVerseRef.current = vNum;
-    shouldPlayRef.current = true;
+    activeVerse.current = vNum;
+    playing.current     = true;
     onVerseChange?.(vNum);
-    setIsPlaying(true);
-    setLoading(true);
-    setProgress(0);
-    setCurrentTime(0);
 
-    const g = globalAyah(surahNum, vNum);
+    setLoading(true);
+    setProgress(0); setCT(0); setDur(0);
+
+    const g   = globalAyah(surahNum, vNum);
     const url = `https://cdn.islamic.network/quran/audio/128/${reciterRef.current}/${g}.mp3`;
 
-    const audio = new Audio();
-    audioRef.current = audio;
+    // change src → browser stops old audio automatically
+    a.src = url;
+    a.load();
+    // play() triggered inside oncanplay via playing.current flag
 
-    audio.oncanplay = () => {
-      if (!shouldPlayRef.current || audioRef.current !== audio) return;
-      setLoading(false);
-      audio.play().catch(() => {
-        setIsPlaying(false);
-        setLoading(false);
-      });
-    };
-
-    audio.ontimeupdate = () => {
-      if (audioRef.current !== audio) return;
-      setCurrentTime(audio.currentTime);
-      if (audio.duration) setProgress((audio.currentTime / audio.duration) * 100);
-    };
-
-    audio.onloadedmetadata = () => {
-      setDuration(audio.duration);
-    };
-
-    audio.onended = () => {
-      if (audioRef.current !== audio) return;
-      if (repeatRef.current) {
-        audio.currentTime = 0;
-        audio.play();
-        return;
-      }
-      // الآية التالية
-      const next = versesRef.current.find(v => v.number === vNum + 1);
-      if (next && shouldPlayRef.current) {
-        setTimeout(() => {
-          if (shouldPlayRef.current) loadAndPlay(next.number);
-        }, 400);
-      } else {
-        hardStop();
-        onVerseChange?.(null);
-      }
-    };
-
-    audio.onerror = () => {
-      if (audioRef.current !== audio) return;
-      setLoading(false);
-      setIsPlaying(false);
-    };
-
-    audio.src = url;
-    audio.load();
-
-    // Auto scroll
-    setTimeout(() => {
-      const el = document.getElementById(`v${vNum}`);
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }, 300);
+    // auto-scroll
+    setTimeout(()=>{
+      document.getElementById(`v${vNum}`)
+        ?.scrollIntoView({ behavior:'smooth', block:'center' });
+    }, 250);
   }, [surahNum]);
 
-  function togglePlay() {
-    if (!audioRef.current || !activeVerseRef.current) {
-      // ابدأ من أول آية
+  function stop(){
+    const a = audioEl.current;
+    if(a){ a.pause(); a.src=''; a.load(); }
+    playing.current     = false;
+    activeVerse.current = null;
+    setIsPlaying(false); setLoading(false);
+    setProgress(0); setCT(0); setDur(0);
+  }
+
+  function togglePlay(){
+    const a = audioEl.current;
+    if(!a) return;
+
+    if(!activeVerse.current){
+      // لا توجد آية محددة → ابدأ من الأولى
       const first = versesRef.current[0]?.number;
-      if (first) loadAndPlay(first);
+      if(first) loadVerse(first);
       return;
     }
-    if (isPlaying) {
-      // إيقاف مؤقت — لا تمسح الـ audio
-      shouldPlayRef.current = false;
-      audioRef.current.pause();
-      setIsPlaying(false);
+
+    if(isPlaying){
+      a.pause();
     } else {
-      // استكمال
-      shouldPlayRef.current = true;
-      audioRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+      playing.current = true;
+      a.play().catch(()=>{ playing.current=false; setIsPlaying(false); });
     }
   }
 
-  function prevVerse() {
-    const cur = activeVerseRef.current || 1;
-    if (cur <= 1) return;
-    loadAndPlay(cur - 1);
+  function prev(){
+    const cur = activeVerse.current || 1;
+    if(cur > 1) loadVerse(cur-1);
   }
 
-  function nextVerse() {
-    const cur = activeVerseRef.current || 0;
-    const next = versesRef.current.find(v => v.number === cur + 1);
-    if (next) loadAndPlay(next.number);
+  function next(){
+    const cur  = activeVerse.current || 0;
+    const nxt  = versesRef.current.find(v=>v.number===cur+1);
+    if(nxt) loadVerse(nxt.number);
   }
 
-  function seek(e) {
-    if (!audioRef.current || !duration) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-    audioRef.current.currentTime = pct * duration;
+  function seek(e){
+    const a = audioEl.current;
+    if(!a || !a.duration) return;
+    const r   = e.currentTarget.getBoundingClientRect();
+    const pct = Math.max(0, Math.min(1,(e.clientX-r.left)/r.width));
+    a.currentTime = pct * a.duration;
   }
 
-  function changeReciter(val) {
-    setReciter(val);
+  function changeReciter(val){
     reciterRef.current = val;
-    if (isPlaying && activeVerseRef.current) {
-      setTimeout(() => loadAndPlay(activeVerseRef.current), 50);
-    }
+    setReciter(val);
+    if(activeVerse.current) setTimeout(()=>loadVerse(activeVerse.current), 50);
   }
 
-  function formatTime(t) {
-    if (!t || isNaN(t)) return '0:00';
+  function fmt(t){
+    if(!t||isNaN(t)) return '0:00';
     return `${Math.floor(t/60)}:${Math.floor(t%60).toString().padStart(2,'0')}`;
   }
 
-  if (!surahNum) return null;
+  if(!surahNum) return null;
 
   return (
-    <div className={`${styles.player} ${minimized ? styles.minimized : ''}`}>
-      <div className={styles.progressWrap} onClick={seek}>
-        <div className={styles.progressBg}>
-          <div className={styles.progressFill} style={{ width: `${progress}%` }}>
-            <div className={styles.progressDot} />
+    <>
+      {/* العنصر الصوتي الوحيد في DOM */}
+      <audio ref={audioEl} style={{display:'none'}} preload="auto" />
+
+      <div className={`${styles.player} ${minimized?styles.minimized:''}`}>
+        {/* شريط التقدم */}
+        <div className={styles.progressWrap} onClick={seek}>
+          <div className={styles.progressBg}>
+            <div className={styles.progressFill} style={{width:`${progress}%`}}>
+              <div className={styles.progressDot}/>
+            </div>
+          </div>
+        </div>
+
+        <div className={styles.inner}>
+          {/* معلومات */}
+          <div className={styles.info}>
+            <div className={styles.surahLabel}>{surahName||'—'}</div>
+            <div className={styles.verseLabel}>
+              {activeVerse.current
+                ? <span className={styles.verseNum}>آية {activeVerse.current}</span>
+                : <span className={styles.verseHint}>اضغط ▶ على أي آية</span>}
+              {loading && <span className={styles.dot}>◌</span>}
+            </div>
+            <div className={styles.time}>{fmt(currentTime)} / {fmt(duration)}</div>
+          </div>
+
+          {/* تحكم */}
+          <div className={styles.controls}>
+            <button className={styles.ctrl} onClick={prev}>⏮</button>
+            <button className={styles.mainBtn} onClick={togglePlay}>
+              {loading ? <span className={styles.spinner}/> : isPlaying ? '⏸' : '▶'}
+            </button>
+            <button className={styles.ctrl} onClick={next}>⏭</button>
+          </div>
+
+          {/* خيارات */}
+          <div className={styles.opts}>
+            <button
+              className={`${styles.opt} ${repeat?styles.optOn:''}`}
+              onClick={()=>setRepeat(v=>!v)}
+              title="تكرار الآية">🔁</button>
+            <select className={styles.sel} value={reciter} onChange={e=>changeReciter(e.target.value)}>
+              {RECITERS.map(r=><option key={r.id} value={r.id}>{r.name}</option>)}
+            </select>
+            <button className={styles.minBtn} onClick={()=>setMin(v=>!v)}>
+              {minimized?'▲':'▼'}
+            </button>
           </div>
         </div>
       </div>
-
-      <div className={styles.inner}>
-        <div className={styles.info}>
-          <div className={styles.surahLabel}>{surahName || '—'}</div>
-          <div className={styles.verseLabel}>
-            {activeVerseRef.current
-              ? <span className={styles.verseNum}>آية {activeVerseRef.current}</span>
-              : <span className={styles.verseHint}>اضغط ▶ على أي آية</span>}
-            {loading && <span className={styles.loadingAnim}>◌</span>}
-          </div>
-          <div className={styles.timeDisplay}>
-            <span>{formatTime(currentTime)}</span>
-            <span className={styles.timeSep}>/</span>
-            <span>{formatTime(duration)}</span>
-          </div>
-        </div>
-
-        <div className={styles.controls}>
-          <button className={styles.ctrlBtn} onClick={prevVerse}>⏮</button>
-          <button className={styles.mainPlayBtn} onClick={togglePlay}>
-            {loading ? <span className={styles.spinner} /> : isPlaying ? '⏸' : '▶'}
-          </button>
-          <button className={styles.ctrlBtn} onClick={nextVerse}>⏭</button>
-        </div>
-
-        <div className={styles.options}>
-          <button className={`${styles.optBtn} ${repeat ? styles.optActive : ''}`}
-            onClick={() => setRepeat(v => !v)} title="تكرار">🔁</button>
-          <select className={styles.reciterSel} value={reciter} onChange={e => changeReciter(e.target.value)}>
-            {RECITERS.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
-          </select>
-          <button className={styles.minBtn} onClick={() => setMinimized(v => !v)}>
-            {minimized ? '▲' : '▼'}
-          </button>
-        </div>
-      </div>
-    </div>
+    </>
   );
 }
