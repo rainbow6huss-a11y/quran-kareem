@@ -192,13 +192,37 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
     document.getElementById(`v${vNum}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  function toggleBookmark(vNum) {
+  async function toggleBookmark(vNum) {
+    const isBmNow = isBm(vNum);
+    // تحديث محلي فوري
     let saved = JSON.parse(localStorage.getItem('q_bookmarks') || '[]');
-    const idx = saved.findIndex(b => b.s === surahNum && b.v === vNum);
-    if (idx > -1) { saved.splice(idx, 1); showToast('تم إزالة العلامة'); }
-    else { saved.push({ s: surahNum, v: vNum, sName: surah?.name }); showToast('🔖 تم الحفظ'); }
+    if (isBmNow) {
+      saved = saved.filter(b => !(b.s === surahNum && b.v === vNum));
+      showToast('تم إزالة العلامة');
+    } else {
+      const verseText = verses.find(v => v.number === vNum)?.text || '';
+      saved.push({ s: surahNum, v: vNum, sName: surah?.name, t: verseText });
+      showToast('🔖 تم الحفظ');
+    }
     localStorage.setItem('q_bookmarks', JSON.stringify(saved));
     setBookmarks(saved);
+
+    // حفظ في Supabase
+    if (user) {
+      if (isBmNow) {
+        await supabase.from('bookmarks').delete()
+          .eq('user_id', user.id).eq('surah_num', surahNum).eq('verse_num', vNum);
+      } else {
+        const verseText = verses.find(v => v.number === vNum)?.text || '';
+        await supabase.from('bookmarks').insert({
+          user_id: user.id,
+          surah_num: surahNum,
+          verse_num: vNum,
+          surah_name: surah?.name,
+          verse_text: verseText,
+        });
+      }
+    }
   }
 
   function copyVerse(vNum) {
