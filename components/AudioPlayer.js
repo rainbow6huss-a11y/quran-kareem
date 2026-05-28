@@ -24,6 +24,7 @@ export default function AudioPlayer({ surahNum, surahName, verses, playingVerse,
   const [duration,  setDuration]  = useState(0);
   const [minimized, setMinimized] = useState(false);
   const [buffering, setBuffering] = useState(false);
+  const [speed, setSpeed] = useState(1);
 
   // ─── Single DOM audio element ───
   const audioEl   = useRef(null);
@@ -37,6 +38,7 @@ export default function AudioPlayer({ surahNum, surahName, verses, playingVerse,
   const reciterRef   = useRef('ar.alafasy');
   const versesRef    = useRef([]);
   const isPlayingRef = useRef(false);
+  const speedRef = useRef(1);
   // Debounce rapid taps
   const loadingVerse = useRef(null);
 
@@ -117,6 +119,7 @@ export default function AudioPlayer({ surahNum, surahName, verses, playingVerse,
     // Change src — browser stops old audio automatically
     a.src = verseUrl(reciterRef.current, sNum, vNum);
     a.load();
+    a.playbackRate = speedRef.current;
     // play triggered inside oncanplay via isPlayingRef
 
     // ─── PRELOAD next verse ───
@@ -179,6 +182,13 @@ export default function AudioPlayer({ surahNum, surahName, verses, playingVerse,
     if(activeVerse.current && surahNum) setTimeout(()=>loadVerse(surahNum,activeVerse.current),50);
   }
 
+  function changeSpeed(val){
+    speedRef.current = val;
+    setSpeed(val);
+    const a = audioEl.current;
+    if(a) a.playbackRate = val;
+  }
+
   function fmt(t){
     if(!t||isNaN(t)) return '0:00';
     return `${Math.floor(t/60)}:${Math.floor(t%60).toString().padStart(2,'0')}`;
@@ -216,16 +226,31 @@ export default function AudioPlayer({ surahNum, surahName, verses, playingVerse,
 
           {/* Controls */}
           <div className={styles.controls}>
-            <button className={styles.ctrl} onClick={prev} disabled={!activeVerse.current||activeVerse.current<=1}>⏮</button>
-            <button className={styles.mainBtn} onClick={togglePlay}>
-              {(loading||buffering) ? <span className={styles.spinner}/> : isPlaying ? '⏸' : '▶'}
+            <button className={styles.ctrl} onClick={prev} disabled={!activeVerse.current||activeVerse.current<=1} title="الآية السابقة">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg>
             </button>
-            <button className={styles.ctrl} onClick={next}>⏭</button>
+            <button className={styles.mainBtn} onClick={togglePlay}>
+              {(loading||buffering) ? <span className={styles.spinner}/> : isPlaying
+                ? <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                : <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>}
+            </button>
+            <button className={styles.ctrl} onClick={next} title="الآية التالية">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M6 18l8.5-6L6 6v12zm2.5-6 5.5 3.9V8.1L8.5 12zM16 6h2v12h-2z"/></svg>
+            </button>
           </div>
 
           {/* Options */}
           <div className={styles.opts}>
-            <button className={`${styles.opt} ${repeat?styles.optOn:''}`} onClick={()=>setRepeat(v=>!v)} title="تكرار">🔁</button>
+            <button className={`${styles.opt} ${repeat?styles.optOn:''}`} onClick={()=>setRepeat(v=>!v)} title="تكرار الآية">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M7 7h10v3l4-4-4-4v3H5v6h2V7zm10 10H7v-3l-4 4 4 4v-3h12v-6h-2v4z"/></svg>
+            </button>
+            <select className={styles.speedSel} value={speed} onChange={e=>changeSpeed(parseFloat(e.target.value))} title="سرعة التشغيل">
+              <option value={0.5}>0.5×</option>
+              <option value={0.75}>0.75×</option>
+              <option value={1}>1×</option>
+              <option value={1.25}>1.25×</option>
+              <option value={1.5}>1.5×</option>
+            </select>
             <select className={styles.sel} value={reciter} onChange={e=>changeReciter(e.target.value)}>
               {RECITERS.map(r=><option key={r.id} value={r.id}>{r.name}</option>)}
             </select>
