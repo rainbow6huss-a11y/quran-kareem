@@ -95,8 +95,21 @@ export default function SurahPage({ toggleDark, dark, showToast, user, onAuth })
         tafsir: tafsir.data?.ayahs?.[i]?.text || '',
       })));
       setLoading(false);
-      // حفظ عند فتح السورة
       saveLastRead(surahNum, 1);
+      // التمرير للآية المحددة في الرابط (#v142 مثلاً)
+      setTimeout(() => {
+        const hash = window.location.hash;
+        if (hash && hash.startsWith('#v')) {
+          const verseEl = document.querySelector(hash);
+          if (verseEl) {
+            verseEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            // تمييز الآية لثانيتين
+            verseEl.style.transition = 'background 0.3s';
+            verseEl.style.background = 'rgba(184,151,58,0.15)';
+            setTimeout(() => { verseEl.style.background = ''; }, 2000);
+          }
+        }
+      }, 800);
     }).catch(() => setLoading(false));
 
     return () => {
