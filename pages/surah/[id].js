@@ -3,9 +3,9 @@ import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Navbar from '../../components/Navbar';
+import { supabase } from '../../lib/supabase';
 import styles from '../../styles/Surah.module.css';
 
-// Global ayah offsets for 100% accurate audio URLs
 const SURAH_START = [];
 const AYAH_COUNTS = [7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,29,15,52,60,22,6,73,52,28,44,28,56,40,31,54,31,46,38,23,18,8,17,16,11,12,3,18,12,12,30,7,6,6,8,3,5,4,5,8,4,7,3,6,3,5,4,5,6,1,5,4,6,1,3,6,6,3,5,12,5,8,9,5,6,5,9,6,3,5,4,3,3,3,3,4,3,1,4,6,5,8,3,3,6,4];
 (function() { let c = 1; for (let i = 0; i < 114; i++) { SURAH_START[i] = c; c += AYAH_COUNTS[i]; } })();
@@ -19,7 +19,7 @@ const RECITERS = [
   { name: 'محمد صديق المنشاوي', id: 'ar.minshawi' },
 ];
 
-export default function SurahPage({ toggleDark, dark, showToast }) {
+export default function SurahPage({ toggleDark, dark, showToast, user, onAuth }) {
   const router = useRouter();
   const { id } = router.query;
   const surahNum = parseInt(id);
@@ -28,7 +28,7 @@ export default function SurahPage({ toggleDark, dark, showToast }) {
   const [verses, setVerses] = useState([]);
   const [wordData, setWordData] = useState({});
   const [loading, setLoading] = useState(true);
-  const [tab, setTab] = useState('read'); // read | tafsir | listen | words
+  const [tab, setTab] = useState('read');
   const [fontSize, setFontSize] = useState(1.75);
   const [reciter, setReciter] = useState('ar.alafasy');
   const [playingVerse, setPlayingVerse] = useState(null);
@@ -41,7 +41,6 @@ export default function SurahPage({ toggleDark, dark, showToast }) {
     setLoading(true);
     setVerses([]);
     setSurah(null);
-
     const saved = JSON.parse(localStorage.getItem('q_bookmarks') || '[]');
     setBookmarks(saved);
 
@@ -56,10 +55,32 @@ export default function SurahPage({ toggleDark, dark, showToast }) {
         tafsir: tafsir.data?.ayahs?.[i]?.text || '',
       })));
       setLoading(false);
+      // حفظ آخر قراءة
+      saveLastRead(surahNum, 1);
     }).catch(() => setLoading(false));
   }, [surahNum]);
 
-  // Fetch word-by-word when tab selected
+  // حفظ آخر قراءة في Supabase أو localStorage
+  async function saveLastRead(sNum, vNum) {
+    localStorage.setItem('q_last_read', JSON.stringify({ surah: sNum, verse: vNum }));
+    if (user) {
+      const { data: existing } = await supabase
+        .from('last_read')
+        .select('id')
+        .eq('user_id', user.id)
+        .single();
+      if (existing) {
+        await supabase.from('last_read').update({
+          surah_num: sNum, verse_num: vNum, updated_at: new Date().toISOString()
+        }).eq('user_id', user.id);
+      } else {
+        await supabase.from('last_read').insert({
+          user_id: user.id, surah_num: sNum, verse_num: vNum
+        });
+      }
+    }
+  }
+
   useEffect(() => {
     if (tab !== 'words' || !surahNum || Object.keys(wordData).length > 0) return;
     fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/en.transliteration`)
@@ -76,24 +97,9 @@ export default function SurahPage({ toggleDark, dark, showToast }) {
     setPlayingVerse(null);
   }
 
-  function playVerse(vNum) {
-    stopAudio();
-    if (playingVerse === vNum) return;
-    const g = globalAyah(surahNum, vNum);
-    const url = `https://cdn.islamic.network/quran/audio/128/${reciter}/${g}.mp3`;
-    const audio = new Audio(url);
-    audioRef.current = audio;
-    audio.play();
-    setPlayingVerse(vNum);
-    audio.addEventListener('ended', () => {
-      setPlayingVerse(null);
-      audioRef.current = null;
-      // Auto play next
-      const next = verses.find(v => v.number === vNum + 1);
-      if (next) setTimeout(() => playVerse(next.number), 400);
-    });
-    // scroll verse into view
-    document.getElementById(`v${vNum}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  function getReciterId() {
+    const sel = document.getElementById('reciterSelect');
+    return sel ? sel.value : RECITERS[0].id;
   }
 
   function playSurah() {
@@ -103,6 +109,26 @@ export default function SurahPage({ toggleDark, dark, showToast }) {
     audioRef.current = audio;
     audio.play();
     showToast('▶ جارٍ تشغيل سورة ' + surah?.name);
+  }
+
+  function playVerse(vNum) {
+    stopAudio();
+    if (playingVerse === vNum) return;
+    const g = globalAyah(surahNum, vNum);
+    const url = `https://cdn.islamic.network/quran/audio/128/${reciter}/${g}.mp3`;
+    const audio = new Audio(url);
+    audioRef.current = audio;
+    audio.play();
+    setPlayingVerse(vNum);
+    // حفظ موضع القراءة عند تشغيل آية
+    saveLastRead(surahNum, vNum);
+    audio.addEventListener('ended', () => {
+      setPlayingVerse(null);
+      audioRef.current = null;
+      const next = verses.find(v => v.number === vNum + 1);
+      if (next) setTimeout(() => playVerse(next.number), 400);
+    });
+    document.getElementById(`v${vNum}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
   function toggleBookmark(vNum) {
@@ -130,10 +156,9 @@ export default function SurahPage({ toggleDark, dark, showToast }) {
       <Head>
         <title>{surah ? `سورة ${surah.name} - القرآن الكريم` : 'جارٍ التحميل...'}</title>
       </Head>
-      <Navbar toggleDark={toggleDark} dark={dark} showToast={showToast} />
+      <Navbar toggleDark={toggleDark} dark={dark} showToast={showToast} onAuth={onAuth} />
 
       <div className={styles.page}>
-        {/* Breadcrumb */}
         <div className={styles.breadcrumb}>
           <Link href="/">الرئيسية</Link>
           <span>›</span>
@@ -144,7 +169,6 @@ export default function SurahPage({ toggleDark, dark, showToast }) {
           <div className="loading"><div className="loader" /><div>جارٍ تحميل السورة...</div></div>
         ) : surah ? (
           <>
-            {/* Surah Header */}
             <div className={styles.surahHeader}>
               <div className={styles.surahNav}>
                 {surahNum > 1 && <Link href={`/surah/${surahNum - 1}`} className={styles.navArrow}>› السابقة</Link>}
@@ -161,18 +185,16 @@ export default function SurahPage({ toggleDark, dark, showToast }) {
               {surahNum !== 9 && <div className={styles.bismillah}>بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>}
             </div>
 
-            {/* Tabs */}
             <div className={styles.tabs}>
               {[['read','📖 القراءة'],['tafsir','📚 التفسير'],['listen','🎧 الاستماع'],['words','🔤 كلمة بكلمة']].map(([v,l]) => (
                 <button key={v} className={`${styles.tab} ${tab===v?styles.tabActive:''}`} onClick={() => setTab(v)}>{l}</button>
               ))}
             </div>
 
-            {/* Toolbar */}
             <div className={styles.toolbar}>
               <div className={styles.toolGroup}>
                 <label>القارئ:</label>
-                <select className={styles.select} value={reciter} onChange={e => { setReciter(e.target.value); stopAudio(); }}>
+                <select className={styles.select} id="reciterSelect" value={reciter} onChange={e => { setReciter(e.target.value); stopAudio(); }}>
                   {RECITERS.map(r => <option key={r.id} value={r.id}>{r.name}</option>)}
                 </select>
                 <button className={styles.playAllBtn} onClick={playSurah}>▶ السورة كاملة</button>
@@ -187,10 +209,7 @@ export default function SurahPage({ toggleDark, dark, showToast }) {
               )}
             </div>
 
-            {/* Content */}
             <div className={styles.content}>
-
-              {/* READ TAB */}
               {tab === 'read' && (
                 <div className={styles.verses}>
                   {verses.map(v => (
@@ -200,12 +219,9 @@ export default function SurahPage({ toggleDark, dark, showToast }) {
                         <div className={styles.verseNum}>{v.number}</div>
                         <div className={styles.verseBody}>
                           <div className={styles.verseText} style={{ fontSize: `${fontSize}rem` }}>{v.text}</div>
-                          {showTrans && v.tafsir && (
-                            <div className={styles.verseTrans}>{v.tafsir}</div>
-                          )}
+                          {showTrans && v.tafsir && <div className={styles.verseTrans}>{v.tafsir}</div>}
                         </div>
-                        <button
-                          className={`${styles.playBtn} ${playingVerse === v.number ? styles.playBtnActive : ''}`}
+                        <button className={`${styles.playBtn} ${playingVerse === v.number ? styles.playBtnActive : ''}`}
                           onClick={() => playingVerse === v.number ? stopAudio() : playVerse(v.number)}>
                           {playingVerse === v.number ? '⏸' : '▶'}
                         </button>
@@ -222,7 +238,6 @@ export default function SurahPage({ toggleDark, dark, showToast }) {
                 </div>
               )}
 
-              {/* TAFSIR TAB */}
               {tab === 'tafsir' && (
                 <div className={styles.tafsirList}>
                   {verses.map(v => (
@@ -236,7 +251,6 @@ export default function SurahPage({ toggleDark, dark, showToast }) {
                 </div>
               )}
 
-              {/* LISTEN TAB */}
               {tab === 'listen' && (
                 <div className={styles.listenTab}>
                   <div className={styles.listenCard}>
@@ -259,7 +273,6 @@ export default function SurahPage({ toggleDark, dark, showToast }) {
                 </div>
               )}
 
-              {/* WORD BY WORD TAB */}
               {tab === 'words' && (
                 <div className={styles.wordsList}>
                   {verses.map(v => (
