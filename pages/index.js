@@ -73,7 +73,15 @@ export default function Home({ toggleDark, dark, showToast, user, onAuth }) {
         <div className={styles.ornament}>❧ ✦ ❧</div>
         <div className={styles.bismillah}>بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
         <h1 className={styles.title}>القرآن الكريم</h1>
-        <p className={styles.sub}>قراءة · استماع · تفسير · ختمة</p>
+        <div className={styles.subLinks}>
+          <Link href="/surah/1" className={styles.subLink}>📖 قراءة</Link>
+          <span className={styles.subDot}>·</span>
+          <Link href="/surah/1#listen" className={styles.subLink}>🎧 استماع</Link>
+          <span className={styles.subDot}>·</span>
+          <Link href="/surah/1#tafsir" className={styles.subLink}>📚 تفسير</Link>
+          <span className={styles.subDot}>·</span>
+          <Link href="/khatma" className={styles.subLink}>🌙 ختمة</Link>
+        </div>
         <div className={styles.ayahBox}>
           <div className={styles.ayahLabel}>✦ آية اليوم ✦</div>
           <div className={styles.ayahText}>{ayah}</div>
@@ -127,12 +135,31 @@ export default function Home({ toggleDark, dark, showToast, user, onAuth }) {
           <div className={styles.stat}><span>١١٤</span> سورة كريمة</div>
         </div>
 
+        {/* Jump to juz */}
+        <div className={styles.juzJump}>
+          <span className={styles.juzLabel}>انتقل إلى الجزء:</span>
+          <div className={styles.juzBtns}>
+            {[1,5,10,15,20,25,30].map(j => (
+              <button key={j} className={styles.juzBtn} onClick={() => {
+                const el = document.getElementById(`juz-${j}`);
+                if(el) el.scrollIntoView({behavior:'smooth', block:'start'});
+              }}>{j}</button>
+            ))}
+          </div>
+        </div>
+
         {loading ? (
           <SurahListSkeleton />
         ) : (
           <div className={styles.grid}>
-            {filtered.map(s => (
-              <Link key={s.number} href={`/surah/${s.number}`} className={styles.card}>
+            {filtered.map(s => {
+              const juzEntry = Object.entries({1:1,2:2,3:3,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:11,12:12,13:13,14:15,15:17,16:18,17:19,18:20,19:21,20:22,21:23,22:24,23:25,24:27,25:29,26:31,27:33,28:36,29:40,30:67}).find(([,sNum]) => sNum === s.number);
+              return (
+              <div key={s.number} id={juzEntry ? `juz-${juzEntry[0]}` : undefined}>
+              {juzEntry && (
+                <div className={styles.juzMarker}>الجزء {juzEntry[0]}</div>
+              )}
+              <Link href={`/surah/${s.number}`} className={styles.card}>
                 <div className={styles.cardNum}>{s.number}</div>
                 <div className={styles.cardInfo}>
                   <div className={styles.cardName}>{s.name}</div>
@@ -140,7 +167,9 @@ export default function Home({ toggleDark, dark, showToast, user, onAuth }) {
                 </div>
                 <div className={styles.cardEn}>{s.englishName}</div>
               </Link>
-            ))}
+              </div>
+            );
+            })}
           </div>
         )}
       </div>
