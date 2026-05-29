@@ -271,21 +271,17 @@ ${url}`;
             {tab==='read' && (
               <div className={styles.fontControls}>
                 <div className={styles.fontSizeRow}>
-                  <button className={styles.fontIconBtn} onClick={()=>{ const v=Math.max(1.1,fontSize-.15); setFontSize(v); localStorage.setItem('q_font_size',v); }} title="تصغير">
-                    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M9 4v3h5v12h3V7h5V4H9zm-6 8h3v7h2v-7h3v-2H3v2z"/></svg>
-                  </button>
+                  <button className={styles.fontIconBtn} onClick={()=>{ const v=parseFloat((Math.max(1.1,fontSize-.2)).toFixed(2)); setFontSize(v); localStorage.setItem('q_font_size',String(v)); }}>أ−</button>
                   <div className={styles.fontSteps}>
-                    {[100,125,150,175,200].map(p=>(
-                      <button key={p}
-                        className={`${styles.fontStep} ${Math.round(fontSize*100)===p?styles.fontStepActive:''}`}
-                        onClick={()=>{ const v=p/100; setFontSize(v); localStorage.setItem('q_font_size',v); }}>
-                        {p}
+                    {[[1.0,'صغير'],[1.4,'وسط'],[1.8,'كبير'],[2.2,'أكبر']].map(([v,l])=>(
+                      <button key={v}
+                        className={`${styles.fontStep} ${Math.abs(fontSize-v)<0.1?styles.fontStepActive:''}`}
+                        onClick={()=>{ setFontSize(v); localStorage.setItem('q_font_size',String(v)); }}>
+                        {l}
                       </button>
                     ))}
                   </div>
-                  <button className={styles.fontIconBtn} onClick={()=>{ const v=Math.min(2.5,fontSize+.15); setFontSize(v); localStorage.setItem('q_font_size',v); }} title="تكبير">
-                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9 4v3h5v12h3V7h5V4H9zm-6 8h3v7h2v-7h3v-2H3v2z"/></svg>
-                  </button>
+                  <button className={styles.fontIconBtn} onClick={()=>{ const v=parseFloat((Math.min(2.5,fontSize+.2)).toFixed(2)); setFontSize(v); localStorage.setItem('q_font_size',String(v)); }}>أ+</button>
                 </div>
                 <div className={styles.fontRow}>
                   <select className={styles.fontSelect} value={fontFamily} onChange={e=>{ setFontFamily(e.target.value); localStorage.setItem('q_font_family', e.target.value); }}>
