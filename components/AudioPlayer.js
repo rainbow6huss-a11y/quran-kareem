@@ -206,7 +206,10 @@ export default function AudioPlayer({ surahNum, surahName, verses, playingVerse,
     <>
       <audio ref={audioEl} style={{display:'none'}} preload="auto"/>
 
-      <div className={`${styles.player} ${minimized?styles.minimized:''}`}>
+      <div className={styles.player} style={{
+        transform: minimized ? 'translateY(calc(100% - 34px))' : 'translateY(0)',
+        transition: 'transform .35s cubic-bezier(.4,0,.2,1)',
+      }}>
         {/* Progress bar */}
         <div className={styles.progressWrap} onClick={seek}>
           <div className={styles.progressBg}>
@@ -260,7 +263,10 @@ export default function AudioPlayer({ surahNum, surahName, verses, playingVerse,
             <select className={styles.sel} value={reciter} onChange={e=>changeReciter(e.target.value)}>
               {RECITERS.map(r=><option key={r.id} value={r.id}>{r.name}</option>)}
             </select>
-            <button className={styles.minBtn} onClick={()=>setMinimized(v=>!v)}>{minimized?'▲':'▼'}</button>
+            <button className={styles.minBtn} onClick={()=>setMinimized(v=>!v)}
+              style={{transform: minimized?'rotate(0)':'rotate(180deg)', transition:'transform .3s'}}>
+              ▲
+            </button>
           </div>
         </div>
       </div>

@@ -246,3 +246,20 @@ body.dark .speedSel { background: #1a2a1e; }
   .reciterSel { max-width: 62px; font-size: .62rem; }
   .speedSel { width: 38px; }
 }
+
+/* ── Minimize fix ── */
+.player {
+  will-change: transform;
+}
+.minBtn {
+  position: relative;
+  z-index: 10;
+  background: var(--gold-pale) !important;
+  border-color: var(--gold) !important;
+  color: var(--brown) !important;
+  font-size: .8rem !important;
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 8px !important;
+  flex-shrink: 0;
+}
