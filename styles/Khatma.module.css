@@ -110,3 +110,24 @@
   transition: all .2s;
 }
 .khatmDuaBtn:hover { background: var(--green-light); transform: translateY(-2px); }
+
+/* ── Mobile Khatma ── */
+@media (max-width: 768px) {
+  .page { padding: 14px 10px 60px; }
+  .title { font-size: 1.4rem; }
+  .statsRow { gap: 5px; }
+  .statCard { min-width: 60px; padding: 7px 6px; }
+  .statNum { font-size: 1.1rem; }
+  .statLabel { font-size: .6rem; }
+  .plans { gap: 4px; }
+  .planBtn { min-width: 52px; padding: 6px 8px; }
+  .planDays { font-size: 1rem; }
+  .wirdCard { padding: 12px 14px; }
+  .wirdStats { gap: 4px; padding: 8px 10px; }
+  .wirdStat strong { font-size: .85rem; }
+  .surahGrid { grid-template-columns: repeat(auto-fill, minmax(75px, 1fr)); gap: 4px; }
+  .surahBtn { padding: 6px 4px; font-size: .7rem; }
+  .logDays { gap: 3px; }
+  .logDay { padding: 6px 2px; }
+  .logDayName { font-size: .58rem; }
+}
