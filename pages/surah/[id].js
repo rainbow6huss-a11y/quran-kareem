@@ -224,20 +224,15 @@ ${url}`;
         <div style={{
           position:'fixed', top:'56px', left:0, right:0, zIndex:998,
           height:'4px', background:'rgba(0,0,0,.08)',
+          direction:'ltr',
         }}>
           <div style={{
             height:'100%', width:`${readPct}%`,
             background:'linear-gradient(90deg,#2d5a3d,#c9a84c)',
             transition:'width .6s ease',
+            marginLeft:'auto',
+            float:'right',
           }}/>
-          <div style={{
-            position:'absolute', right:`${100-Math.min(readPct,96)}%`,
-            top:'6px', fontSize:'.62rem', color:'var(--gold)',
-            fontFamily:'Tajawal,sans-serif', fontWeight:'700',
-            background:'var(--parchment)', padding:'1px 5px',
-            borderRadius:'6px', border:'1px solid var(--border)',
-            whiteSpace:'nowrap', pointerEvents:'none',
-          }}>{readPct}%</div>
         </div>
       )}
       <div className={styles.page} style={{ paddingBottom: '90px', paddingTop: readPct > 0 ? '10px' : '0' }}>
@@ -276,19 +271,21 @@ ${url}`;
             {tab==='read' && (
               <div className={styles.fontControls}>
                 <div className={styles.fontSizeRow}>
-                  <button className={styles.fontIconBtn} onClick={()=>setFontSize(f=>Math.max(1.1,f-.1))} title="تصغير">
+                  <button className={styles.fontIconBtn} onClick={()=>{ const v=Math.max(1.1,fontSize-.15); setFontSize(v); localStorage.setItem('q_font_size',v); }} title="تصغير">
                     <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M9 4v3h5v12h3V7h5V4H9zm-6 8h3v7h2v-7h3v-2H3v2z"/></svg>
                   </button>
-                  <input type="range" min="1.1" max="2.5" step="0.05"
-                    value={fontSize}
-                    onChange={e=>{ const v=parseFloat(e.target.value); setFontSize(v); localStorage.setItem('q_font_size', v); }}
-                    className={styles.fontSlider}
-                    title={`حجم الخط: ${Math.round(fontSize*100)}%`}
-                  />
-                  <button className={styles.fontIconBtn} onClick={()=>setFontSize(f=>Math.min(2.5,f+.1))} title="تكبير">
+                  <div className={styles.fontSteps}>
+                    {[100,125,150,175,200,225].map(p=>(
+                      <button key={p}
+                        className={`${styles.fontStep} ${Math.round(fontSize*100)===p?styles.fontStepActive:''}`}
+                        onClick={()=>{ const v=p/100; setFontSize(v); localStorage.setItem('q_font_size',v); }}>
+                        {p}%
+                      </button>
+                    ))}
+                  </div>
+                  <button className={styles.fontIconBtn} onClick={()=>{ const v=Math.min(2.5,fontSize+.15); setFontSize(v); localStorage.setItem('q_font_size',v); }} title="تكبير">
                     <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9 4v3h5v12h3V7h5V4H9zm-6 8h3v7h2v-7h3v-2H3v2z"/></svg>
                   </button>
-                  <span className={styles.fontSizeLabel}>{Math.round(fontSize*100)}%</span>
                 </div>
                 <div className={styles.fontRow}>
                   <select className={styles.fontSelect} value={fontFamily} onChange={e=>{ setFontFamily(e.target.value); localStorage.setItem('q_font_family', e.target.value); }}>
