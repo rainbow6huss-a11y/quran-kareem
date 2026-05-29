@@ -181,11 +181,37 @@ export default function SurahPage({
 
   function isBm(vNum) { return bookmarks.some(b => b.s === surahNum && b.v === vNum); }
 
+  function shareVerse(vNum) {
+    const v = verses.find(x => x.number === vNum);
+    if (!v) return;
+    const url = `${window.location.origin}/surah/${surahNum}#v${vNum}`;
+    const text = `${v.text}
+
+[${surah?.name} - آية ${vNum}]
+${url}`;
+    if (navigator.share) {
+      navigator.share({ title: `${surah?.name} - آية ${vNum}`, text: v.text, url });
+    } else {
+      navigator.clipboard.writeText(text);
+      showToast('📋 تم نسخ الآية والرابط');
+    }
+  }
+
   if (!surahNum) return null;
 
   return (
     <>
-      <Head><title>{surah ? `${surah.name} - القرآن الكريم` : 'جارٍ التحميل...'}</title></Head>
+      <Head>
+        <title>{surah ? `${surah.name} - القرآن الكريم` : 'جارٍ التحميل...'}</title>
+        {surah && <>
+          <meta name="description" content={`اقرأ ${surah.name} - ${surah.numberOfAyahs} آية - ${surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'}`} />
+          <meta property="og:title" content={`${surah.name} - القرآن الكريم`} />
+          <meta property="og:description" content={`اقرأ واستمع إلى ${surah.name} مع التفسير والترجمة`} />
+          <meta property="og:type" content="website" />
+          <meta name="twitter:card" content="summary" />
+          <meta name="twitter:title" content={`${surah.name} - القرآن الكريم`} />
+        </>}
+      </Head>
       <Navbar toggleDark={toggleDark} dark={dark} showToast={showToast} onAuth={onAuth} />
 
       <div className={styles.page} style={{ paddingBottom: '90px' }}>
@@ -295,6 +321,7 @@ export default function SurahPage({
                           {isBm(v.number)?'🔖 محفوظ':'🔖 حفظ'}
                         </button>
                         <button className={styles.actionBtn} onClick={()=>copyVerse(v.number)}>📋 نسخ</button>
+                        <button className={styles.actionBtn} onClick={()=>shareVerse(v.number)}>🔗 مشاركة</button>
                       </div>
                     </div>
                   ))}
