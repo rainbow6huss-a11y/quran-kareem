@@ -36,7 +36,7 @@ export default function SurahPage({
     if (savedTrans !== null) setShowTrans(savedTrans === 'true');
   }, []);
   const [saving,   setSaving]   = useState(false);
-  const [translation, setTranslation] = useState([]);
+  const [translation, setTranslation] = useState({});
   const [showTranslation, setShowTranslation] = useState(false);
   const [translationLang, setTranslationLang] = useState('en.sahih');
 
@@ -125,7 +125,7 @@ export default function SurahPage({
   }, [verses, tab]);
 
   useEffect(() => {
-    if (!showTranslation || !surahNum || translation.length > 0) return;
+    if (!showTranslation || !surahNum || Object.keys(translation).length > 0) return;
     fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/${translationLang}`)
       .then(r => r.json())
       .then(d => {
@@ -137,7 +137,7 @@ export default function SurahPage({
 
   useEffect(() => {
     // Reset translation when surah changes
-    setTranslation([]);
+    setTranslation({});
   }, [surahNum]);
 
   useEffect(() => {
