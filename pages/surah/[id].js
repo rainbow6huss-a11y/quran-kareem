@@ -275,11 +275,11 @@ ${url}`;
                     <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M9 4v3h5v12h3V7h5V4H9zm-6 8h3v7h2v-7h3v-2H3v2z"/></svg>
                   </button>
                   <div className={styles.fontSteps}>
-                    {[100,125,150,175,200,225].map(p=>(
+                    {[100,125,150,175,200].map(p=>(
                       <button key={p}
                         className={`${styles.fontStep} ${Math.round(fontSize*100)===p?styles.fontStepActive:''}`}
                         onClick={()=>{ const v=p/100; setFontSize(v); localStorage.setItem('q_font_size',v); }}>
-                        {p}%
+                        {p}
                       </button>
                     ))}
                   </div>
