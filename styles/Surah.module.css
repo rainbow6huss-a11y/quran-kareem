@@ -217,3 +217,116 @@ body.dark .fontSelect { background: #1a2a1e; }
   border-radius: 10px !important;
   transform: scale(1.002) !important;
 }
+
+/* ── Mobile Surah ── */
+@media (max-width: 768px) {
+  .page { padding: 10px 10px 100px; }
+  .surahHeader { padding: 16px 14px; border-radius: 12px; }
+  .surahName { font-size: 1.6rem; }
+  .surahNav { gap: 8px; }
+  .navArrow { font-size: .82rem; padding: 5px 8px; }
+  .bismillah { font-size: 1.3rem; }
+  .tabs { gap: 4px; margin-bottom: 10px; }
+  .tab { padding: 7px 10px; font-size: .78rem; }
+  .fontControls { padding: 8px 10px; gap: 6px; }
+  .fontSizeRow { gap: 6px; }
+  .fontIconBtn { width: 28px; height: 28px; }
+  .fontSelect { font-size: .75rem; padding: 4px 6px; }
+  .transBtn { padding: 4px 8px; font-size: .75rem; }
+  .verse { padding: 12px 10px; }
+  .verseText { font-size: 1.4rem !important; line-height: 2.2; }
+  .verseTrans { font-size: .8rem; }
+  .verseTranslation { font-size: .8rem; }
+  .verseNum { width: 26px; height: 26px; font-size: .7rem; }
+  .verseActions { gap: 5px; padding-top: 6px; }
+  .actionBtn { padding: 4px 8px; font-size: .73rem; }
+  .playBtn { width: 32px; height: 32px; font-size: .85rem; }
+  .breadcrumb { font-size: .78rem; margin-bottom: 8px; }
+}
+@media (max-width: 400px) {
+  .verseText { font-size: 1.25rem !important; }
+  .tab { padding: 6px 8px; font-size: .72rem; }
+}
+
+/* ── Critical Mobile Fixes ── */
+@media (max-width: 768px) {
+  .page { 
+    padding: 8px 8px 110px; 
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+  .content { overflow-x: hidden; }
+  .verses { overflow-x: hidden; }
+  .verse { 
+    padding: 10px 8px;
+    overflow: hidden;
+    flex-wrap: nowrap;
+  }
+  .verseTop {
+    gap: 6px;
+    overflow: hidden;
+  }
+  .verseBody {
+    min-width: 0;
+    flex: 1;
+    overflow: hidden;
+  }
+  .verseText { 
+    font-size: 1.35rem !important; 
+    line-height: 2.1;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    width: 100%;
+  }
+  .verseTrans {
+    font-size: .78rem;
+    word-break: break-word;
+  }
+  .verseActions {
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .actionBtn {
+    padding: 5px 8px;
+    font-size: .72rem;
+    flex: 1;
+    min-width: 60px;
+    text-align: center;
+  }
+  .playBtn {
+    width: 34px; height: 34px;
+    flex-shrink: 0;
+  }
+  .verseNum {
+    width: 24px; height: 24px;
+    font-size: .65rem;
+    flex-shrink: 0;
+  }
+  .surahHeader { 
+    padding: 14px 12px; 
+    margin-bottom: 10px;
+  }
+  .surahName { font-size: 1.5rem; }
+  .surahMeta { font-size: .72rem; flex-wrap: wrap; gap: 4px; }
+  .tabs { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 4px;
+  }
+  .tab { 
+    padding: 8px 4px; 
+    font-size: .72rem;
+    text-align: center;
+  }
+  .fontControls { 
+    padding: 8px 10px; 
+    gap: 6px;
+  }
+  .fontRow { flex-wrap: wrap; gap: 5px; }
+}
+
+@media (max-width: 400px) {
+  .verseText { font-size: 1.2rem !important; }
+  .tabs { grid-template-columns: 1fr 1fr 1fr; }
+  .tab { font-size: .66rem; padding: 7px 2px; }
+}
