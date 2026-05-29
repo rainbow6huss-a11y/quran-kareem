@@ -17,7 +17,12 @@ function verseUrl(reciter,s,v){ return `https://cdn.islamic.network/quran/audio/
 export default function AudioPlayer({ surahNum, surahName, verses, playingVerse, onVerseChange }) {
   const [isPlaying, setIsPlaying] = useState(false);
   const [repeat,    setRepeat]    = useState(false);
-  const [reciter,   setReciter]   = useState('ar.alafasy');
+  const [reciter, setReciter] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('q_reciter') || 'ar.alafasy';
+    }
+    return 'ar.alafasy';
+  });
   const [loading,   setLoading]   = useState(false);
   const [progress,  setProgress]  = useState(0);
   const [curTime,   setCurTime]   = useState(0);
@@ -179,6 +184,7 @@ export default function AudioPlayer({ surahNum, surahName, verses, playingVerse,
 
   function changeReciter(val){
     reciterRef.current=val; setReciter(val);
+    localStorage.setItem('q_reciter', val);
     if(activeVerse.current && surahNum) setTimeout(()=>loadVerse(surahNum,activeVerse.current),50);
   }
 
