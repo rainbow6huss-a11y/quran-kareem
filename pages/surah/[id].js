@@ -36,6 +36,9 @@ export default function SurahPage({
     if (savedTrans !== null) setShowTrans(savedTrans === 'true');
   }, []);
   const [saving,   setSaving]   = useState(false);
+  const [translation, setTranslation] = useState([]);
+  const [showTranslation, setShowTranslation] = useState(false);
+  const [translationLang, setTranslationLang] = useState('en.sahih');
 
   const saveTimerRef = useRef(null);
   const observerRef  = useRef(null);
@@ -120,6 +123,22 @@ export default function SurahPage({
     }, 500);
     return () => { if (observerRef.current) observerRef.current.disconnect(); };
   }, [verses, tab]);
+
+  useEffect(() => {
+    if (!showTranslation || !surahNum || translation.length > 0) return;
+    fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/${translationLang}`)
+      .then(r => r.json())
+      .then(d => {
+        const map = {};
+        d.data?.ayahs?.forEach(a => { map[a.numberInSurah] = a.text; });
+        setTranslation(map);
+      });
+  }, [showTranslation, surahNum, translationLang]);
+
+  useEffect(() => {
+    // Reset translation when surah changes
+    setTranslation([]);
+  }, [surahNum]);
 
   useEffect(() => {
     if (tab !== 'words' || !surahNum || Object.keys(wordData).length > 0) return;
@@ -247,6 +266,9 @@ export default function SurahPage({
                                       : "'Amiri Quran', serif"
                           }}>{v.text}</div>
                           {showTrans && v.tafsir && <div className={styles.verseTrans}>{v.tafsir}</div>}
+                          {showTranslation && translation[v.number] && (
+                            <div className={styles.verseTranslation}>{translation[v.number]}</div>
+                          )}
                         </div>
                         <button
                           className={`${styles.playBtn} ${playingVerse===v.number?styles.playBtnActive:''}`}
