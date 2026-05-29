@@ -36,6 +36,7 @@ export default function SurahPage({
     if (savedTrans !== null) setShowTrans(savedTrans === 'true');
   }, []);
   const [saving,   setSaving]   = useState(false);
+  const [readPct,  setReadPct]  = useState(0);
   const [translation, setTranslation] = useState({});
   const [showTranslation, setShowTranslation] = useState(false);
   const [translationLang, setTranslationLang] = useState('en.sahih');
@@ -111,7 +112,11 @@ export default function SurahPage({
       entries.forEach(e => {
         if (e.isIntersecting) {
           const v = parseInt(e.target.getAttribute('data-verse'));
-          if (v) saveLastRead(surahNum, v);
+          if (v) {
+            saveLastRead(surahNum, v);
+            // حساب نسبة التقدم
+            if (verses.length > 0) setReadPct(Math.round((v / verses.length) * 100));
+          }
         }
       });
     }, { threshold: 0.5 });
@@ -221,6 +226,12 @@ ${url}`;
           <span>{surah ? surah.name : '...'}</span>
           {saving && <span style={{color:'var(--gold)',fontSize:'.73rem'}}>• جارٍ الحفظ...</span>}
         </div>
+        {/* شريط تقدم القراءة */}
+        {readPct > 0 && (
+          <div style={{height:'3px',background:'var(--border)',borderRadius:'3px',marginBottom:'8px',overflow:'hidden'}}>
+            <div style={{height:'100%',width:`${readPct}%`,background:'linear-gradient(90deg,var(--green),var(--gold))',borderRadius:'3px',transition:'width .3s ease'}}/>
+          </div>
+        )}
 
         {loading ? <SurahSkeleton /> : surah ? (
           <>
