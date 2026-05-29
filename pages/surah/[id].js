@@ -227,11 +227,24 @@ ${url}`;
           {saving && <span style={{color:'var(--gold)',fontSize:'.73rem'}}>• جارٍ الحفظ...</span>}
         </div>
         {/* شريط تقدم القراءة */}
-        {readPct > 0 && (
-          <div style={{height:'3px',background:'var(--border)',borderRadius:'3px',marginBottom:'8px',overflow:'hidden'}}>
-            <div style={{height:'100%',width:`${readPct}%`,background:'linear-gradient(90deg,var(--green),var(--gold))',borderRadius:'3px',transition:'width .3s ease'}}/>
-          </div>
-        )}
+        <div style={{height:'5px',background:'var(--border)',borderRadius:'4px',margin:'6px 0 10px',overflow:'hidden',position:'relative'}}>
+          <div style={{
+            height:'100%',
+            width:`${readPct}%`,
+            background:'linear-gradient(90deg,#2d5a3d,#c9a84c)',
+            borderRadius:'4px',
+            transition:'width .4s ease',
+            minWidth: readPct > 0 ? '12px' : '0'
+          }}/>
+          {readPct > 0 && (
+            <span style={{
+              position:'absolute',left:`${Math.min(readPct, 92)}%`,
+              top:'-18px',fontSize:'.65rem',color:'var(--gold)',
+              fontFamily:'Tajawal,sans-serif',fontWeight:'700',
+              whiteSpace:'nowrap'
+            }}>{readPct}%</span>
+          )}
+        </div>
 
         {loading ? <SurahSkeleton /> : surah ? (
           <>
