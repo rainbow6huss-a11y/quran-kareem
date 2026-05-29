@@ -5,6 +5,7 @@ import Head from 'next/head';
 import Splash from '../components/Splash';
 import AudioPlayer from '../components/AudioPlayer';
 import BackToTop from '../components/BackToTop';
+import InstallPWA from '../components/InstallPWA';
 
 export default function App({ Component, pageProps }) {
   const [dark, setDark]           = useState(false);
@@ -19,6 +20,14 @@ export default function App({ Component, pageProps }) {
   const [playingVerse,setPlayingVerse]= useState(null);
 
   const router = useRouter();
+
+  useEffect(() => {
+    // Register Service Worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js')
+        .catch(err => console.log('SW error:', err));
+    }
+  }, []);
 
   useEffect(() => {
     const saved = localStorage.getItem('q_dark') === 'true';
@@ -87,6 +96,7 @@ export default function App({ Component, pageProps }) {
       )}
 
       <BackToTop />
+      <InstallPWA />
       <div className={`toast ${toastVisible ? 'show' : ''}`}>{toast}</div>
     </>
   );
