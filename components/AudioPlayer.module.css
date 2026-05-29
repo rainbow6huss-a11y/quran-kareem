@@ -152,3 +152,60 @@ body.dark .speedSel { background: #1a2a1e; }
   box-shadow: 0 3px 14px rgba(45,90,61,.4);
 }
 .mainBtn:hover { transform: scale(1.08); box-shadow: 0 5px 18px rgba(45,90,61,.5); }
+
+/* ── Mobile Audio Player ── */
+@media (max-width: 768px) {
+  .inner { padding: 5px 10px; gap: 8px; }
+  .surahLabel { font-size: .78rem; }
+  .verseLabel { font-size: .68rem; }
+  .time { display: none; }
+  .mainPlayBtn { width: 36px; height: 36px; font-size: .9rem; }
+  .ctrl { width: 26px; height: 26px; font-size: .7rem; }
+  .reciterSel { max-width: 80px; font-size: .68rem; padding: 3px 5px; }
+  .speedSel { width: 46px; font-size: .68rem; }
+  .minBtn { width: 24px; height: 24px; font-size: .65rem; }
+  .progressDot { width: 8px; height: 8px; right: -4px; top: -3px; }
+}
+@media (max-width: 400px) {
+  .info { max-width: 100px; }
+  .reciterSel { max-width: 65px; }
+}
+
+/* ── Critical Mobile Player Fix ── */
+@media (max-width: 768px) {
+  .player { 
+    padding-bottom: env(safe-area-inset-bottom, 0);
+  }
+  .progressBg { height: 3px; }
+  .inner { 
+    padding: 5px 8px; 
+    gap: 6px;
+    min-height: 52px;
+  }
+  .info { flex: 1; min-width: 0; }
+  .surahLabel { 
+    font-size: .78rem; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100px;
+  }
+  .verseLabel { display: none; }
+  .time { display: none; }
+  .controls { gap: 6px; }
+  .mainPlayBtn { width: 38px; height: 38px; font-size: .95rem; }
+  .ctrl { width: 28px; height: 28px; }
+  .opts { gap: 4px; }
+  .opt { width: 28px; height: 28px; font-size: .8rem; }
+  .reciterSel { 
+    max-width: 75px; 
+    font-size: .68rem;
+    padding: 3px 4px;
+  }
+  .speedSel { 
+    width: 44px; 
+    font-size: .68rem;
+    padding: 3px 3px;
+  }
+  .minBtn { width: 22px; height: 22px; font-size: .6rem; }
+}
