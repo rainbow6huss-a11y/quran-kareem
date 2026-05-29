@@ -219,32 +219,35 @@ ${url}`;
       </Head>
       <Navbar toggleDark={toggleDark} dark={dark} showToast={showToast} onAuth={onAuth} />
 
-      <div className={styles.page} style={{ paddingBottom: '90px' }}>
+      {/* شريط تقدم القراءة — ثابت أعلى الصفحة */}
+      {readPct > 0 && (
+        <div style={{
+          position:'fixed', top:'56px', left:0, right:0, zIndex:998,
+          height:'4px', background:'rgba(0,0,0,.08)',
+        }}>
+          <div style={{
+            height:'100%', width:`${readPct}%`,
+            background:'linear-gradient(90deg,#2d5a3d,#c9a84c)',
+            transition:'width .6s ease',
+          }}/>
+          <div style={{
+            position:'absolute', right:`${100-Math.min(readPct,96)}%`,
+            top:'6px', fontSize:'.62rem', color:'var(--gold)',
+            fontFamily:'Tajawal,sans-serif', fontWeight:'700',
+            background:'var(--parchment)', padding:'1px 5px',
+            borderRadius:'6px', border:'1px solid var(--border)',
+            whiteSpace:'nowrap', pointerEvents:'none',
+          }}>{readPct}%</div>
+        </div>
+      )}
+      <div className={styles.page} style={{ paddingBottom: '90px', paddingTop: readPct > 0 ? '10px' : '0' }}>
         <div className={styles.breadcrumb}>
           <Link href="/">الرئيسية</Link>
           <span>›</span>
           <span>{surah ? surah.name : '...'}</span>
           {saving && <span style={{color:'var(--gold)',fontSize:'.73rem'}}>• جارٍ الحفظ...</span>}
         </div>
-        {/* شريط تقدم القراءة */}
-        <div style={{height:'5px',background:'var(--border)',borderRadius:'4px',margin:'6px 0 10px',overflow:'hidden',position:'relative'}}>
-          <div style={{
-            height:'100%',
-            width:`${readPct}%`,
-            background:'linear-gradient(90deg,#2d5a3d,#c9a84c)',
-            borderRadius:'4px',
-            transition:'width .4s ease',
-            minWidth: readPct > 0 ? '12px' : '0'
-          }}/>
-          {readPct > 0 && (
-            <span style={{
-              position:'absolute',left:`${Math.min(readPct, 92)}%`,
-              top:'-18px',fontSize:'.65rem',color:'var(--gold)',
-              fontFamily:'Tajawal,sans-serif',fontWeight:'700',
-              whiteSpace:'nowrap'
-            }}>{readPct}%</span>
-          )}
-        </div>
+
 
         {loading ? <SurahSkeleton /> : surah ? (
           <>
