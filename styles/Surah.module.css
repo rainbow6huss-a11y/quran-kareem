@@ -341,3 +341,34 @@ body.dark .fontSelect { background: #1a2a1e; }
 }
 .fontStep:hover { border-color: var(--gold); color: var(--brown); }
 .fontStepActive { background: var(--green) !important; color: white !important; border-color: var(--green) !important; font-weight: 700; }
+
+/* Font Steps - compact */
+.fontSteps {
+  display: flex;
+  gap: 3px;
+  flex: 1;
+  justify-content: center;
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+.fontStep {
+  padding: 5px 6px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--card);
+  font-family: 'Tajawal', sans-serif;
+  font-size: .7rem;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+  flex: 1;
+  text-align: center;
+}
+.fontStep:hover { border-color: var(--gold); color: var(--brown); }
+.fontStepActive {
+  background: var(--green) !important;
+  color: white !important;
+  border-color: var(--green) !important;
+  font-weight: 700;
+}
