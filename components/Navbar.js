@@ -16,6 +16,7 @@ export default function Navbar({ toggleDark, dark, showToast, onAuth }) {
 
   const links = [
     { href: '/', label: '📖 القرآن' },
+    { href: '/search', label: '🔍 بحث' },
     { href: '/juz', label: '🗂 الأجزاء' },
     { href: '/khatma', label: '🌙 الختمة' },
     { href: '/bookmarks', label: '🔖 علاماتي' },
