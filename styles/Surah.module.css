@@ -272,7 +272,6 @@ body.dark .fontSelect { background: #1a2a1e; }
     overflow: hidden;
   }
   .verseText { 
-    font-size: 1.35rem !important; 
     line-height: 2.1;
     word-break: break-word;
     overflow-wrap: break-word;
