@@ -244,8 +244,22 @@ export default function SurahPage({
                     <option value="amiri">Amiri Classic</option>
                   </select>
                   <button className={`${styles.transBtn} ${showTrans?styles.transBtnOn:''}`} onClick={()=>setShowTrans(v=>!v)}>
-                    {showTrans ? '📖 إخفاء التفسير' : '📖 إظهار التفسير'}
+                    {showTrans ? '📖 إخفاء التفسير' : '📖 التفسير'}
                   </button>
+                  <button className={`${styles.transBtn} ${showTranslation?styles.transBtnOn:''}`}
+                    onClick={()=>setShowTranslation(v=>!v)}>
+                    {showTranslation ? '🌐 إخفاء الترجمة' : '🌐 ترجمة'}
+                  </button>
+                  {showTranslation && (
+                    <select className={styles.fontSelect} value={translationLang}
+                      onChange={e=>{ setTranslationLang(e.target.value); setTranslation({}); }}>
+                      <option value="en.sahih">English - Sahih</option>
+                      <option value="en.pickthall">English - Pickthall</option>
+                      <option value="fr.hamidullah">Français</option>
+                      <option value="tr.diyanet">Türkçe</option>
+                      <option value="ur.jalandhry">اردو</option>
+                    </select>
+                  )}
                 </div>
               </div>
             )}
