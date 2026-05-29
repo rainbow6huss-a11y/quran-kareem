@@ -24,6 +24,7 @@ export default function SurahPage({
   const [fontSize, setFontSize] = useState(1.75);
   const [bookmarks,setBookmarks]= useState([]);
   const [showTrans,setShowTrans]= useState(true);
+  const [fontFamily, setFontFamily] = useState('amiri-quran');
   const [saving,   setSaving]   = useState(false);
 
   const saveTimerRef = useRef(null);
@@ -192,10 +193,31 @@ export default function SurahPage({
 
             {tab==='read' && (
               <div className={styles.fontControls}>
-                <label>الخط:</label>
-                <button className={styles.fontBtn} onClick={()=>setFontSize(f=>Math.max(1.1,f-.15))}>أ−</button>
-                <button className={styles.fontBtn} onClick={()=>setFontSize(f=>Math.min(2.5,f+.15))}>أ+</button>
-                <button className={`${styles.fontBtn} ${showTrans?styles.fontBtnActive:''}`} onClick={()=>setShowTrans(v=>!v)}>التفسير</button>
+                <div className={styles.fontSizeRow}>
+                  <button className={styles.fontIconBtn} onClick={()=>setFontSize(f=>Math.max(1.1,f-.1))} title="تصغير">
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M9 4v3h5v12h3V7h5V4H9zm-6 8h3v7h2v-7h3v-2H3v2z"/></svg>
+                  </button>
+                  <input type="range" min="1.1" max="2.5" step="0.05"
+                    value={fontSize}
+                    onChange={e=>setFontSize(parseFloat(e.target.value))}
+                    className={styles.fontSlider}
+                    title={`حجم الخط: ${Math.round(fontSize*100)}%`}
+                  />
+                  <button className={styles.fontIconBtn} onClick={()=>setFontSize(f=>Math.min(2.5,f+.1))} title="تكبير">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M9 4v3h5v12h3V7h5V4H9zm-6 8h3v7h2v-7h3v-2H3v2z"/></svg>
+                  </button>
+                  <span className={styles.fontSizeLabel}>{Math.round(fontSize*100)}%</span>
+                </div>
+                <div className={styles.fontRow}>
+                  <select className={styles.fontSelect} value={fontFamily} onChange={e=>setFontFamily(e.target.value)}>
+                    <option value="amiri-quran">Amiri Quran</option>
+                    <option value="noto-naskh">Noto Naskh</option>
+                    <option value="amiri">Amiri Classic</option>
+                  </select>
+                  <button className={`${styles.transBtn} ${showTrans?styles.transBtnOn:''}`} onClick={()=>setShowTrans(v=>!v)}>
+                    {showTrans ? '📖 إخفاء التفسير' : '📖 إظهار التفسير'}
+                  </button>
+                </div>
               </div>
             )}
 
@@ -208,7 +230,12 @@ export default function SurahPage({
                       <div className={styles.verseTop}>
                         <div className={styles.verseNum}>{v.number}</div>
                         <div className={styles.verseBody}>
-                          <div className={styles.verseText} style={{fontSize:`${fontSize}rem`}}>{v.text}</div>
+                          <div className={styles.verseText} style={{
+                            fontSize:`${fontSize}rem`,
+                            fontFamily: fontFamily==='noto-naskh' ? "'Noto Naskh Arabic', serif"
+                                      : fontFamily==='amiri' ? "'Amiri', serif"
+                                      : "'Amiri Quran', serif"
+                          }}>{v.text}</div>
                           {showTrans && v.tafsir && <div className={styles.verseTrans}>{v.tafsir}</div>}
                         </div>
                         <button
