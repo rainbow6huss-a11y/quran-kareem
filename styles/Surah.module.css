@@ -147,3 +147,47 @@ body.dark .select { background: #1a2a1e; color: var(--text); }
 .playing .verseText {
   color: var(--brown) !important;
 }
+
+/* ─── Font Controls ─── */
+.fontControls {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 10px 14px; background: var(--card);
+  border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px;
+}
+.fontSizeRow { display: flex; align-items: center; gap: 8px; }
+.fontIconBtn {
+  width: 30px; height: 30px; border: 1px solid var(--border);
+  border-radius: 8px; background: var(--parchment);
+  cursor: pointer; color: var(--text-soft); transition: all .2s;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.fontIconBtn:hover { border-color: var(--gold); color: var(--brown); background: var(--gold-pale); }
+.fontSlider {
+  flex: 1; -webkit-appearance: none; height: 4px;
+  background: linear-gradient(90deg, var(--green), var(--gold));
+  border-radius: 4px; outline: none; cursor: pointer;
+}
+.fontSlider::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 16px; height: 16px;
+  border-radius: 50%; background: var(--green);
+  border: 2px solid white; box-shadow: 0 1px 4px rgba(0,0,0,.2); cursor: pointer;
+}
+.fontSlider::-moz-range-thumb {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: var(--green); border: 2px solid white; cursor: pointer;
+}
+.fontSizeLabel { font-size: .75rem; color: var(--gold); font-weight: 700; min-width: 36px; text-align: center; }
+.fontRow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.fontSelect {
+  padding: 5px 8px; border: 1px solid var(--border); border-radius: 8px;
+  font-family: 'Tajawal', sans-serif; font-size: .8rem;
+  background: var(--card); color: var(--text); outline: none; cursor: pointer;
+}
+body.dark .fontSelect { background: #1a2a1e; }
+.transBtn {
+  padding: 5px 12px; border: 1px solid var(--border); border-radius: 8px;
+  font-family: 'Tajawal', sans-serif; font-size: .8rem;
+  background: transparent; color: var(--text-soft); cursor: pointer; transition: all .2s;
+}
+.transBtn:hover { border-color: var(--gold); color: var(--brown); }
+.transBtnOn { background: rgba(45,90,61,.1) !important; border-color: var(--green) !important; color: var(--green) !important; }
