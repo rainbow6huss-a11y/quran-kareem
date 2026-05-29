@@ -191,3 +191,18 @@ body.dark .fontSelect { background: #1a2a1e; }
 }
 .transBtn:hover { border-color: var(--gold); color: var(--brown); }
 .transBtnOn { background: rgba(45,90,61,.1) !important; border-color: var(--green) !important; color: var(--green) !important; }
+
+/* Translation */
+.verseTranslation {
+  margin-top: 6px;
+  padding: 8px 12px;
+  border-top: 1px dashed rgba(45,90,61,.2);
+  font-family: 'Tajawal', sans-serif;
+  font-size: .85rem;
+  color: var(--text-soft);
+  line-height: 1.8;
+  direction: ltr;
+  text-align: left;
+  background: rgba(45,90,61,.04);
+  border-radius: 6px;
+}
