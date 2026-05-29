@@ -90,3 +90,17 @@
   .links { display: none; }
   #menuToggle { display: flex !important; }
 }
+
+/* ── Mobile Navbar ── */
+@media (max-width: 768px) {
+  .inner { padding: 0 12px; height: 52px; }
+  .links { display: none; }
+  .logoMain { font-size: 14px; }
+  .logoSub { display: none; }
+  .logoDivider { display: none; }
+  .logoSvg { width: 30px; height: 30px; }
+  .ctrl { width: 34px; height: 34px; font-size: .9rem; }
+}
+@media (max-width: 400px) {
+  .inner { padding: 0 8px; gap: 6px; }
+}
