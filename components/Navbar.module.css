@@ -17,6 +17,11 @@
   gap: 16px;
 }
 
+.logoSvg { flex-shrink: 0; display: block; }
+.logoDivider { width: 1px; height: 26px; background: rgba(184,151,58,.35); flex-shrink: 0; }
+.logoTexts { display: flex; flex-direction: column; line-height: 1.25; }
+.logoMain { font-family: 'Tajawal', sans-serif; font-size: 16px; font-weight: 600; color: var(--brown); letter-spacing: .3px; white-space: nowrap; }
+.logoSub { font-size: 9px; color: #4A90E2; letter-spacing: 1.5px; opacity: .8; white-space: nowrap; }
 .logo { display: flex; align-items: center; gap: 8px; }
 .logoAr {
   font-family: 'Amiri', serif;
