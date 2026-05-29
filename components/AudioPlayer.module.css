@@ -6,6 +6,7 @@
   border-top: 1.5px solid var(--gold);
   box-shadow: 0 -4px 16px rgba(0,0,0,.12);
   direction: rtl;
+  will-change: transform;
 }
 body.dark .player { background: #152018; }
 
