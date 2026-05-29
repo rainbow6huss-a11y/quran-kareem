@@ -1,0 +1,76 @@
+.page { max-width: 800px; margin: 0 auto; padding: 24px 16px 60px; position: relative; z-index: 1; }
+
+.header { text-align: center; margin-bottom: 24px; }
+.title { font-family: 'Amiri', serif; font-size: 1.8rem; color: var(--brown); font-weight: 700; margin-bottom: 4px; }
+.sub { color: var(--text-soft); font-size: .87rem; }
+
+/* Search Box */
+.searchWrap { margin-bottom: 20px; }
+.searchBox {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--card); border: 2px solid var(--border);
+  border-radius: 14px; padding: 6px 12px;
+  transition: border-color .2s;
+}
+.searchBox:focus-within { border-color: var(--gold); }
+.searchIcon { color: var(--text-soft); flex-shrink: 0; }
+.input {
+  flex: 1; border: none; background: transparent;
+  font-family: 'Tajawal', sans-serif; font-size: 1.05rem;
+  color: var(--text); outline: none; padding: 6px 0;
+}
+.input::placeholder { color: var(--text-soft); }
+.clearBtn {
+  background: none; border: none; color: var(--text-soft);
+  cursor: pointer; font-size: 1rem; padding: 4px 6px;
+  border-radius: 6px; transition: all .15s;
+}
+.clearBtn:hover { background: var(--gold-pale); color: var(--brown); }
+
+/* Suggestions */
+.suggestions { display: flex; align-items: center; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.sugLabel { font-size: .8rem; color: var(--text-soft); }
+.sugBtn {
+  padding: 5px 12px; background: var(--card); border: 1px solid var(--border);
+  border-radius: 20px; font-family: 'Tajawal', sans-serif; font-size: .83rem;
+  color: var(--text-soft); cursor: pointer; transition: all .2s;
+}
+.sugBtn:hover { border-color: var(--gold); color: var(--brown); background: var(--gold-pale); }
+
+/* Loading */
+.loadingWrap { text-align: center; padding: 40px; color: var(--text-soft); }
+
+/* Results header */
+.resultsHeader {
+  padding: 10px 14px; background: var(--card);
+  border: 1px solid var(--border); border-radius: 10px;
+  font-size: .87rem; color: var(--text-soft); margin-bottom: 14px;
+}
+.resultsHeader strong { color: var(--brown); }
+
+/* Results */
+.results { display: flex; flex-direction: column; gap: 10px; }
+.result {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 14px 16px; transition: all .2s;
+  display: block;
+}
+.result:hover { border-color: var(--gold); transform: translateY(-1px); box-shadow: 0 3px 12px var(--shadow); }
+.resultHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.resultSurah { font-family: 'Amiri', serif; font-size: 1rem; color: var(--brown); font-weight: 700; }
+.resultVerse { font-size: .75rem; color: var(--gold); background: var(--gold-pale); padding: 2px 8px; border-radius: 10px; font-weight: 700; }
+.resultText { font-family: 'Amiri Quran', serif; font-size: 1.2rem; color: var(--text); line-height: 2.2; direction: rtl; }
+.mark { background: rgba(184,151,58,.3); color: var(--brown); border-radius: 3px; padding: 0 2px; font-weight: 700; }
+
+/* More results */
+.moreResults { text-align: center; padding: 14px; font-size: .83rem; color: var(--text-soft); background: var(--card); border: 1px dashed var(--border); border-radius: 10px; }
+
+/* No results */
+.noResults { text-align: center; padding: 60px 20px; }
+.noResultsIcon { font-size: 3rem; opacity: .3; margin-bottom: 12px; }
+.noResults h3 { font-family: 'Amiri', serif; font-size: 1.3rem; color: var(--brown); margin-bottom: 6px; }
+.noResults p { color: var(--text-soft); font-size: .87rem; }
+
+@media(max-width:600px) {
+  .resultText { font-size: 1rem; }
+}
