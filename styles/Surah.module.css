@@ -330,3 +330,14 @@ body.dark .fontSelect { background: #1a2a1e; }
   .tabs { grid-template-columns: 1fr 1fr 1fr; }
   .tab { font-size: .66rem; padding: 7px 2px; }
 }
+
+/* Font Steps */
+.fontSteps { display: flex; gap: 4px; flex-wrap: wrap; flex: 1; justify-content: center; }
+.fontStep {
+  padding: 4px 8px; border: 1px solid var(--border);
+  border-radius: 6px; background: var(--card);
+  font-family: 'Tajawal', sans-serif; font-size: .72rem;
+  color: var(--text-soft); cursor: pointer; transition: all .15s;
+}
+.fontStep:hover { border-color: var(--gold); color: var(--brown); }
+.fontStepActive { background: var(--green) !important; color: white !important; border-color: var(--green) !important; font-weight: 700; }
