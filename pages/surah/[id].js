@@ -23,8 +23,18 @@ export default function SurahPage({
   const [tab,      setTab]      = useState('read');
   const [fontSize, setFontSize] = useState(1.75);
   const [bookmarks,setBookmarks]= useState([]);
-  const [showTrans,setShowTrans]= useState(true);
+  const [showTrans,  setShowTrans]  = useState(true);
   const [fontFamily, setFontFamily] = useState('amiri-quran');
+
+  // تحميل تفضيلات المستخدم المحفوظة
+  useEffect(() => {
+    const savedSize   = localStorage.getItem('q_font_size');
+    const savedFamily = localStorage.getItem('q_font_family');
+    const savedTrans  = localStorage.getItem('q_show_trans');
+    if (savedSize)   setFontSize(parseFloat(savedSize));
+    if (savedFamily) setFontFamily(savedFamily);
+    if (savedTrans !== null) setShowTrans(savedTrans === 'true');
+  }, []);
   const [saving,   setSaving]   = useState(false);
 
   const saveTimerRef = useRef(null);
@@ -199,7 +209,7 @@ export default function SurahPage({
                   </button>
                   <input type="range" min="1.1" max="2.5" step="0.05"
                     value={fontSize}
-                    onChange={e=>setFontSize(parseFloat(e.target.value))}
+                    onChange={e=>{ const v=parseFloat(e.target.value); setFontSize(v); localStorage.setItem('q_font_size', v); }}
                     className={styles.fontSlider}
                     title={`حجم الخط: ${Math.round(fontSize*100)}%`}
                   />
@@ -209,7 +219,7 @@ export default function SurahPage({
                   <span className={styles.fontSizeLabel}>{Math.round(fontSize*100)}%</span>
                 </div>
                 <div className={styles.fontRow}>
-                  <select className={styles.fontSelect} value={fontFamily} onChange={e=>setFontFamily(e.target.value)}>
+                  <select className={styles.fontSelect} value={fontFamily} onChange={e=>{ setFontFamily(e.target.value); localStorage.setItem('q_font_family', e.target.value); }}>
                     <option value="amiri-quran">Amiri Quran</option>
                     <option value="noto-naskh">Noto Naskh</option>
                     <option value="amiri">Amiri Classic</option>
