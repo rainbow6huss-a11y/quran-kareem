@@ -206,3 +206,14 @@ body.dark .fontSelect { background: #1a2a1e; }
   background: rgba(45,90,61,.04);
   border-radius: 6px;
 }
+
+/* ─── Smooth verse transitions ─── */
+.verse {
+  transition: background .4s ease, border-color .4s ease, transform .3s ease !important;
+}
+.playing {
+  background: linear-gradient(135deg, rgba(45,90,61,.1), rgba(184,151,58,.06)) !important;
+  border-right: 3px solid var(--green) !important;
+  border-radius: 10px !important;
+  transform: scale(1.002) !important;
+}
