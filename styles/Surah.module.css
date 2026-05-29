@@ -234,7 +234,7 @@ body.dark .fontSelect { background: #1a2a1e; }
   .fontSelect { font-size: .75rem; padding: 4px 6px; }
   .transBtn { padding: 4px 8px; font-size: .75rem; }
   .verse { padding: 12px 10px; }
-  .verseText { font-size: 1.4rem !important; line-height: 2.2; }
+  .verseText { line-height: 2.1; }
   .verseTrans { font-size: .8rem; }
   .verseTranslation { font-size: .8rem; }
   .verseNum { width: 26px; height: 26px; font-size: .7rem; }
@@ -244,7 +244,7 @@ body.dark .fontSelect { background: #1a2a1e; }
   .breadcrumb { font-size: .78rem; margin-bottom: 8px; }
 }
 @media (max-width: 400px) {
-  .verseText { font-size: 1.25rem !important; }
+  .verseText { line-height: 2.1; }
   .tab { padding: 6px 8px; font-size: .72rem; }
 }
 
@@ -326,7 +326,7 @@ body.dark .fontSelect { background: #1a2a1e; }
 }
 
 @media (max-width: 400px) {
-  .verseText { font-size: 1.2rem !important; }
+  .verseText { line-height: 2.1; }
   .tabs { grid-template-columns: 1fr 1fr 1fr; }
   .tab { font-size: .66rem; padding: 7px 2px; }
 }
