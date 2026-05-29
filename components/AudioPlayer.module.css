@@ -209,3 +209,39 @@ body.dark .speedSel { background: #1a2a1e; }
   }
   .minBtn { width: 22px; height: 22px; font-size: .6rem; }
 }
+
+/* ══ MOBILE PLAYER - Clean ══ */
+@media (max-width: 768px) {
+  .player { border-top-width: 1px; }
+  .inner {
+    padding: 6px 10px;
+    gap: 8px;
+    min-height: 54px;
+    max-height: 60px;
+  }
+  /* Info */
+  .info { flex: 1; min-width: 0; max-width: 90px; }
+  .surahLabel { font-size: .75rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .verseLabel { display: none; }
+  .time { display: none; }
+  /* Controls */
+  .controls { gap: 4px; flex-shrink: 0; }
+  .ctrl { width: 28px; height: 28px; font-size: .7rem; border: none; background: transparent; }
+  .mainPlayBtn { width: 40px; height: 40px; font-size: 1rem; }
+  .spinner { width: 16px; height: 16px; }
+  /* Options */
+  .opts { gap: 4px; flex-shrink: 0; }
+  .opt { width: 26px; height: 26px; font-size: .75rem; padding: 0; border-radius: 6px; }
+  .reciterSel { max-width: 78px; font-size: .68rem; padding: 3px 4px; }
+  .speedSel { width: 46px; font-size: .68rem; padding: 3px 3px; }
+  .minBtn { width: 22px; height: 22px; font-size: .6rem; }
+  /* Progress */
+  .progressBg { height: 3px; }
+  .progressDot { width: 8px; height: 8px; right: -4px; top: -2.5px; }
+}
+
+@media (max-width: 400px) {
+  .info { max-width: 70px; }
+  .reciterSel { max-width: 62px; font-size: .62rem; }
+  .speedSel { width: 38px; }
+}
