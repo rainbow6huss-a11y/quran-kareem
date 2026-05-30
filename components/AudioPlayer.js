@@ -209,14 +209,6 @@ export default function AudioPlayer({ surahNum, surahName, verses, playingVerse,
       <div className={styles.player} style={{
         transform: minimized ? 'translateY(calc(100% - 34px))' : 'translateY(0)',
         transition: 'transform .35s cubic-bezier(.4,0,.2,1)',
-        position: 'fixed',
-        bottom: '56px',
-        left: 0,
-        right: 0,
-        zIndex: 999,
-        background: 'var(--parchment)',
-        borderTop: '1.5px solid var(--gold)',
-        direction: 'rtl',
       }}>
         {/* Progress bar */}
         <div className={styles.progressWrap} onClick={seek}>

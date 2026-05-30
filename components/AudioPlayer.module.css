@@ -4,7 +4,8 @@
 
 .player {
   position: fixed;
-  bottom: 0; left: 0; right: 0;
+  bottom: 0;
+  left: 0; right: 0;
   z-index: 999;
   background: var(--parchment);
   border-top: 1.5px solid var(--gold);
@@ -153,7 +154,7 @@ body.dark .sel { background: #1a2a1e; }
 
 /* ═══ MOBILE ═══ */
 @media (max-width: 768px) {
-  .player { bottom: 56px !important; }
+  .player { bottom: 56px; }
   .inner { padding: 6px 8px; gap: 6px; }
   .surahLabel { font-size: .75rem; max-width: 85px; }
   .verseLabel { display: none; }
