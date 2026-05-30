@@ -81,6 +81,8 @@ export default function Home({ toggleDark, dark, showToast, user, onAuth }) {
           <Link href="/surah/1#tafsir" className={styles.subLink}>📚 تفسير</Link>
           <span className={styles.subDot}>·</span>
           <Link href="/khatma" className={styles.subLink}>🌙 ختمة</Link>
+          <span className={styles.subDot}>·</span>
+          <Link href="/hadya" className={styles.subLink}>🤲 إهداء</Link>
         </div>
         <div className={styles.ayahBox}>
           <div className={styles.ayahLabel}>✦ آية اليوم ✦</div>
