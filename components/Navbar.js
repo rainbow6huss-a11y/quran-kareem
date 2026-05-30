@@ -14,6 +14,16 @@ export default function Navbar({ toggleDark, dark, showToast, onAuth }) {
     else { navigator.clipboard.writeText(url); showToast('📋 تم نسخ الرابط'); }
   }
 
+  // روابط الشريط الرئيسي (Desktop فقط)
+  const mainLinks = [
+    { href: '/',          label: '📖 القرآن' },
+    { href: '/search',    label: '🔍 بحث' },
+    { href: '/juz',       label: '🗂 الأجزاء' },
+    { href: '/khatma',    label: '🌙 الختمة' },
+    { href: '/bookmarks', label: '🔖 علاماتي' },
+  ];
+
+  // كل الروابط (في قائمة ☰)
   const links = [
     { href: '/',             label: '📖 القرآن' },
     { href: '/search',       label: '🔍 بحث' },
@@ -60,9 +70,9 @@ export default function Navbar({ toggleDark, dark, showToast, onAuth }) {
           </div>
         </Link>
 
-        {/* روابط Desktop */}
+        {/* روابط Desktop - مختصرة */}
         <div className={styles.links}>
-          {links.map(l => (
+          {mainLinks.map(l => (
             <Link key={l.href} href={l.href}
               className={`${styles.link} ${router.pathname === l.href || (l.href !== '/' && router.pathname.startsWith(l.href)) ? styles.active : ''}`}>
               {l.label}
@@ -70,15 +80,7 @@ export default function Navbar({ toggleDark, dark, showToast, onAuth }) {
           ))}
         </div>
 
-        {/* روابط سريعة Mobile */}
-        <div className={styles.mobileQuick}>
-          {mobileQuickLinks.map(l => (
-            <Link key={l.href} href={l.href}
-              className={`${styles.mobileQuickBtn} ${router.pathname === l.href ? styles.mobileQuickActive : ''}`}>
-              {l.label}
-            </Link>
-          ))}
-        </div>
+
 
         {/* تحكم */}
         <div className={styles.controls}>

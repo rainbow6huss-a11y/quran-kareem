@@ -37,3 +37,8 @@
 @media (max-width: 768px) {
   .btn { bottom: 72px !important; left: 12px !important; width: 38px !important; height: 38px !important; }
 }
+
+/* Hide on mobile - bottom nav is enough */
+@media (max-width: 768px) {
+  .btn { display: none !important; }
+}

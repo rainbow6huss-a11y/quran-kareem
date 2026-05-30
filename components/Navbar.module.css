@@ -104,3 +104,9 @@
   .inner { padding: 0 8px; gap: 5px; }
   .logoMain { font-size: 13px; }
 }
+
+/* ── Mobile: شعار + ☰ فقط ── */
+@media (max-width: 768px) {
+  .ctrl:not(.menuBtn) { display: none !important; }
+  .shareBtn { display: none !important; }
+}
