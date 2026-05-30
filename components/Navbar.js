@@ -22,7 +22,6 @@ export default function Navbar({ toggleDark, dark, showToast, onAuth }) {
     { href: '/bookmarks', label: '🔖 علاماتي' },
     { href: '/athkar', label: '📿 الأذكار' },
     { href: '/hadya', label: '🤲 إهداء' },
-    { href: '/about', label: 'ℹ️ عن الموقع' },
   ];
 
   return (

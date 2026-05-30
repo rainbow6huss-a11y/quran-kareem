@@ -1,7 +1,9 @@
 .banner {
   position: fixed;
-  bottom: 90px; left: 0; right: 0;
-  margin: 0 16px;
+  bottom: 76px; left: 50%; right: auto;
+  transform: translateX(-50%);
+  width: calc(100% - 32px);
+  max-width: 500px;
   background: var(--parchment);
   border: 1px solid var(--border);
   border-radius: 14px;
