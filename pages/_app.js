@@ -5,7 +5,6 @@ import Head from 'next/head';
 import Splash from '../components/Splash';
 import AudioPlayer from '../components/AudioPlayer';
 import BackToTop from '../components/BackToTop';
-import InstallPWA from '../components/InstallPWA';
 import BottomNav from '../components/BottomNav';
 
 export default function App({ Component, pageProps }) {
@@ -93,7 +92,6 @@ export default function App({ Component, pageProps }) {
       )}
 
       <BackToTop />
-      <InstallPWA />
       <BottomNav />
       <div className={`toast ${toastVisible ? 'show' : ''}`}>{toast}</div>
     </>
