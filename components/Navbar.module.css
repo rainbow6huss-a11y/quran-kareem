@@ -227,3 +227,25 @@
     flex-shrink: 0;
   }
 }
+
+/* ════ NAVBAR FINAL CLEAN ════ */
+@media (max-width: 768px) {
+  .inner {
+    display: grid !important;
+    grid-template-columns: auto 1fr auto !important;
+    align-items: center;
+    height: 52px;
+    padding: 0 10px !important;
+    gap: 8px !important;
+  }
+  .logo { grid-column: 3; justify-self: end; }
+  .mobileQuick { display: none !important; }
+  .links { display: none !important; }
+  .controls { 
+    grid-column: 1; 
+    justify-self: start;
+    display: flex !important;
+    align-items: center;
+    gap: 5px !important;
+  }
+}
