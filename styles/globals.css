@@ -221,7 +221,4 @@ body.dark nav {
   border-bottom-color: rgba(184,151,58,.12) !important;
 }
 
-/* Bottom nav padding */
-@media (max-width: 768px) {
-  body { padding-bottom: 65px; }
-}
+
