@@ -21,6 +21,7 @@ export default function Navbar({ toggleDark, dark, showToast, onAuth }) {
     { href: '/khatma', label: '🌙 الختمة' },
     { href: '/bookmarks', label: '🔖 علاماتي' },
     { href: '/athkar', label: '📿 الأذكار' },
+    { href: '/tasbih', label: '🔵 التسبيح' },
     { href: '/hadya', label: '🤲 إهداء' },
   ];
 
