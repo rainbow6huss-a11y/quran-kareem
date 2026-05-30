@@ -22,6 +22,7 @@ export default function Navbar({ toggleDark, dark, showToast, onAuth }) {
     { href: '/bookmarks', label: '🔖 علاماتي' },
     { href: '/athkar', label: '📿 الأذكار' },
     { href: '/tasbih', label: '🔵 التسبيح' },
+    { href: '/contact', label: '✉️ تواصل' },
     { href: '/hadya', label: '🤲 إهداء' },
   ];
 
