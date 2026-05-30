@@ -129,10 +129,10 @@ export default function Home({ toggleDark, dark, showToast, user, onAuth }) {
         </div>
 
         <div className={styles.stats}>
-          <div className={styles.stat}><span>{surahs.length}</span> سورة</div>
+          <div className={styles.stat}><span>١١٤</span> سورة</div>
           <div className={styles.stat}><span>٦٢٣٦</span> آية</div>
-          <div className={styles.stat}><span>٣٠</span> جزء</div>
-          <div className={styles.stat}><span>١١٤</span> سورة كريمة</div>
+          <div className={styles.stat}><span>٣٠</span> جزءًا</div>
+          <div className={styles.stat}><span>٢٩</span> جزءًا مكياً</div>
         </div>
 
         {/* Jump to juz */}
