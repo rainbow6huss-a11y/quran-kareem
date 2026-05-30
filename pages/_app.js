@@ -4,8 +4,8 @@ import { useRouter } from 'next/router';
 import Head from 'next/head';
 import Splash from '../components/Splash';
 import AudioPlayer from '../components/AudioPlayer';
-import BackToTop from '../components/BackToTop';
 import BottomNav from '../components/BottomNav';
+import BackToTop from '../components/BackToTop';
 
 export default function App({ Component, pageProps }) {
   const [dark, setDark]           = useState(false);
