@@ -23,6 +23,8 @@ export default function InstallPWA() {
     setPrompt(null);
   }
 
+  // لا تظهر على الجوال أبداً
+  if (typeof window !== 'undefined' && window.innerWidth <= 768) return null;
   if (!visible) return null;
 
   return (
