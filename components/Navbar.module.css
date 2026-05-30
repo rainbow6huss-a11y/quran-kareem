@@ -180,3 +180,50 @@
   }
   .mobileQuick { display: none !important; }
 }
+
+/* ════ FINAL MOBILE NAVBAR FIX ════ */
+@media (max-width: 768px) {
+  .nav { position: sticky; top: 0; z-index: 1000; }
+  .inner {
+    height: 52px;
+    padding: 0 10px;
+    gap: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  /* Logo - compact */
+  .logo { gap: 6px; flex-shrink: 0; }
+  .logoSvg { width: 28px !important; height: 28px !important; }
+  .logoDivider { display: none !important; }
+  .logoMain { font-size: 13px !important; }
+  .logoSub { display: none !important; }
+
+  /* Hide desktop links */
+  .links { display: none !important; }
+  .mobileQuick { display: none !important; }
+
+  /* Controls - only essential */
+  .controls { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  
+  /* Hide share on mobile */
+  .shareBtn { display: none !important; }
+  
+  /* Dark mode button */
+  .ctrl { 
+    width: 30px !important; height: 30px !important; 
+    font-size: .85rem !important;
+    padding: 0 !important;
+  }
+  
+  /* Menu button - green and visible */
+  .menuBtn {
+    width: 34px !important; height: 34px !important;
+    background: var(--green) !important;
+    color: white !important;
+    border-color: var(--green) !important;
+    border-radius: 8px !important;
+    font-size: .9rem !important;
+    flex-shrink: 0;
+  }
+}
