@@ -263,3 +263,8 @@ body.dark .speedSel { background: #1a2a1e; }
   border-radius: 8px !important;
   flex-shrink: 0;
 }
+
+/* On mobile - sit above bottom nav */
+@media (max-width: 768px) {
+  .player { bottom: 56px !important; }
+}
