@@ -221,9 +221,7 @@ body.dark nav {
   border-bottom-color: rgba(184,151,58,.12) !important;
 }
 
-/* Bottom nav padding — all pages */
+/* Bottom nav padding */
 @media (max-width: 768px) {
-  main, .page, #__next > div {
-    padding-bottom: 70px !important;
-  }
+  body { padding-bottom: 65px; }
 }
