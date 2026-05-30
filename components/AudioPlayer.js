@@ -209,6 +209,7 @@ export default function AudioPlayer({ surahNum, surahName, verses, playingVerse,
       <div className={styles.player} style={{
         transform: minimized ? 'translateY(calc(100% - 34px))' : 'translateY(0)',
         transition: 'transform .35s cubic-bezier(.4,0,.2,1)',
+        bottom: typeof window !== 'undefined' && window.innerWidth <= 768 ? '56px' : '0',
       }}>
         {/* Progress bar */}
         <div className={styles.progressWrap} onClick={seek}>
@@ -220,7 +221,10 @@ export default function AudioPlayer({ surahNum, surahName, verses, playingVerse,
           {buffering && <div className={styles.bufferingBar}/>}
         </div>
 
-        <div className={styles.inner}>
+        <div className={styles.inner} style={{
+          padding: typeof window !== 'undefined' && window.innerWidth <= 768 ? '5px 8px' : undefined,
+          gap: typeof window !== 'undefined' && window.innerWidth <= 768 ? '6px' : undefined,
+        }}>
           {/* Info */}
           <div className={styles.info}>
             <div className={styles.surahLabel}>{surahName||'—'}</div>
