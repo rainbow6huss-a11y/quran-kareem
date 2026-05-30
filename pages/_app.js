@@ -5,7 +5,6 @@ import Head from 'next/head';
 import Splash from '../components/Splash';
 import AudioPlayer from '../components/AudioPlayer';
 import BottomNav from '../components/BottomNav';
-import BackToTop from '../components/BackToTop';
 
 export default function App({ Component, pageProps }) {
   const [dark, setDark]           = useState(false);
@@ -91,7 +90,6 @@ export default function App({ Component, pageProps }) {
         />
       )}
 
-      <BackToTop />
       <BottomNav />
       <div className={`toast ${toastVisible ? 'show' : ''}`}>{toast}</div>
     </>
