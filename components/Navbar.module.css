@@ -72,12 +72,16 @@
 .mobileMenu {
   display: flex;
   flex-direction: column;
-  padding: 8px 16px 12px;
+  padding: 10px 14px 16px;
   gap: 4px;
   border-top: 1px solid var(--border);
+  background: var(--parchment);
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 8px 20px rgba(0,0,0,.12);
 }
 .mobileLink {
-  padding: 10px 14px;
+  padding: 12px 16px;
   border-radius: 10px;
   font-size: .9rem;
   color: var(--text-soft);
@@ -103,4 +107,28 @@
 }
 @media (max-width: 400px) {
   .inner { padding: 0 8px; gap: 6px; }
+}
+
+/* ── Mobile Quick Links ── */
+.mobileQuick {
+  display: none;
+  gap: 2px;
+}
+.mobileQuickBtn {
+  width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: 8px; font-size: 1.1rem;
+  border: 1px solid transparent;
+  transition: all .15s;
+}
+.mobileQuickBtn:hover { background: rgba(184,151,58,.12); }
+.mobileQuickActive { background: rgba(45,90,61,.15) !important; border-color: var(--green) !important; }
+
+.ctrlActive { background: var(--gold-pale) !important; border-color: var(--gold) !important; }
+
+@media (max-width: 768px) {
+  .links { display: none !important; }
+  .mobileQuick { display: flex !important; }
+  .logoSub { display: none; }
+  .logoDivider { display: none; }
 }
