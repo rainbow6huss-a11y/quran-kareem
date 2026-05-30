@@ -1,9 +1,10 @@
 .btn {
   position: fixed;
-  bottom: 80px;
-  left: 16px;
-  width: 44px;
-  height: 44px;
+  bottom: 100px;
+  right: 16px;
+  left: auto;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   background: var(--green);
   color: white;
@@ -13,7 +14,7 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 3px 12px rgba(45,90,61,.4);
-  z-index: 998;
+  z-index: 996;
   opacity: 0;
   transform: translateY(20px);
   pointer-events: none;
@@ -27,18 +28,13 @@
 .btn:hover {
   background: var(--green-light);
   transform: translateY(-2px);
-  box-shadow: 0 5px 16px rgba(45,90,61,.5);
-}
-@media(max-width: 600px) {
-  .btn { bottom: 100px; left: 12px; width: 40px; height: 40px; }
 }
 
-/* Above bottom nav on mobile */
 @media (max-width: 768px) {
-  .btn { bottom: 72px !important; left: 12px !important; width: 38px !important; height: 38px !important; }
-}
-
-/* Hide on mobile - bottom nav is enough */
-@media (max-width: 768px) {
-  .btn { display: none !important; }
+  .btn {
+    bottom: 70px;
+    right: 10px;
+    width: 36px;
+    height: 36px;
+  }
 }
