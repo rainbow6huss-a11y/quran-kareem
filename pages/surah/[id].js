@@ -74,15 +74,20 @@ export default function SurahPage({
         number: a.numberInSurah, text: a.text,
         tafsir: tafsir.data?.ayahs?.[i]?.text || '',
       }));
+      // إخفاء البسملة من بداية السور (ما عدا الفاتحة)
+      // البسملة تأتي كأول آية من API لكنها ليست آية رسمية
+      const filteredVerses = ar.data.number !== 1 
+        ? v.filter(verse => !verse.text.startsWith('بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ') || verse.number !== 1)
+        : v;
       setSurah(ar.data);
-      setVerses(v);
+      setVerses(filteredVerses);
       setLoading(false);
       saveLastRead(surahNum, 1);
 
       // Feed AudioPlayer in _app
       setAudioSurah?.(surahNum);
       setAudioName?.(ar.data.name);
-      setAudioVerses?.(v);
+      setAudioVerses?.(filteredVerses);
 
       // Scroll to hash verse
       setTimeout(() => {
