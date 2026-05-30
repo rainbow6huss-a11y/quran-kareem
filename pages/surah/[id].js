@@ -272,7 +272,7 @@ ${url}`;
                 </div>
                 {surahNum < 114 && <Link href={`/surah/${surahNum+1}`} className={styles.navArrow}>التالية ‹</Link>}
               </div>
-              {surahNum !== 9 && <div className={styles.bismillah}>بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>}
+              {surahNum !== 9 && surahNum !== 1 && <div className={styles.bismillah}>بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>}
             </div>
 
             <div className={styles.tabs}>
