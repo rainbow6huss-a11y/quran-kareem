@@ -34,7 +34,7 @@ export default function SearchPage({ toggleDark, dark, showToast, onAuth }) {
       setResults([]); setSearched(false); return;
     }
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => search(query.trim()), 600);
+    debounceRef.current = setTimeout(() => search(query.trim()), 500);
     return () => clearTimeout(debounceRef.current);
   }, [query]);
 
@@ -42,6 +42,7 @@ export default function SearchPage({ toggleDark, dark, showToast, onAuth }) {
     setLoading(true); setSearched(false);
     try {
       const normalizedQ = normalizeArabic(q);
+      // بحث في نصوص الآيات
       const res = await fetch(`https://api.alquran.cloud/v1/search/${encodeURIComponent(normalizedQ)}/all/ar`);
       const data = await res.json();
       const matches = data.data?.matches || [];
