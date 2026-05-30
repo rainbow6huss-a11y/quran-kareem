@@ -132,3 +132,12 @@
   .logoSub { display: none; }
   .logoDivider { display: none; }
 }
+
+/* ── Fix Auth button on mobile ── */
+@media (max-width: 768px) {
+  /* Make auth button icon only on mobile */
+  .controls > *:first-child {
+    max-width: 36px;
+    overflow: hidden;
+  }
+}

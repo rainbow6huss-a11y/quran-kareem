@@ -81,3 +81,13 @@
   transition: all .2s;
 }
 .menuBtn:hover { background: var(--gold-pale); color: var(--brown); }
+
+/* Mobile auth button */
+.btnTextShort { display: none; }
+.btnTextFull { display: inline; }
+
+@media (max-width: 768px) {
+  .btnTextFull { display: none; }
+  .btnTextShort { display: inline; }
+  .signInBtn { padding: 6px 10px !important; font-size: .78rem !important; }
+}
