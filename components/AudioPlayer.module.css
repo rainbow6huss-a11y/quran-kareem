@@ -166,3 +166,14 @@ body.dark .sel { background: #1a2a1e; }
   .sel { max-width: 72px; font-size: .65rem; }
   .minBtn { width: 24px; height: 24px; font-size: .6rem; }
 }
+
+/* Hide player on mobile until verse is played */
+@media (max-width: 768px) {
+  .player { 
+    transform: translateY(100%) !important;
+    transition: transform .3s ease !important;
+  }
+  .player[data-visible="true"] {
+    transform: translateY(0) !important;
+  }
+}

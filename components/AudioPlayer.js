@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import styles from './AudioPlayer.module.css';
 
 const RECITERS = [
@@ -15,6 +15,7 @@ function globalAyah(s,v){ return SURAH_START[s-1]+(v-1); }
 function verseUrl(reciter,s,v){ return `https://cdn.islamic.network/quran/audio/128/${reciter}/${globalAyah(s,v)}.mp3`; }
 
 export default function AudioPlayer({ surahNum, surahName, verses, playingVerse, onVerseChange }) {
+  const [playerVisible, setPlayerVisible] = React.useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [repeat,    setRepeat]    = useState(false);
   const [reciter, setReciter] = useState(() => {
@@ -209,7 +210,7 @@ export default function AudioPlayer({ surahNum, surahName, verses, playingVerse,
       <div className={styles.player} style={{
         transform: minimized ? 'translateY(calc(100% - 34px))' : 'translateY(0)',
         transition: 'transform .35s cubic-bezier(.4,0,.2,1)',
-      }}>
+      }} data-visible={playerVisible}>
         {/* Progress bar */}
         <div className={styles.progressWrap} onClick={seek}>
           <div className={styles.progressBg}>
