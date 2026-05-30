@@ -202,3 +202,21 @@ button:focus-visible, a:focus-visible {
   /* Faster touch response */
   * { touch-action: manipulation; }
 }
+
+/* ── Enhanced Dark Mode ── */
+body.dark {
+  --parchment: #0f1a10;
+  --card: #142016;
+  --border: rgba(184,151,58,.15);
+  --text: #e8dcc8;
+  --text-soft: #8a9e8a;
+  --shadow: rgba(0,0,0,.4);
+  --gold-pale: rgba(184,151,58,.08);
+}
+body.dark .verseText {
+  color: #e8dcc8 !important;
+}
+body.dark nav {
+  background: #0f1a10 !important;
+  border-bottom-color: rgba(184,151,58,.12) !important;
+}
