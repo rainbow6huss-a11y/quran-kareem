@@ -72,7 +72,7 @@ body.dark .select { background: #1a2a1e; color: var(--text); }
 }
 .verseBody { flex: 1; }
 .verseText {
-  font-family: 'Amiri Quran', serif;
+  font-family: 'KFGQPC', 'Amiri Quran', 'Noto Naskh Arabic', serif;
   line-height: 2.8;
   color: var(--text);
   direction: rtl;
