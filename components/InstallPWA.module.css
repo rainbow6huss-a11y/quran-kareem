@@ -42,3 +42,8 @@
 @media (max-width: 768px) {
   .banner { bottom: 70px !important; }
 }
+
+/* Hide completely on mobile */
+@media (max-width: 768px) {
+  .banner { display: none !important; }
+}
