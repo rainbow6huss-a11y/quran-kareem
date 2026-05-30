@@ -198,3 +198,9 @@ body.dark .hero { background: linear-gradient(180deg, rgba(20,40,25,.9) 0%, tran
   line-height: 2.6;
   word-spacing: 0.1em;
 }
+
+/* Padding for bottom nav on mobile */
+@media (max-width: 768px) {
+  .container { padding-bottom: 80px !important; }
+  .grid { padding-bottom: 10px; }
+}

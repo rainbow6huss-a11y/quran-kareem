@@ -220,3 +220,10 @@ body.dark nav {
   background: #0f1a10 !important;
   border-bottom-color: rgba(184,151,58,.12) !important;
 }
+
+/* Bottom nav padding — all pages */
+@media (max-width: 768px) {
+  main, .page, #__next > div {
+    padding-bottom: 70px !important;
+  }
+}
