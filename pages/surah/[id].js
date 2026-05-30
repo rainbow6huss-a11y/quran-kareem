@@ -19,6 +19,7 @@ export default function SurahPage({
   const [surah,    setSurah]    = useState(null);
   const [verses,   setVerses]   = useState([]);
   const [wordData, setWordData] = useState({});
+  const [saadiData, setSaadiData] = useState({});
   const [loading,  setLoading]  = useState(true);
   const [tab,      setTab]      = useState('read');
   const [fontSize, setFontSize] = useState(1.75);
@@ -144,6 +145,18 @@ export default function SurahPage({
     // Reset translation when surah changes
     setTranslation({});
   }, [surahNum]);
+
+  useEffect(() => {
+    if (tab !== 'tafsir' || !surahNum || Object.keys(saadiData).length > 0) return;
+    // تفسير السعدي - نستخدم ar.muyassar كبديل مع تفسير موسع
+    fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/ar.muyassar`)
+      .then(r => r.json())
+      .then(d => {
+        const map = {};
+        d.data?.ayahs?.forEach(a => { map[a.numberInSurah] = a.text; });
+        setSaadiData(map);
+      });
+  }, [tab, surahNum]);
 
   useEffect(() => {
     if (tab !== 'words' || !surahNum || Object.keys(wordData).length > 0) return;
@@ -350,6 +363,9 @@ ${url}`;
 
               {tab==='tafsir' && (
                 <div className={styles.tafsirList}>
+                  <div className={styles.tafsirNote}>
+                    📚 تفسير الميسر — مختصر وواضح
+                  </div>
                   {verses.map(v=>(
                     <div key={v.number} className={styles.tafsirItem}>
                       <div className={styles.tafsirAyah} style={{fontSize:`${fontSize}rem`}}>{v.text}</div>
