@@ -161,3 +161,44 @@ html, body {
   /* Smooth scroll */
   html { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
 }
+
+/* ═══════════════════════════════
+   TYPOGRAPHY & POLISH
+   ═══════════════════════════════ */
+
+/* Page transitions */
+#__next { animation: pageIn .2s ease; }
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Better Arabic typography */
+.arabic-text {
+  font-family: 'Amiri Quran', serif;
+  line-height: 2.8;
+  letter-spacing: 0.02em;
+  word-spacing: 0.1em;
+}
+
+/* Smooth hover on all interactive elements */
+a, button { transition: all .18s ease !important; }
+
+/* Better focus styles */
+button:focus-visible, a:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Touch improvements */
+@media (max-width: 768px) {
+  button, a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  /* Faster touch response */
+  * { touch-action: manipulation; }
+}

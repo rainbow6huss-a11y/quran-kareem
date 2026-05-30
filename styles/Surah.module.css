@@ -71,7 +71,16 @@ body.dark .select { background: #1a2a1e; color: var(--text); }
   font-size: .7rem; font-weight: 700; color: var(--brown); margin-top: 4px;
 }
 .verseBody { flex: 1; }
-.verseText { font-family: 'Amiri Quran', serif; line-height: 2.6; color: var(--text); direction: rtl; text-align: right; transition: font-size .2s; }
+.verseText {
+  font-family: 'Amiri Quran', serif;
+  line-height: 2.8;
+  color: var(--text);
+  direction: rtl;
+  text-align: right;
+  transition: font-size .25s ease;
+  word-spacing: 0.12em;
+  letter-spacing: 0.01em;
+}
 .verseTrans { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); font-size: .85rem; color: var(--text-soft); line-height: 1.9; direction: rtl; }
 .playBtn {
   width: 32px; height: 32px; border: 1px solid var(--border); border-radius: 50%;

@@ -173,3 +173,28 @@ body.dark .hero { background: linear-gradient(180deg, rgba(20,40,25,.9) 0%, tran
   .grid { grid-template-columns: 1fr 1fr; gap: 5px; }
   .card { padding: 8px 8px; }
 }
+
+/* ── Polish Cards ── */
+.card {
+  transition: all .2s ease !important;
+}
+.card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 14px var(--shadow) !important;
+}
+
+/* ── Better Stats ── */
+.stat span {
+  display: block;
+  font-size: 1.6rem;
+  font-weight: 700;
+  font-family: 'Amiri', serif;
+  color: var(--green);
+  line-height: 1.2;
+}
+
+/* ── Ayah box polish ── */
+.ayahText {
+  line-height: 2.6;
+  word-spacing: 0.1em;
+}
