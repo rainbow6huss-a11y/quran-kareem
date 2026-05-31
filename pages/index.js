@@ -134,7 +134,7 @@ export default function Home({ toggleDark, dark, showToast, user, onAuth }) {
           <div className={styles.stat}><span>١١٤</span> سورة</div>
           <div className={styles.stat}><span>٦٢٣٦</span> آية</div>
           <div className={styles.stat}><span>٣٠</span> جزءًا</div>
-          <div className={styles.stat}><span>٢٩</span> جزءًا مكياً</div>
+          <div className={styles.stat}><span>٦٦٤</span> صفحة</div>
         </div>
 
         {/* Jump to juz */}
