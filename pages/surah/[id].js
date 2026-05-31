@@ -74,14 +74,18 @@ export default function SurahPage({
         number: a.numberInSurah, text: a.text,
         tafsir: tafsir.data?.ayahs?.[i]?.text || '',
       }));
-      // إخفاء البسملة من الآية الأولى في السور ما عدا الفاتحة (1) والتوبة (9)
-      // البسملة تظهر كعنوان مستقل فوق الآيات
+      // إزالة البسملة من نص الآية الأولى (مدموجة معها)
+      // البسملة ستظهر كعنوان مستقل فوق الآيات
       let filteredVerses = v;
-      if (ar.data.number !== 1 && ar.data.number !== 9) {
-        // إذا كانت الآية الأولى تبدأ بـ "بسم" نحذفها لأنها ستظهر كعنوان
-        if (v.length > 0 && v[0].text && v[0].text.replace(/[ً-ٟ]/g, '').includes('بسم الله')) {
-          filteredVerses = v.slice(1);
-        }
+      if (ar.data.number !== 1 && ar.data.number !== 9 && v.length > 0) {
+        const firstVerse = v[0];
+        // إزالة البسملة من بداية نص الآية الأولى
+        const cleanText = firstVerse.text
+          .replace(/^بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\s*/, '')
+          .replace(/^بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ\s*/, '')
+          .replace(/^بسم الله الرحمن الرحيم\s*/, '')
+          .trim();
+        filteredVerses = [{ ...firstVerse, text: cleanText }, ...v.slice(1)];
       }
       setSurah(ar.data);
       setVerses(filteredVerses);
