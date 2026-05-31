@@ -74,18 +74,32 @@ export default function SurahPage({
         number: a.numberInSurah, text: a.text,
         tafsir: tafsir.data?.ayahs?.[i]?.text || '',
       }));
-      // إزالة البسملة من نص الآية الأولى (مدموجة معها)
-      // البسملة ستظهر كعنوان مستقل فوق الآيات
+      // فصل البسملة عن الآية الأولى وحذفها (ستظهر كعنوان مستقل)
       let filteredVerses = v;
       if (ar.data.number !== 1 && ar.data.number !== 9 && v.length > 0) {
         const firstVerse = v[0];
-        // إزالة البسملة من بداية نص الآية الأولى
-        const cleanText = firstVerse.text
-          .replace(/^بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ\s*/, '')
-          .replace(/^بِسْمِ اللَّهِ الرَّحْمَنِ الرَّحِيمِ\s*/, '')
-          .replace(/^بسم الله الرحمن الرحيم\s*/, '')
-          .trim();
-        filteredVerses = [{ ...firstVerse, text: cleanText }, ...v.slice(1)];
+        // البسملة الكاملة بدون تشكيل للمقارنة
+        const BISM = 'بسم الله الرحمن الرحيم';
+        // إزالة التشكيل من النص للمقارنة
+        const textNorm = firstVerse.text.replace(/[ً-ٰٟ]/g, '');
+        if (textNorm.startsWith('بسم الله')) {
+          // فصل البسملة: نجد نهايتها بعد "الرحيم" ونأخذ ما بعدها
+          const bismEnd = textNorm.indexOf('الرحيم');
+          if (bismEnd !== -1) {
+            // نحسب عدد الحروف حتى نهاية البسملة في النص الأصلي (مع التشكيل)
+            let charCount = 0, origIdx = 0;
+            for (let i = 0; i < firstVerse.text.length && charCount <= bismEnd + 6; i++) {
+              const c = firstVerse.text[i];
+              const isHarakat = /[ً-ٰٟ]/.test(c);
+              if (!isHarakat) charCount++;
+              origIdx = i + 1;
+            }
+            const cleanText = firstVerse.text.substring(origIdx).trim();
+            if (cleanText.length > 0) {
+              filteredVerses = [{ ...firstVerse, text: cleanText }, ...v.slice(1)];
+            }
+          }
+        }
       }
       setSurah(ar.data);
       setVerses(filteredVerses);
