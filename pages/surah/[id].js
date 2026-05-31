@@ -79,9 +79,8 @@ export default function SurahPage({
       if (ar.data.number !== 1 && ar.data.number !== 9 && v.length > 0) {
         const firstVerse = v[0];
         const words = firstVerse.text.trim().split(/\s+/);
-        const firstWordLetters = words[0].replace(/[^\u0600-\u06FF]/g, '');
-        const hasBsm = firstWordLetters.includes('بسم');
-        if (hasBsm && words.length > 4) {
+        // البسملة دائماً 4 كلمات أولى في كل سورة عدا الفاتحة والتوبة
+        if (words.length > 4) {
           const cleanText = words.slice(4).join(' ').trim();
           filteredVerses = [{ ...firstVerse, text: cleanText }, ...v.slice(1)];
         }
