@@ -74,37 +74,16 @@ export default function SurahPage({
         number: a.numberInSurah, text: a.text,
         tafsir: tafsir.data?.ayahs?.[i]?.text || '',
       }));
-      // فصل البسملة عن الآية الأولى وحذفها
+      // إزالة البسملة من الآية الأولى — البسملة = 4 كلمات أولى
       let filteredVerses = v;
       if (ar.data.number !== 1 && ar.data.number !== 9 && v.length > 0) {
         const firstVerse = v[0];
-        // تطبيع النص: إزالة التشكيل وتوحيد الألف
-        const normalize = t => t
-          .replace(/[ً-ٰٟۖ-ۜ۟-۪ۤۧۨ-ۭ]/g, '')
-          .replace(/[آأإٱا]/g, 'ا')
-          .replace(/\s+/g, ' ').trim();
-        const norm = normalize(firstVerse.text);
-        // البسملة دائماً تبدأ بـ "بسم الله"
-        if (norm.startsWith('بسم الله')) {
-          // نجد "الرحيم" ونأخذ ما بعده
-          const idx = norm.indexOf('الرحيم');
-          if (idx !== -1) {
-            // نحسب الموقع في النص الأصلي
-            let normCount = 0;
-            let origPos = 0;
-            const targetLen = idx + 6; // "الرحيم" = 6 أحرف
-            for (let i = 0; i < firstVerse.text.length; i++) {
-              const c = firstVerse.text[i];
-              if (!/[ً-ٰٟۖ-ۜ۟-۪ۤۧۨ-ۭ]/.test(c)) {
-                normCount++;
-              }
-              if (normCount >= targetLen) { origPos = i + 1; break; }
-            }
-            const cleanText = firstVerse.text.substring(origPos).trim();
-            if (cleanText.length > 0) {
-              filteredVerses = [{ ...firstVerse, text: cleanText }, ...v.slice(1)];
-            }
-          }
+        const words = firstVerse.text.trim().split(/\s+/);
+        const firstWordLetters = words[0].replace(/[^\u0600-\u06FF]/g, '');
+        const hasBsm = firstWordLetters.includes('\u0628\u0633\u0645');
+        if (hasBsm && words.length > 4) {
+          const cleanText = words.slice(4).join(' ').trim();
+          filteredVerses = [{ ...firstVerse, text: cleanText }, ...v.slice(1)];
         }
       }
       setSurah(ar.data);
