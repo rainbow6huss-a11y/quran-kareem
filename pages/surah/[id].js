@@ -80,7 +80,7 @@ export default function SurahPage({
         const firstVerse = v[0];
         const words = firstVerse.text.trim().split(/\s+/);
         const firstWordLetters = words[0].replace(/[^\u0600-\u06FF]/g, '');
-        const hasBsm = firstWordLetters.includes('\u0628\u0633\u0645');
+        const hasBsm = firstWordLetters.includes('بسم');
         if (hasBsm && words.length > 4) {
           const cleanText = words.slice(4).join(' ').trim();
           filteredVerses = [{ ...firstVerse, text: cleanText }, ...v.slice(1)];
