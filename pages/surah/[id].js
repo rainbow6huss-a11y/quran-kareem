@@ -74,27 +74,33 @@ export default function SurahPage({
         number: a.numberInSurah, text: a.text,
         tafsir: tafsir.data?.ayahs?.[i]?.text || '',
       }));
-      // فصل البسملة عن الآية الأولى وحذفها (ستظهر كعنوان مستقل)
+      // فصل البسملة عن الآية الأولى وحذفها
       let filteredVerses = v;
       if (ar.data.number !== 1 && ar.data.number !== 9 && v.length > 0) {
         const firstVerse = v[0];
-        // البسملة الكاملة بدون تشكيل للمقارنة
-        const BISM = 'بسم الله الرحمن الرحيم';
-        // إزالة التشكيل من النص للمقارنة
-        const textNorm = firstVerse.text.replace(/[ً-ٰٟ]/g, '');
-        if (textNorm.startsWith('بسم الله')) {
-          // فصل البسملة: نجد نهايتها بعد "الرحيم" ونأخذ ما بعدها
-          const bismEnd = textNorm.indexOf('الرحيم');
-          if (bismEnd !== -1) {
-            // نحسب عدد الحروف حتى نهاية البسملة في النص الأصلي (مع التشكيل)
-            let charCount = 0, origIdx = 0;
-            for (let i = 0; i < firstVerse.text.length && charCount <= bismEnd + 6; i++) {
+        // تطبيع النص: إزالة التشكيل وتوحيد الألف
+        const normalize = t => t
+          .replace(/[ً-ٰٟۖ-ۜ۟-۪ۤۧۨ-ۭ]/g, '')
+          .replace(/[آأإٱا]/g, 'ا')
+          .replace(/\s+/g, ' ').trim();
+        const norm = normalize(firstVerse.text);
+        // البسملة دائماً تبدأ بـ "بسم الله"
+        if (norm.startsWith('بسم الله')) {
+          // نجد "الرحيم" ونأخذ ما بعده
+          const idx = norm.indexOf('الرحيم');
+          if (idx !== -1) {
+            // نحسب الموقع في النص الأصلي
+            let normCount = 0;
+            let origPos = 0;
+            const targetLen = idx + 6; // "الرحيم" = 6 أحرف
+            for (let i = 0; i < firstVerse.text.length; i++) {
               const c = firstVerse.text[i];
-              const isHarakat = /[ً-ٰٟ]/.test(c);
-              if (!isHarakat) charCount++;
-              origIdx = i + 1;
+              if (!/[ً-ٰٟۖ-ۜ۟-۪ۤۧۨ-ۭ]/.test(c)) {
+                normCount++;
+              }
+              if (normCount >= targetLen) { origPos = i + 1; break; }
             }
-            const cleanText = firstVerse.text.substring(origIdx).trim();
+            const cleanText = firstVerse.text.substring(origPos).trim();
             if (cleanText.length > 0) {
               filteredVerses = [{ ...firstVerse, text: cleanText }, ...v.slice(1)];
             }
