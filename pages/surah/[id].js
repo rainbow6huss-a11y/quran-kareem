@@ -74,10 +74,10 @@ export default function SurahPage({
         number: a.numberInSurah, text: a.text,
         tafsir: tafsir.data?.ayahs?.[i]?.text || '',
       }));
-      // إخفاء الآية الأولى إذا كانت بسملة (لكل السور ما عدا الفاتحة)
-      const BISMILLAH_WORDS = ['بسم', 'بِسْمِ'];
+      // API يُرجع البسملة كأول آية في كل سورة
+      // نحذفها من كل السور ما عدا الفاتحة (رقم 1)
       const filteredVerses = ar.data.number !== 1
-        ? v.filter(verse => !(verse.number === 1 && BISMILLAH_WORDS.some(w => verse.text.includes(w))))
+        ? v.slice(1)
         : v;
       setSurah(ar.data);
       setVerses(filteredVerses);
