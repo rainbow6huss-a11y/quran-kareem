@@ -74,11 +74,15 @@ export default function SurahPage({
         number: a.numberInSurah, text: a.text,
         tafsir: tafsir.data?.ayahs?.[i]?.text || '',
       }));
-      // API يُرجع البسملة كأول آية في كل سورة
-      // نحذفها من كل السور ما عدا الفاتحة (رقم 1)
-      const filteredVerses = ar.data.number !== 1
-        ? v.slice(1)
-        : v;
+      // إخفاء البسملة من الآية الأولى في السور ما عدا الفاتحة (1) والتوبة (9)
+      // البسملة تظهر كعنوان مستقل فوق الآيات
+      let filteredVerses = v;
+      if (ar.data.number !== 1 && ar.data.number !== 9) {
+        // إذا كانت الآية الأولى تبدأ بـ "بسم" نحذفها لأنها ستظهر كعنوان
+        if (v.length > 0 && v[0].text && v[0].text.replace(/[ً-ٟ]/g, '').includes('بسم الله')) {
+          filteredVerses = v.slice(1);
+        }
+      }
       setSurah(ar.data);
       setVerses(filteredVerses);
       setLoading(false);
