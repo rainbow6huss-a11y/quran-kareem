@@ -287,6 +287,7 @@ ${url}`;
                     <span>📍 {surah.revelationType==='Meccan'?'مكية':'مدنية'}</span>
                     <span>📜 {surah.numberOfAyahs} آية</span>
                     <span>🔢 رقم {surah.number}</span>
+                    <span className={styles.riwayaBadge}>رواية حفص عن عاصم</span>
                   </div>
                 </div>
                 {surahNum < 114 && <Link href={`/surah/${surahNum+1}`} className={styles.navArrow}>التالية ‹</Link>}
