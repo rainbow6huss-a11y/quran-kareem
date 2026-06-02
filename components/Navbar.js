@@ -31,6 +31,7 @@ export default function Navbar({ toggleDark, dark, showToast, onAuth }) {
     { href: '/khatma',       label: '🌙 الختمة' },
     { href: '/bookmarks',    label: '🔖 علاماتي' },
     { href: '/achievements', label: '🏆 إنجازاتي' },
+    { href: '/stats', label: '📊 إحصائياتي' },
     { href: '/athkar',       label: '📿 الأذكار' },
     { href: '/tasbih',       label: '🔵 التسبيح' },
     { href: '/contact',      label: '✉️ تواصل' },
