@@ -354,6 +354,8 @@ ${url}`;
                 </div>
               </div>
             )}
+
+            <div className={styles.content}>
               {tab==='read' && (
                 <div className={styles.verses}>
                   {readingMode === 'page' ? (
@@ -425,7 +427,8 @@ ${url}`;
                       </div>
                     </div>
                     </div>
-                  ))}</> )}
+                  ))}</>
+                  )}
                 </div>
               )}
 
