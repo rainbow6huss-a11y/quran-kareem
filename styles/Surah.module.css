@@ -509,3 +509,10 @@ body.dark .fontSelect { background: #1a2a1e; }
   .readingModeRow { gap: 4px; }
   .modeBtn { font-size: .75rem; padding: 6px 8px; }
 }
+
+/* Riwaya Badge */
+.riwayaBadge {
+  font-size: .65rem; color: var(--green);
+  background: rgba(45,90,61,.1); padding: 2px 8px;
+  border-radius: 10px; font-weight: 600;
+}
