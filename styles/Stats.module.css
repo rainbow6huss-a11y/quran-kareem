@@ -69,12 +69,7 @@
 }
 .quickLink:hover { border-color: var(--gold); color: var(--brown); }
 
-/* Riwaya badge in surah page */
-:global(.riwayaBadge) {
-  font-size: .65rem; color: var(--green);
-  background: rgba(45,90,61,.1); padding: 2px 8px;
-  border-radius: 10px; font-weight: 600;
-}
+
 
 @media(max-width: 600px) {
   .statsGrid { grid-template-columns: repeat(2, 1fr); }
