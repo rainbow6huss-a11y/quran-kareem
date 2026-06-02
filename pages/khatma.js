@@ -304,6 +304,17 @@ export default function KhatmaPage({ toggleDark, dark, showToast, user, onAuth }
 
         {/* SURAHS GRID */}
         <h2 className={styles.gridTitle}>السور — اضغط لتعليم المكتملة</h2>
+        {/* زر إعادة تعيين الختمة */}
+        <div className={styles.resetWrap}>
+          <button className={styles.resetKhatmaBtn} onClick={() => {
+            if (confirm('هل تريد إعادة تعيين الختمة والبدء من جديد؟')) {
+              localStorage.removeItem('q_khatma');
+              localStorage.removeItem('q_khatma_log');
+              window.location.reload();
+            }
+          }}>🔄 بدء ختمة جديدة</button>
+        </div>
+
         <div className={styles.surahGrid}>
           {SURAH_NAMES.map((name, i) => {
             const num = i+1;

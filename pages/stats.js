@@ -46,7 +46,7 @@ export default function StatsPage({ toggleDark, dark, showToast, onAuth }) {
       const dateStr = d.toISOString().split('T')[0];
       const count = readLog.filter(r => r.date === dateStr).length;
       return {
-        day: ['أحد','اثن','ثلا','أرب','خمي','جمع','سبت'][d.getDay()],
+        day: ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'][d.getDay()],
         count,
         isToday: dateStr === today,
       };
@@ -118,7 +118,7 @@ export default function StatsPage({ toggleDark, dark, showToast, onAuth }) {
           <div className={styles.lastReadCard}>
             <div className={styles.lastReadTitle}>📍 آخر قراءة</div>
             <div className={styles.lastReadInfo}>
-              وصلت إلى آية {stats.lastRead.verse} من السورة رقم {stats.lastRead.surah}
+              آخر آية: سورة رقم {stats.lastRead.surah} — آية {stats.lastRead.verse}
             </div>
             <Link href={`/surah/${stats.lastRead.surah}#v${stats.lastRead.verse}`}
               className={styles.continueBtn}>
