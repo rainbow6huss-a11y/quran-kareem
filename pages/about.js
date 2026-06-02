@@ -1,4 +1,3 @@
-// عن الموقع
 import Head from 'next/head';
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
@@ -12,18 +11,18 @@ export default function AboutPage({ toggleDark, dark, showToast, onAuth }) {
 
       <div className={styles.page}>
 
-        {/* Hero */}
+        {/* Hero مختصر */}
         <div className={styles.hero}>
           <div className={styles.ornament}>❧ ✦ ❧</div>
-          <h1 className={styles.title}>عن موقع القرآن الكريم</h1>
-          <p className={styles.sub}>نُورٌ عَلَى نُور</p>
+          <h1 className={styles.title}>عن الموقع</h1>
+          <p className={styles.sub}>
+            موقع قرآن كامل، صدقة جارية إلى <strong>فرح ياسر</strong>
+          </p>
         </div>
 
         {/* الإهداء */}
         <div className={styles.dedicationCard}>
           <div className={styles.dedIcon}>🤲</div>
-          <h2 className={styles.dedTitle}>صدقة جارية خالصة</h2>
-          <p className={styles.dedText}>هذا العمل المتواضع مُهدى إلى</p>
           <div className={styles.dedName}>فرح ياسر</div>
           <p className={styles.dedDua}>
             اللهم اجعله في ميزان حسناتها<br/>
@@ -38,30 +37,12 @@ export default function AboutPage({ toggleDark, dark, showToast, onAuth }) {
         <div className={styles.section}>
           <h2 className={styles.sectionTitle}>📜 الرواية المعتمدة</h2>
           <div className={styles.infoGrid}>
-            <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>الرواية</span>
-              <span className={styles.infoValue}>حفص عن عاصم</span>
-            </div>
-            <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>الطريق</span>
-              <span className={styles.infoValue}>الشاطبية</span>
-            </div>
-            <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>عدد الآيات</span>
-              <span className={styles.infoValue}>٦٢٣٦ آية</span>
-            </div>
-            <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>عدد الصفحات</span>
-              <span className={styles.infoValue}>٦٠٤ صفحة</span>
-            </div>
-            <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>عدد السور</span>
-              <span className={styles.infoValue}>١١٤ سورة</span>
-            </div>
-            <div className={styles.infoItem}>
-              <span className={styles.infoLabel}>عدد الأجزاء</span>
-              <span className={styles.infoValue}>٣٠ جزءًا</span>
-            </div>
+            <div className={styles.infoItem}><span className={styles.infoLabel}>الرواية</span><span className={styles.infoValue}>حفص عن عاصم</span></div>
+            <div className={styles.infoItem}><span className={styles.infoLabel}>الطريق</span><span className={styles.infoValue}>الشاطبية</span></div>
+            <div className={styles.infoItem}><span className={styles.infoLabel}>عدد الآيات</span><span className={styles.infoValue}>٦٢٣٦ آية</span></div>
+            <div className={styles.infoItem}><span className={styles.infoLabel}>عدد الصفحات</span><span className={styles.infoValue}>٦٠٤ صفحة</span></div>
+            <div className={styles.infoItem}><span className={styles.infoLabel}>عدد السور</span><span className={styles.infoValue}>١١٤ سورة</span></div>
+            <div className={styles.infoItem}><span className={styles.infoLabel}>عدد الأجزاء</span><span className={styles.infoValue}>٣٠ جزءًا</span></div>
           </div>
         </div>
 
@@ -70,16 +51,18 @@ export default function AboutPage({ toggleDark, dark, showToast, onAuth }) {
           <h2 className={styles.sectionTitle}>✨ مميزات الموقع</h2>
           <div className={styles.featuresGrid}>
             {[
-              ['📖','قراءة القرآن','114 سورة كاملة بالرسم العثماني'],
-              ['🎧','الاستماع','4 قراء مع تزامن الآيات'],
-              ['📚','التفسير','تفسير الميسر لكل آية'],
-              ['🌐','الترجمة','5 لغات: إنجليزية، فرنسية، تركية، أردو'],
-              ['🌙','الختمة','تتبع يومي مع streak وإحصائيات'],
+              ['📖','قراءة القرآن','114 سورة كاملة'],
+              ['🎧','الاستماع','4 قراء مع تزامن'],
+              ['📚','التفسير','تفسير الميسر'],
+              ['🌐','الترجمة','5 لغات'],
+              ['🌙','الختمة','تتبع يومي وstreak'],
               ['🔖','العلامات','حفظ الآيات المفضلة'],
-              ['🔍','البحث','بحث في نصوص القرآن كاملاً'],
-              ['📿','الأذكار','أذكار الصباح والمساء والأدعية'],
-              ['📊','الإحصائيات','تتبع تقدمك اليومي'],
-              ['📱','PWA','تثبيته كتطبيق على هاتفك'],
+              ['🔍','البحث','في نصوص القرآن'],
+              ['📿','الأذكار','صباح ومساء وأدعية'],
+              ['📊','الإحصائيات','تقدمك اليومي'],
+              ['📱','PWA','تطبيق على هاتفك'],
+              ['🔒','الخصوصية','لا إعلانات ولا تتبع'],
+              ['🤲','صدقة جارية','خالصة لوجه الله'],
             ].map(([icon,title,desc],i) => (
               <div key={i} className={styles.featureCard}>
                 <div className={styles.featureIcon}>{icon}</div>
@@ -90,40 +73,13 @@ export default function AboutPage({ toggleDark, dark, showToast, onAuth }) {
           </div>
         </div>
 
-        {/* المصادر */}
-        <div className={styles.section}>
-          <h2 className={styles.sectionTitle}>🛠 المصادر والتقنيات</h2>
-          <div className={styles.techCard}>
-            <div className={styles.techItem}>
-              <span className={styles.techLabel}>النص القرآني</span>
-              <span className={styles.techValue}>مشروع AlQuran Cloud API</span>
-            </div>
-            <div className={styles.techItem}>
-              <span className={styles.techLabel}>التلاوات الصوتية</span>
-              <span className={styles.techValue}>Islamic Network CDN</span>
-            </div>
-            <div className={styles.techItem}>
-              <span className={styles.techLabel}>إطار العمل</span>
-              <span className={styles.techValue}>Next.js + React</span>
-            </div>
-            <div className={styles.techItem}>
-              <span className={styles.techLabel}>قاعدة البيانات</span>
-              <span className={styles.techValue}>Supabase</span>
-            </div>
-            <div className={styles.techItem}>
-              <span className={styles.techLabel}>الاستضافة</span>
-              <span className={styles.techValue}>Vercel</span>
-            </div>
-          </div>
-        </div>
-
         {/* الخصوصية */}
         <div className={styles.section}>
           <h2 className={styles.sectionTitle}>🔒 الخصوصية</h2>
           <div className={styles.privacyCard}>
             <p>لا نجمع أي بيانات شخصية بدون إذنك.</p>
             <p>إحصائياتك تُحفظ في متصفحك فقط، أو في حساب Google إذا اخترت تسجيل الدخول.</p>
-            <p>لا يوجد أي إعلانات — هذا الموقع صدقة جارية خالصة.</p>
+            <p>لا يوجد أي إعلانات — هذا الموقع صدقة جارية خالصة لوجه الله.</p>
           </div>
         </div>
 
@@ -131,10 +87,22 @@ export default function AboutPage({ toggleDark, dark, showToast, onAuth }) {
         <div className={styles.section}>
           <h2 className={styles.sectionTitle}>📋 الترخيص</h2>
           <div className={styles.licenseCard}>
-            يمكنك استخدام الكود لأي غرض خيري.<br/>
-            ذكر المصدر غير إلزامي لكنه محبَّب.<br/>
-            <span className={styles.licenseNote}>بارك الله في كل من ساهم في نشر القرآن الكريم 🤲</span>
+            <p>يمكنك استخدام هذا العمل لأي غرض خيري.</p>
+            <a href="https://github.com/rainbow6huss-a11y/quran-kareem"
+              target="_blank" rel="noreferrer"
+              className={styles.githubBtn}>
+              👨‍💻 قارئ الكود على GitHub
+            </a>
           </div>
+        </div>
+
+        {/* دعاء ختامي */}
+        <div className={styles.finalDua}>
+          <div className={styles.finalDuaText}>
+            اللهم اجعل هذا العمل خالصًا لوجهك<br/>
+            وتقبّله منا، واغفر لنا ولوالدينا وللمسلمين أجمعين
+          </div>
+          <div className={styles.finalDuaAmen}>آمين 🤲</div>
         </div>
 
         {/* روابط */}
