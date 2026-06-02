@@ -390,3 +390,122 @@ body.dark .fontSelect { background: #1a2a1e; }
   border: 1px solid rgba(184,151,58,.3); border-radius: 8px;
   font-size: .78rem; color: var(--brown); margin-bottom: 12px; font-weight: 600;
 }
+
+/* ── Page Markers ── */
+.pageMarker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0 8px;
+  opacity: .6;
+}
+.pageMarkerLine {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.pageMarkerInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: .72rem;
+  color: var(--gold);
+  font-weight: 600;
+  white-space: nowrap;
+  padding: 3px 10px;
+  border: 1px solid rgba(184,151,58,.3);
+  border-radius: 20px;
+  background: var(--gold-pale);
+}
+
+/* ── Beautiful Bismillah ── */
+.bismillah {
+  font-family: 'KFGQPC', 'Amiri Quran', serif;
+  font-size: 1.8rem;
+  text-align: center;
+  color: var(--brown);
+  line-height: 2.5;
+  margin: 12px 0 4px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, rgba(184,151,58,.06), rgba(45,90,61,.04));
+  border-radius: 12px;
+  border: 1px solid rgba(184,151,58,.15);
+  position: relative;
+}
+.bismillah::before, .bismillah::after {
+  content: '❧';
+  color: var(--gold);
+  font-size: .9rem;
+  opacity: .5;
+  margin: 0 8px;
+}
+
+/* ── Reading Mode ── */
+.readingModeRow {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+.modeBtn {
+  flex: 1;
+  padding: 7px 12px;
+  border: 1.5px solid var(--border);
+  border-radius: 10px;
+  background: var(--card);
+  font-family: 'Tajawal', sans-serif;
+  font-size: .82rem;
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: all .2s;
+  font-weight: 500;
+}
+.modeBtn:hover { border-color: var(--gold); color: var(--brown); }
+.modeBtnActive {
+  background: var(--green) !important;
+  color: white !important;
+  border-color: var(--green) !important;
+  font-weight: 700;
+}
+
+/* ── Page Mode (صفحة كاملة) ── */
+.pageMode {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 24px 20px;
+  text-align: right;
+  direction: rtl;
+  line-height: 2.8;
+}
+.inlineVerse {
+  font-family: 'Amiri Quran', serif;
+  color: var(--text);
+}
+.inlineVerse.playing {
+  background: rgba(184,151,58,.2);
+  border-radius: 4px;
+  padding: 0 2px;
+}
+.inlineVerseNum {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--gold-pale);
+  border: 1px solid rgba(184,151,58,.3);
+  font-size: .62rem;
+  color: var(--gold);
+  font-weight: 700;
+  margin: 0 3px;
+  vertical-align: middle;
+  font-family: 'Tajawal', sans-serif;
+}
+
+@media (max-width: 768px) {
+  .pageMode { padding: 16px 12px; }
+  .readingModeRow { gap: 4px; }
+  .modeBtn { font-size: .75rem; padding: 6px 8px; }
+}
