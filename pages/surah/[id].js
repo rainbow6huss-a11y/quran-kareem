@@ -38,6 +38,7 @@ export default function SurahPage({
   }, []);
   const [saving,   setSaving]   = useState(false);
   const [readPct,  setReadPct]  = useState(0);
+  const [readingMode, setReadingMode] = useState(localStorage.getItem('q_reading_mode') || 'verse');
   const [translation, setTranslation] = useState({});
   const [showTranslation, setShowTranslation] = useState(false);
   const [translationLang, setTranslationLang] = useState('en.sahih');
@@ -67,12 +68,17 @@ export default function SurahPage({
     setBookmarks(saved);
 
     Promise.all([
-      fetch(`https://api.alquran.cloud/v1/surah/${surahNum}`).then(r => r.json()),
+      fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/quran-uthmani`).then(r => r.json()),
       fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/ar.muyassar`).then(r => r.json()),
     ]).then(([ar, tafsir]) => {
       const v = ar.data.ayahs.map((a, i) => ({
-        number: a.numberInSurah, text: a.text,
+        number: a.numberInSurah,
+        text: a.text,
         tafsir: tafsir.data?.ayahs?.[i]?.text || '',
+        page: a.page,
+        juz: a.juz,
+        hizb: a.hizbQuarter,
+        sajda: a.sajda,
       }));
       // إزالة البسملة من الآية الأولى — البسملة = 4 كلمات أولى
       let filteredVerses = v;
@@ -337,8 +343,45 @@ ${url}`;
             <div className={styles.content}>
               {tab==='read' && (
                 <div className={styles.verses}>
-                  {verses.map(v => (
-                    <div key={v.number} id={`v${v.number}`} data-verse={v.number}
+                  {readingMode === 'page' ? (
+                    /* وضع الصفحة الكاملة */
+                    <div className={styles.pageMode}>
+                      {verses.map((v, idx) => (
+                        <span key={v.number} id={`v${v.number}`} data-verse={v.number}>
+                          {v.page && (idx === 0 || verses[idx-1]?.page !== v.page) && idx > 0 && (
+                            <div className={styles.pageMarker}>
+                              <div className={styles.pageMarkerLine}/>
+                              <div className={styles.pageMarkerInfo}>صفحة {v.page} • جزء {v.juz}</div>
+                              <div className={styles.pageMarkerLine}/>
+                            </div>
+                          )}
+                          <span className={`${styles.inlineVerse} ${playingVerse===v.number?styles.playing:''}`}
+                            style={{fontSize:`${fontSize}rem`, fontFamily: fontFamily==='noto-naskh' ? "'Noto Naskh Arabic', serif" : fontFamily==='amiri' ? "'Amiri', serif" : "'Amiri Quran', serif"}}>
+                            {v.text}
+                          </span>
+                          <span className={styles.inlineVerseNum}>{v.number}</span>
+                          {' '}
+                        </span>
+                      ))}
+                    </div>
+                  ) : (
+                  /* وضع آية بآية */
+                  <>{verses.map((v, idx) => (
+                    <div key={v.number}>
+                      {/* عرض رقم الصفحة عند بداية كل صفحة جديدة */}
+                      {v.page && (idx === 0 || verses[idx-1]?.page !== v.page) && (
+                        <div className={styles.pageMarker}>
+                          <div className={styles.pageMarkerLine}/>
+                          <div className={styles.pageMarkerInfo}>
+                            <span>صفحة {v.page}</span>
+                            <span>•</span>
+                            <span>جزء {v.juz}</span>
+                            {v.hizb && <span>• حزب {Math.ceil(v.hizb/2)}</span>}
+                          </div>
+                          <div className={styles.pageMarkerLine}/>
+                        </div>
+                      )}
+                    <div id={`v${v.number}`} data-verse={v.number}
                       className={`${styles.verse} ${playingVerse===v.number?styles.playing:''}`}>
                       <div className={styles.verseTop}>
                         <div className={styles.verseNum}>{v.number}</div>
@@ -368,7 +411,8 @@ ${url}`;
                         <button className={styles.actionBtn} onClick={()=>shareVerse(v.number)}>🔗 مشاركة</button>
                       </div>
                     </div>
-                  ))}
+                    </div>
+                  ))}</> )}
                 </div>
               )}
 
