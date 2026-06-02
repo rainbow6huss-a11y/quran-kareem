@@ -34,6 +34,7 @@ export default function Navbar({ toggleDark, dark, showToast, onAuth }) {
     { href: '/stats', label: '📊 إحصائياتي' },
     { href: '/athkar',       label: '📿 الأذكار' },
     { href: '/tasbih',       label: '🔵 التسبيح' },
+    { href: '/about',        label: 'ℹ️ عن الموقع' },
     { href: '/contact',      label: '✉️ تواصل' },
     { href: '/hadya',        label: '🤲 إهداء' },
   ];
