@@ -29,6 +29,8 @@ export default function SurahPage({
 
   // تحميل تفضيلات المستخدم المحفوظة
   useEffect(() => {
+    const savedMode = localStorage.getItem('q_reading_mode');
+    if (savedMode) setReadingMode(savedMode);
     const savedSize   = localStorage.getItem('q_font_size');
     const savedFamily = localStorage.getItem('q_font_family');
     const savedTrans  = localStorage.getItem('q_show_trans');
@@ -38,7 +40,7 @@ export default function SurahPage({
   }, []);
   const [saving,   setSaving]   = useState(false);
   const [readPct,  setReadPct]  = useState(0);
-  const [readingMode, setReadingMode] = useState(localStorage.getItem('q_reading_mode') || 'verse');
+  const [readingMode, setReadingMode] = useState('verse');
   const [translation, setTranslation] = useState({});
   const [showTranslation, setShowTranslation] = useState(false);
   const [translationLang, setTranslationLang] = useState('en.sahih');
