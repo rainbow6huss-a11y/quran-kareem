@@ -302,6 +302,19 @@ ${url}`;
 
             {tab==='read' && (
               <div className={styles.fontControls}>
+                {/* وضع القراءة */}
+                <div className={styles.readingModeRow}>
+                  <button
+                    className={`${styles.modeBtn} ${readingMode==='verse'?styles.modeBtnActive:''}`}
+                    onClick={()=>{ setReadingMode('verse'); localStorage.setItem('q_reading_mode','verse'); }}>
+                    📖 آية بآية
+                  </button>
+                  <button
+                    className={`${styles.modeBtn} ${readingMode==='page'?styles.modeBtnActive:''}`}
+                    onClick={()=>{ setReadingMode('page'); localStorage.setItem('q_reading_mode','page'); }}>
+                    📄 صفحة كاملة
+                  </button>
+                </div>
                 <div className={styles.fontSizeRow}>
                   <button className={styles.fontIconBtn} onClick={()=>{ const v=parseFloat((Math.max(1.1,fontSize-.2)).toFixed(2)); setFontSize(v); localStorage.setItem('q_font_size',String(v)); }}>أ−</button>
                   <div className={styles.fontSteps}>
@@ -341,8 +354,6 @@ ${url}`;
                 </div>
               </div>
             )}
-
-            <div className={styles.content}>
               {tab==='read' && (
                 <div className={styles.verses}>
                   {readingMode === 'page' ? (
