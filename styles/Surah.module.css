@@ -601,3 +601,24 @@ body.dark .fontSelect { background: #1a2a1e; }
 @media(max-width: 768px) {
   .bottomNavBtn { font-size: .8rem; padding: 8px 14px; }
 }
+
+/* ── Sajda Alert ── */
+.sajdaAlert {
+  background: linear-gradient(135deg, rgba(45,90,61,.1), rgba(184,151,58,.08));
+  border: 1px solid var(--green);
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: .82rem;
+  color: var(--green);
+  font-weight: 600;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+/* ── Focus Mode ── */
+.focusModeActive .verseActions,
+.focusModeActive .verseTrans,
+.focusModeActive .verseTranslation {
+  display: none !important;
+}
