@@ -23,27 +23,13 @@ const RULES = {
 
 export default function TajweedText({ text, annotations, fontSize, fontFamily, dark }) {
   const [activeIdx, setActiveIdx] = useState(null);
-  
-  // إغلاق عند الضغط خارج الـ tooltip
-  const closeTooltip = (e) => {
-    e.stopPropagation();
-    setActiveIdx(null);
-  };
 
-  // استخدام نفس الخط والحجم الدقيق كالآيات العادية
-  const style = { 
-    fontSize: `${fontSize}rem`, 
+  const style = {
+    fontSize: `${fontSize}rem`,
     fontFamily: fontFamily || "'Amiri Quran', serif",
     direction: 'rtl',
     lineHeight: 'inherit',
-    fontFeatureSettings: 'inherit',
   };
-
-  // إغلاق عند الضغط في أي مكان
-  if (typeof window !== 'undefined' && activeIdx !== null) {
-    const handler = () => setActiveIdx(null);
-    window.addEventListener('click', handler, { once: true });
-  }
 
   if (!annotations || annotations.length === 0) {
     return <span style={style}>{text}</span>;
@@ -84,17 +70,21 @@ export default function TajweedText({ text, annotations, fontSize, fontFamily, d
                 cursor: 'pointer',
                 paddingBottom: '1px',
               }}
-              onClick={() => setActiveIdx(activeIdx === i ? null : i)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setActiveIdx(prev => prev === i ? null : i);
+              }}
             >
               {part.text}
             </span>
             {activeIdx === i && (
-              <span className={styles.tooltip}>
+              <span className={styles.tooltip} onClick={e => e.stopPropagation()}>
                 <span className={styles.dot} style={{ background: info.color }}/>
                 <span>
                   <span className={styles.label}>{info.label}</span>
                   <span className={styles.desc}>{info.desc}</span>
                 </span>
+                <button className={styles.close} onClick={() => setActiveIdx(null)}>✕</button>
               </span>
             )}
           </span>

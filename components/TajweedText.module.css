@@ -14,25 +14,25 @@
   direction: rtl;
   width: max-content;
   max-width: 220px;
-  pointer-events: none;
 }
 .dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  flex-shrink: 0;
+  width: 10px; height: 10px;
+  border-radius: 50%; flex-shrink: 0;
 }
 .label {
   display: block;
   font-family: 'Tajawal', sans-serif;
-  font-size: .82rem;
-  font-weight: 700;
+  font-size: .82rem; font-weight: 700;
   color: var(--brown);
 }
 .desc {
   display: block;
   font-family: 'Tajawal', sans-serif;
-  font-size: .72rem;
-  color: var(--text-soft);
-  margin-top: 2px;
+  font-size: .72rem; color: var(--text-soft); margin-top: 2px;
 }
+.close {
+  background: none; border: none; cursor: pointer;
+  color: var(--text-soft); font-size: .75rem;
+  padding: 2px 4px; margin-right: auto; flex-shrink: 0;
+}
+.close:hover { color: var(--brown); }
