@@ -8,6 +8,9 @@ import { supabase } from '../../lib/supabase';
 import styles from '../../styles/Surah.module.css';
 import TajweedText from '../../components/TajweedText';
 
+// آيات السجدة
+const SAJDA = {7:206,13:15,16:50,17:109,19:58,22:18,25:60,27:26,32:15,38:24,41:38,53:62,84:21,96:19};
+
 export default function SurahPage({
   toggleDark, dark, showToast, user, onAuth,
   setAudioSurah, setAudioName, setAudioVerses,
@@ -43,6 +46,7 @@ export default function SurahPage({
   const [readPct,  setReadPct]  = useState(0);
   const [readingMode, setReadingMode] = useState('verse');
   const [showTajweed, setShowTajweed] = useState(false);
+  const [focusMode, setFocusMode] = useState(false);
   const [tajweedData, setTajweedData] = useState({});
   const [translation, setTranslation] = useState({});
   const [showTranslation, setShowTranslation] = useState(false);
@@ -361,6 +365,10 @@ ${url}`;
                     style={{background: showTajweed ? '#9333ea' : undefined, color: showTajweed ? 'white' : undefined, borderColor: showTajweed ? '#9333ea' : undefined}}>
                     🎨 {showTajweed ? 'إخفاء التجويد' : 'تجويد ملون'}
                   </button>
+                  <button className={`${styles.transBtn} ${focusMode?styles.transBtnOn:''}`}
+                    onClick={()=>setFocusMode(v=>!v)}>
+                    {focusMode ? '👁 إخفاء وضع التركيز' : '🎯 وضع التركيز'}
+                  </button>
                   {showTranslation && (
                     <select className={styles.fontSelect} value={translationLang}
                       onChange={e=>{ setTranslationLang(e.target.value); setTranslation({}); }}>
@@ -437,8 +445,8 @@ ${url}`;
                               }}>{v.text}</span>
                             )}
                           </div>
-                          {showTrans && v.tafsir && <div className={styles.verseTrans}>{v.tafsir}</div>}
-                          {showTranslation && translation[v.number] && (
+                          {showTrans && v.tafsir && !focusMode && <div className={styles.verseTrans}>{v.tafsir}</div>}
+                          {showTranslation && translation[v.number] && !focusMode && (
                             <div className={styles.verseTranslation}>{translation[v.number]}</div>
                           )}
                         </div>
@@ -448,6 +456,12 @@ ${url}`;
                           {playingVerse===v.number?'🔊':'▶'}
                         </button>
                       </div>
+                      {/* علامة السجدة */}
+                      {SAJDA[surahNum] === v.number && (
+                        <div className={styles.sajdaAlert}>
+                          ⬇️ آية سجدة — السجود سنة عند التلاوة
+                        </div>
+                      )}
                       <div className={styles.verseActions}>
                         <button className={`${styles.actionBtn} ${isBm(v.number)?styles.bmActive:''}`} onClick={()=>toggleBookmark(v.number)}>
                           {isBm(v.number)?'🔖 محفوظ':'🔖 حفظ'}
