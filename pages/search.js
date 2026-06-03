@@ -47,29 +47,6 @@ export default function SearchPage({ toggleDark, dark, showToast, onAuth }) {
   const [loading, setLoading]   = useState(false);
   const [searched, setSearched] = useState(false);
   const [total, setTotal]       = useState(0);
-  const [listening, setListening] = useState(false);
-
-  function startVoiceSearch() {
-    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      showToast('⚠️ المتصفح لا يدعم البحث الصوتي');
-      return;
-    }
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    const recognition = new SR();
-    recognition.lang = 'ar-SA';
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    setListening(true);
-    recognition.start();
-    recognition.onresult = (e) => {
-      const text = e.results[0][0].transcript;
-      setQuery(text);
-      setListening(false);
-    };
-    recognition.onerror = () => { setListening(false); showToast('حدث خطأ'); };
-    recognition.onend = () => setListening(false);
-  }
-
   const inputRef = useRef(null);
   const debounceRef = useRef(null);
 
