@@ -47,6 +47,8 @@ export default function SurahPage({
   const [readingMode, setReadingMode] = useState('verse');
   const [showTajweed, setShowTajweed] = useState(false);
   const [focusMode, setFocusMode] = useState(false);
+  const [asbabData, setAsbabData] = useState({});
+  const [showAsbab, setShowAsbab] = useState(null);
   const [tajweedData, setTajweedData] = useState({});
   const [translation, setTranslation] = useState({});
   const [showTranslation, setShowTranslation] = useState(false);
@@ -456,6 +458,22 @@ ${url}`;
                           {playingVerse===v.number?'🔊':'▶'}
                         </button>
                       </div>
+                      {/* سبب النزول */}
+                      {showAsbab === v.number && (
+                        <div className={styles.asbabBox}>
+                          <div className={styles.asbabTitle}>📜 سبب النزول</div>
+                          <div className={styles.asbabText}>
+                            لمعرفة سبب نزول هذه الآية، يمكنك الرجوع إلى كتب أسباب النزول
+                            مثل كتاب "أسباب النزول" للإمام الواحدي أو تفسير ابن كثير.
+                          </div>
+                          <a href={`https://quran.com/ar/${surahNum}/${v.number}`}
+                            target="_blank" rel="noreferrer"
+                            className={styles.asbabLink}>
+                            🔗 اقرأ في Quran.com
+                          </a>
+                        </div>
+                      )}
+
                       {/* علامة السجدة */}
                       {SAJDA[surahNum] === v.number && (
                         <div className={styles.sajdaAlert}>
@@ -468,6 +486,10 @@ ${url}`;
                         </button>
                         <button className={styles.actionBtn} onClick={()=>copyVerse(v.number)}>📋 نسخ</button>
                         <button className={styles.actionBtn} onClick={()=>shareVerse(v.number)}>🔗 مشاركة</button>
+                        <button className={styles.actionBtn} onClick={async()=>{
+                          if (showAsbab === v.number) { setShowAsbab(null); return; }
+                          setShowAsbab(v.number);
+                        }}>📜 سبب النزول</button>
                       </div>
                     </div>
                     </div>
