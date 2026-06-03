@@ -577,3 +577,27 @@ body.dark .fontSelect { background: #1a2a1e; }
   .quickNavBtn { font-size: .78rem; padding: 5px 8px; }
   .bottomNavBtn { font-size: .82rem; padding: 8px 14px; }
 }
+
+/* Bottom Navigation */
+.surahBottomNav {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 10px; margin-top: 24px; padding: 16px 0;
+  border-top: 1px solid var(--border);
+}
+.bottomNavBtn {
+  font-family: 'Tajawal', sans-serif; font-size: .9rem;
+  color: white; background: var(--green);
+  padding: 10px 20px; border-radius: 10px; font-weight: 700;
+  transition: all .2s;
+}
+.bottomNavBtn:hover { background: var(--green-light); transform: translateY(-1px); }
+.bottomNavHome {
+  font-family: 'Tajawal', sans-serif; font-size: .82rem;
+  color: var(--text-soft); padding: 8px 14px;
+  border: 1px solid var(--border); border-radius: 8px; transition: all .2s;
+}
+.bottomNavHome:hover { color: var(--brown); border-color: var(--gold); }
+
+@media(max-width: 768px) {
+  .bottomNavBtn { font-size: .8rem; padding: 8px 14px; }
+}
