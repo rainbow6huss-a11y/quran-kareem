@@ -6,6 +6,7 @@ import Navbar from '../../components/Navbar';
 import { SurahSkeleton } from '../../components/Skeleton';
 import { supabase } from '../../lib/supabase';
 import styles from '../../styles/Surah.module.css';
+import TajweedText from '../../components/TajweedText';
 
 export default function SurahPage({
   toggleDark, dark, showToast, user, onAuth,
@@ -41,6 +42,8 @@ export default function SurahPage({
   const [saving,   setSaving]   = useState(false);
   const [readPct,  setReadPct]  = useState(0);
   const [readingMode, setReadingMode] = useState('verse');
+  const [showTajweed, setShowTajweed] = useState(false);
+  const [tajweedData, setTajweedData] = useState({});
   const [translation, setTranslation] = useState({});
   const [showTranslation, setShowTranslation] = useState(false);
   const [translationLang, setTranslationLang] = useState('en.sahih');
@@ -97,6 +100,17 @@ export default function SurahPage({
       setVerses(filteredVerses);
       setLoading(false);
       saveLastRead(surahNum, 1);
+
+      // تحميل بيانات التجويد مسبقاً
+      fetch(`https://raw.githubusercontent.com/cpfair/quran-tajweed/master/output/tajweed.hafs.uthmani-pause-sajdah.json`)
+        .then(r => r.json())
+        .then(d => {
+          const map = {};
+          d.filter(e => e.surah === surahNum).forEach(e => {
+            map[e.ayah] = e.annotations || [];
+          });
+          setTajweedData(map);
+        }).catch(() => {});
 
       // Feed AudioPlayer in _app
       setAudioSurah?.(surahNum);
@@ -342,6 +356,11 @@ ${url}`;
                     onClick={()=>setShowTranslation(v=>!v)}>
                     {showTranslation ? '🌐 إخفاء الترجمة' : '🌐 ترجمة'}
                   </button>
+                  <button className={`${styles.transBtn} ${showTajweed?styles.transBtnOn:''}`}
+                    onClick={()=>setShowTajweed(v=>!v)}
+                    style={{background: showTajweed ? '#9333ea' : undefined, color: showTajweed ? 'white' : undefined, borderColor: showTajweed ? '#9333ea' : undefined}}>
+                    🎨 {showTajweed ? 'إخفاء التجويد' : 'تجويد ملون'}
+                  </button>
                   {showTranslation && (
                     <select className={styles.fontSelect} value={translationLang}
                       onChange={e=>{ setTranslationLang(e.target.value); setTranslation({}); }}>
@@ -402,12 +421,22 @@ ${url}`;
                       <div className={styles.verseTop}>
                         <div className={styles.verseNum}>{v.number}</div>
                         <div className={styles.verseBody}>
-                          <div className={styles.verseText} style={{
-                            fontSize:`${fontSize}rem`,
-                            fontFamily: fontFamily==='noto-naskh' ? "'Noto Naskh Arabic', serif"
-                                      : fontFamily==='amiri' ? "'Amiri', serif"
-                                      : "'Amiri Quran', serif"
-                          }}>{v.text}</div>
+                          <div className={styles.verseText}>
+                            {showTajweed && tajweedData[v.number] ? (
+                              <TajweedText
+                                text={v.text}
+                                annotations={tajweedData[v.number]}
+                                fontSize={fontSize}
+                                fontFamily={fontFamily==='noto-naskh' ? "'Noto Naskh Arabic', serif" : fontFamily==='amiri' ? "'Amiri', serif" : "'Amiri Quran', serif"}
+                                dark={dark}
+                              />
+                            ) : (
+                              <span style={{
+                                fontSize:`${fontSize}rem`,
+                                fontFamily: fontFamily==='noto-naskh' ? "'Noto Naskh Arabic', serif" : fontFamily==='amiri' ? "'Amiri', serif" : "'Amiri Quran', serif"
+                              }}>{v.text}</span>
+                            )}
+                          </div>
                           {showTrans && v.tafsir && <div className={styles.verseTrans}>{v.tafsir}</div>}
                           {showTranslation && translation[v.number] && (
                             <div className={styles.verseTranslation}>{translation[v.number]}</div>
