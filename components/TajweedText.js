@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styles from './TajweedText.module.css';
 
 const RULES = {
@@ -21,8 +21,17 @@ const RULES = {
   lam_shamsiyyah:        { color: '#6b7280', label: 'لام شمسية',     desc: 'لام التعريف المدغمة' },
 };
 
-export default function TajweedText({ text, annotations, fontSize, fontFamily, dark }) {
+export default function TajweedText({ text, annotations, fontSize, fontFamily }) {
   const [activeIdx, setActiveIdx] = useState(null);
+  const ref = useRef(null);
+
+  // إغلاق تلقائي عند الضغط خارج المكون
+  useEffect(() => {
+    if (activeIdx === null) return;
+    const handleClick = () => setActiveIdx(null);
+    document.addEventListener('click', handleClick);
+    return () => document.removeEventListener('click', handleClick);
+  }, [activeIdx]);
 
   const style = {
     fontSize: `${fontSize}rem`,
@@ -35,7 +44,6 @@ export default function TajweedText({ text, annotations, fontSize, fontFamily, d
     return <span style={style}>{text}</span>;
   }
 
-  // بناء الأجزاء
   const parts = [];
   let last = 0;
   const sorted = [...annotations]
@@ -43,20 +51,14 @@ export default function TajweedText({ text, annotations, fontSize, fontFamily, d
     .sort((a, b) => a.start - b.start);
 
   for (const ann of sorted) {
-    if (ann.start > last) {
-      parts.push({ text: text.slice(last, ann.start), rule: null });
-    }
-    if (ann.end > ann.start) {
-      parts.push({ text: text.slice(ann.start, ann.end), rule: ann.rule });
-    }
+    if (ann.start > last) parts.push({ text: text.slice(last, ann.start), rule: null });
+    if (ann.end > ann.start) parts.push({ text: text.slice(ann.start, ann.end), rule: ann.rule });
     last = Math.max(last, ann.end);
   }
-  if (last < text.length) {
-    parts.push({ text: text.slice(last), rule: null });
-  }
+  if (last < text.length) parts.push({ text: text.slice(last), rule: null });
 
   return (
-    <span style={style}>
+    <span style={style} ref={ref}>
       {parts.map((part, i) => {
         const info = part.rule ? RULES[part.rule] : null;
         if (!info) return <span key={i}>{part.text}</span>;
@@ -64,27 +66,17 @@ export default function TajweedText({ text, annotations, fontSize, fontFamily, d
         return (
           <span key={i} style={{ position: 'relative', display: 'inline' }}>
             <span
-              style={{
-                color: info.color,
-                borderBottom: `2px solid ${info.color}`,
-                cursor: 'pointer',
-                paddingBottom: '1px',
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                setActiveIdx(prev => prev === i ? null : i);
-              }}
-            >
-              {part.text}
-            </span>
+              style={{ color: info.color, borderBottom: `2px solid ${info.color}`, cursor: 'pointer', paddingBottom: '1px' }}
+              onClick={(e) => { e.stopPropagation(); setActiveIdx(prev => prev === i ? null : i); }}
+            >{part.text}</span>
+
             {activeIdx === i && (
-              <span className={styles.tooltip} onClick={e => e.stopPropagation()}>
+              <span className={styles.tooltip}>
                 <span className={styles.dot} style={{ background: info.color }}/>
                 <span>
                   <span className={styles.label}>{info.label}</span>
                   <span className={styles.desc}>{info.desc}</span>
                 </span>
-                <button className={styles.close} onClick={() => setActiveIdx(null)}>✕</button>
               </span>
             )}
           </span>
