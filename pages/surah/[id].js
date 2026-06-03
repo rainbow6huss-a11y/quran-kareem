@@ -290,21 +290,6 @@ ${url}`;
         </div>
 
 
-        {/* تنقل سريع بين السور - أعلى */}
-        <div className={styles.surahQuickNav}>
-          {surahNum > 1 && (
-            <Link href={`/surah/${surahNum-1}`} className={styles.quickNavBtn}>
-              ‹ السورة السابقة
-            </Link>
-          )}
-          <Link href="/" className={styles.quickNavHome}>📖 قائمة السور</Link>
-          {surahNum < 114 && (
-            <Link href={`/surah/${surahNum+1}`} className={styles.quickNavBtn}>
-              السورة التالية ›
-            </Link>
-          )}
-        </div>
-
         {loading ? <SurahSkeleton /> : surah ? (
           <>
             <div className={styles.surahHeader}>
