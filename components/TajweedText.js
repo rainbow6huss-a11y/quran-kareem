@@ -23,8 +23,27 @@ const RULES = {
 
 export default function TajweedText({ text, annotations, fontSize, fontFamily, dark }) {
   const [activeIdx, setActiveIdx] = useState(null);
+  
+  // إغلاق عند الضغط خارج الـ tooltip
+  const closeTooltip = (e) => {
+    e.stopPropagation();
+    setActiveIdx(null);
+  };
 
-  const style = { fontSize: `${fontSize}rem`, fontFamily, direction: 'rtl' };
+  // استخدام نفس الخط والحجم الدقيق كالآيات العادية
+  const style = { 
+    fontSize: `${fontSize}rem`, 
+    fontFamily: fontFamily || "'Amiri Quran', serif",
+    direction: 'rtl',
+    lineHeight: 'inherit',
+    fontFeatureSettings: 'inherit',
+  };
+
+  // إغلاق عند الضغط في أي مكان
+  if (typeof window !== 'undefined' && activeIdx !== null) {
+    const handler = () => setActiveIdx(null);
+    window.addEventListener('click', handler, { once: true });
+  }
 
   if (!annotations || annotations.length === 0) {
     return <span style={style}>{text}</span>;
