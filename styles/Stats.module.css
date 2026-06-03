@@ -75,3 +75,14 @@
   .statsGrid { grid-template-columns: repeat(2, 1fr); }
   .lastReadCard { flex-direction: column; align-items: flex-start; }
 }
+
+/* Export Button */
+.exportBtn {
+  width: 100%; padding: 12px;
+  background: linear-gradient(135deg, var(--green), var(--green-light));
+  color: white; border: none; border-radius: 12px;
+  font-family: 'Tajawal', sans-serif; font-size: .95rem;
+  font-weight: 700; cursor: pointer; transition: all .2s;
+  margin-bottom: 14px;
+}
+.exportBtn:hover { transform: translateY(-1px); box-shadow: 0 4px 14px rgba(45,90,61,.3); }
