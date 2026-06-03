@@ -15,6 +15,59 @@ export default function StatsPage({ toggleDark, dark, showToast, onAuth }) {
     favSurah: null,
   });
 
+  function exportAsImage() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 400; canvas.height = 300;
+    const ctx = canvas.getContext('2d');
+    
+    // خلفية
+    ctx.fillStyle = '#faf6ef';
+    ctx.fillRect(0, 0, 400, 300);
+    
+    // إطار ذهبي
+    ctx.strokeStyle = '#c9a84c';
+    ctx.lineWidth = 2;
+    ctx.strokeRect(10, 10, 380, 280);
+    
+    // العنوان
+    ctx.fillStyle = '#5c3d1e';
+    ctx.font = 'bold 22px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('إحصائياتي في القرآن الكريم', 200, 50);
+    
+    // خط فاصل
+    ctx.strokeStyle = '#c9a84c';
+    ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(40, 65); ctx.lineTo(360, 65); ctx.stroke();
+    
+    // الإحصائيات
+    ctx.font = '18px Arial';
+    ctx.textAlign = 'right';
+    const items = [
+      [`📖 سور مقروءة: ${stats.totalSurahs}`, 120],
+      [`🔥 أيام متتالية: ${stats.streak}`, 155],
+      [`🌙 تقدم الختمة: ${stats.khatmaPct}%`, 190],
+      [`📅 آيات اليوم: ${stats.todayVerses}`, 225],
+    ];
+    items.forEach(([text, y]) => {
+      ctx.fillStyle = '#2d5a3d';
+      ctx.fillText(text, 360, y);
+    });
+    
+    // رابط الموقع
+    ctx.fillStyle = '#b8973a';
+    ctx.font = '14px Arial';
+    ctx.textAlign = 'center';
+    ctx.fillText('quran-kareem-pi.vercel.app', 200, 268);
+    
+    // تحميل
+    const link = document.createElement('a');
+    link.download = 'my-quran-stats.png';
+    link.href = canvas.toDataURL();
+    link.click();
+    showToast('✅ تم تصدير الإحصائيات');
+  }
+
   useEffect(() => {
     // حساب الإحصائيات من localStorage
     const readLog = JSON.parse(localStorage.getItem('q_read_log') || '[]');
@@ -126,6 +179,11 @@ export default function StatsPage({ toggleDark, dark, showToast, onAuth }) {
             </Link>
           </div>
         )}
+
+        {/* زر التصدير */}
+        <button className={styles.exportBtn} onClick={exportAsImage}>
+          📸 تصدير كصورة ومشاركة
+        </button>
 
         {/* مخطط الأسبوع */}
         <div className={styles.weekCard}>

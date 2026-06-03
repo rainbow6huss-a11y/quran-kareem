@@ -17,6 +17,31 @@ function normalizeArabic(text) {
 }
 
 export default function SearchPage({ toggleDark, dark, showToast, onAuth }) {
+  const [listening, setListening] = useState(false);
+
+  function startVoiceSearch() {
+    if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+      showToast('⚠️ المتصفح لا يدعم البحث الصوتي');
+      return;
+    }
+    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+    const recognition = new SR();
+    recognition.lang = 'ar-SA';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    setListening(true);
+    recognition.start();
+    recognition.onresult = (e) => {
+      const text = e.results[0][0].transcript;
+      setQuery(text);
+      setListening(false);
+    };
+    recognition.onerror = () => {
+      setListening(false);
+      showToast('حدث خطأ في البحث الصوتي');
+    };
+    recognition.onend = () => setListening(false);
+  }
   const [query, setQuery]       = useState('');
   const [results, setResults]   = useState([]);
   const [loading, setLoading]   = useState(false);
