@@ -1,42 +1,25 @@
 import TajweedText from './TajweedText';
+import VerseNumStar from './VerseNumStar';
 import styles from '../styles/Surah.module.css';
 import { SAJDA_VERSES } from '../lib/constants';
 
-/**
- * VerseCard — بطاقة آية واحدة
- * مُستخرجة من surah/[id].js
- */
 export default function VerseCard({
-  verse,
-  surahNum,
-  prevVerse,
-  playingVerse,
-  fontSize,
-  fontFamily,
-  showTrans,
-  showTranslation,
-  showTajweed,
-  focusMode,
-  tajweedData,
-  translation,
-  showAsbab,
-  isBookmarked,
-  dark,
-  onPlay,
-  onToggleBookmark,
-  onCopy,
-  onShare,
-  onToggleAsbab,
+  verse, surahNum, prevVerse,
+  playingVerse, fontSize, fontFamily,
+  showTrans, showTranslation, showTajweed,
+  focusMode, tajweedData, translation,
+  showAsbab, isBookmarked, dark,
+  onPlay, onToggleBookmark, onCopy, onShare, onToggleAsbab,
 }) {
   const fontStyle = {
     fontSize: `${fontSize}rem`,
     fontFamily:
       fontFamily === 'noto-naskh' ? "'Noto Naskh Arabic', serif"
-      : fontFamily === 'amiri' ? "'Amiri', serif"
+      : fontFamily === 'amiri'    ? "'Amiri', serif"
       : "'Amiri Quran', serif",
   };
 
-  const isSajda = SAJDA_VERSES[surahNum] === verse.number;
+  const isSajda    = SAJDA_VERSES[surahNum] === verse.number;
   const pageChanged = verse.page && (!prevVerse || prevVerse.page !== verse.page);
 
   return (
@@ -61,8 +44,13 @@ export default function VerseCard({
         className={`${styles.verse} ${playingVerse === verse.number ? styles.playing : ''}`}
       >
         <div className={styles.verseTop}>
-          <div className={styles.verseNum}>{verse.number}</div>
+          {/* رقم الآية — نجمة ذهبية */}
+          <div className={styles.verseNumBadge} style={{ color: dark ? '#c9a84c' : '#8b6340' }}>
+            <VerseNumStar num={verse.number} size={28} />
+          </div>
+
           <div className={styles.verseBody}>
+            {/* نص الآية */}
             <div className={styles.verseText}>
               {showTajweed && tajweedData[verse.number] ? (
                 <TajweedText
@@ -76,6 +64,7 @@ export default function VerseCard({
                 <span style={fontStyle}>{verse.text}</span>
               )}
             </div>
+
             {showTrans && verse.tafsir && !focusMode && (
               <div className={styles.verseTrans}>{verse.tafsir}</div>
             )}
@@ -83,6 +72,8 @@ export default function VerseCard({
               <div className={styles.verseTranslation}>{translation[verse.number]}</div>
             )}
           </div>
+
+          {/* زر التشغيل */}
           <button
             className={`${styles.playBtn} ${playingVerse === verse.number ? styles.playBtnActive : ''}`}
             onClick={() => onPlay(verse.number)}
@@ -113,9 +104,10 @@ export default function VerseCard({
           </div>
         )}
 
-        {/* أزرار الآية */}
+        {/* أزرار الإجراءات */}
         <div className={styles.verseActions}>
-          <button className={`${styles.actionBtn} ${isBookmarked ? styles.bmActive : ''}`}
+          <button
+            className={`${styles.actionBtn} ${isBookmarked ? styles.bmActive : ''}`}
             onClick={() => onToggleBookmark(verse.number)}>
             {isBookmarked ? '🔖 محفوظ' : '🔖 حفظ'}
           </button>
