@@ -21,8 +21,8 @@
 
 /* ── متغيرات وضع الليل ── */
 body.dark {
-  --parchment: #0a1209;
-  --card:      #0d1710;
+  --parchment: #0f1e12;
+  --card:      #162518;
   --gold:      #c9a84c;
   --gold-light:#e8c97a;
   --gold-pale: rgba(184,151,58,.07);
@@ -136,7 +136,7 @@ body.dark [class*="surahNav"]    { background: #0a1209 !important; }
 body.dark [class*="surahMeta"]   { background: #0d1710 !important; }
 body.dark [class*="bismillah"]   { background: #0a1209 !important; }
 body.dark [class*="tabs"]        { background: #0a1209 !important; }
-body.dark [class*="fontControls"]{ background: #0d1710 !important; }
+body.dark [class*="fontControls"]{ background: #1e3525 !important; border-color: rgba(184,151,58,.3) !important; }
 body.dark [class*="breadcrumb"]  { color: var(--text-soft) !important; }
 
 /* ── ألوان التجويد — ثابتة في الوضعين ── */
@@ -153,3 +153,12 @@ body.dark [class*="tjMadd"]    { color: #5599ee !important; }
 @media (max-width: 768px) {
   .toast { bottom: 72px; font-size: .82rem; }
 }
+
+/* ── أزرار fontControls في وضع الليل ── */
+body.dark [class*="modeBtn"]   { background: #243d2a !important; color: #b0d4b0 !important; border-color: rgba(184,151,58,.3) !important; }
+body.dark [class*="fontStep"]  { background: #243d2a !important; color: #b0d4b0 !important; border-color: rgba(184,151,58,.25) !important; }
+body.dark [class*="fontIconBtn"] { background: #243d2a !important; color: #b0d4b0 !important; }
+body.dark [class*="fontSelect"]  { background: #243d2a !important; color: #d4af5a !important; }
+body.dark [class*="transBtn"]    { color: #b0d4b0 !important; border-color: rgba(184,151,58,.25) !important; }
+body.dark [class*="tabs"]        { background: #0f1e12 !important; }
+body.dark [class*="tab"]:not([class*="tabActive"]) { color: #7aaa7a !important; }

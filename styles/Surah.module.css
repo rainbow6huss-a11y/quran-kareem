@@ -119,7 +119,7 @@ body.dark .bismillahText { color: #5aaa70; }
   margin-bottom: 10px;
   border-radius: 10px 10px 0 0; overflow: hidden;
 }
-body.dark .tabs { background: #0a1209; border-color: rgba(184,151,58,.12); }
+body.dark .tabs { background: #0f1e12; border-color: rgba(184,151,58,.2); }
 
 .tab {
   padding: 9px 4px; text-align: center;
@@ -129,7 +129,7 @@ body.dark .tabs { background: #0a1209; border-color: rgba(184,151,58,.12); }
   cursor: pointer; border-bottom: 2px solid transparent;
   transition: all .2s; white-space: nowrap;
 }
-body.dark .tab { color: #4a7a50; }
+body.dark .tab { color: #7aaa7a; }
 .tab:hover { color: #b8973a; }
 .tabActive {
   color: #2d5a3d !important;
@@ -147,7 +147,7 @@ body.dark .tabActive { color: #5aaa70 !important; border-bottom-color: #5aaa70 !
   border: 1px solid rgba(184,151,58,.25);
   border-radius: 12px; margin-bottom: 10px;
 }
-body.dark .fontControls { background: #1a2e1e; border-color: rgba(184,151,58,.25); }
+body.dark .fontControls { background: #1e3525; border-color: rgba(184,151,58,.3); }
 
 .readingModeRow { display: flex; gap: 6px; }
 .modeBtn {
@@ -156,7 +156,7 @@ body.dark .fontControls { background: #1a2e1e; border-color: rgba(184,151,58,.25
   background: #ede4cc; font-family: 'Tajawal', sans-serif;
   font-size: .8rem; color: #7a5c30; cursor: pointer; transition: all .2s;
 }
-body.dark .modeBtn { background: #1e3525; border-color: rgba(184,151,58,.25); color: #a0c8a0; }
+body.dark .modeBtn { background: #243d2a; border-color: rgba(184,151,58,.3); color: #b0d4b0; }
 .modeBtn:hover { border-color: #b8973a; }
 .modeBtnActive {
   background: #2d5a3d !important; color: white !important;
@@ -171,7 +171,7 @@ body.dark .modeBtn { background: #1e3525; border-color: rgba(184,151,58,.25); co
   flex-shrink: 0; display: flex; align-items: center; justify-content: center;
   transition: all .2s;
 }
-body.dark .fontIconBtn { background: #1e3525; border-color: rgba(184,151,58,.25); color: #a0c8a0; }
+body.dark .fontIconBtn { background: #243d2a; border-color: rgba(184,151,58,.3); color: #b0d4b0; }
 .fontIconBtn:hover { border-color: #b8973a; background: rgba(184,151,58,.12); }
 
 .fontSteps { display: flex; gap: 3px; flex: 1; justify-content: center; }
@@ -181,7 +181,7 @@ body.dark .fontIconBtn { background: #1e3525; border-color: rgba(184,151,58,.25)
   background: #faf5e9; font-family: 'Tajawal', sans-serif;
   font-size: .7rem; color: #7a5c30; cursor: pointer; transition: all .15s;
 }
-body.dark .fontStep { background: #1e3525; border-color: rgba(184,151,58,.22); color: #a0c8a0; }
+body.dark .fontStep { background: #243d2a; border-color: rgba(184,151,58,.28); color: #b0d4b0; }
 .fontStep:hover { border-color: #b8973a; }
 .fontStepActive {
   background: #2d5a3d !important; color: white !important;
