@@ -1,464 +1,161 @@
-.page { max-width: 900px; margin: 0 auto; padding: 20px 20px 60px; position: relative; z-index: 1; }
+/* ═══════════════════════════════════════════════
+   SURAH PAGE — تصميم المصحف الاحترافي
+   النهار: كريمي دافئ | الليل: أخضر داكن عميق
+═══════════════════════════════════════════════ */
 
-.breadcrumb { display: flex; gap: 8px; align-items: center; font-size: .82rem; color: var(--text-soft); margin-bottom: 16px; }
+/* ── Page Layout ── */
+.page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 16px 16px 100px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Breadcrumb ── */
+.breadcrumb {
+  display: flex; gap: 6px; align-items: center;
+  font-size: .78rem; color: var(--text-soft); margin-bottom: 12px;
+}
 .breadcrumb a { color: var(--green); }
 .breadcrumb a:hover { text-decoration: underline; }
 
+/* ══════════════════════════════
+   SURAH HEADER
+══════════════════════════════ */
 .surahHeader {
-  text-align: center; padding: 24px 20px 20px;
-  background: var(--card); border: 1px solid var(--border);
-  border-radius: 14px; margin-bottom: 16px; position: relative; overflow: hidden;
+  border-radius: 14px;
+  margin-bottom: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border);
 }
-.surahHeader::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+
+/* شريط العنوان العلوي */
+.surahNav {
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--parchment);
+  border-bottom: 1px solid var(--border);
 }
-.surahNav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .navArrow {
-  padding: 6px 14px; border: 1px solid var(--border); border-radius: 8px;
-  font-size: .82rem; color: var(--green); transition: all .2s;
+  padding: 6px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: .82rem; color: var(--green);
+  transition: all .2s; font-family: 'Tajawal', sans-serif;
 }
 .navArrow:hover { background: var(--gold-pale); border-color: var(--gold); }
-.surahName { font-family: 'Amiri', serif; font-size: clamp(1.8rem,5vw,2.8rem); color: var(--brown); font-weight: 700; }
-.surahMeta { display: flex; justify-content: center; gap: 16px; font-size: .8rem; color: var(--text-soft); margin-top: 6px; flex-wrap: wrap; }
-.bismillah { font-family: 'KFGQPC', 'Amiri Quran', serif; font-size: clamp(1.3rem,3vw,2rem); color: var(--green); margin-top: 14px; line-height: 2; }
 
-.tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 0; background: var(--card); border-radius: 12px 12px 0 0; overflow: hidden; overflow-x: auto; }
-.tab { flex: 1; padding: 12px 8px; border: none; background: none; font-family: 'Tajawal', sans-serif; font-size: .82rem; color: var(--text-soft); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all .2s; white-space: nowrap; }
-.tab:hover { color: var(--gold); }
-.tabActive { color: var(--brown) !important; border-bottom-color: var(--gold) !important; font-weight: 700; background: var(--gold-pale); }
-
-.toolbar {
-  display: flex; align-items: center; gap: 12px; padding: 10px 14px;
-  background: var(--card); border: 1px solid var(--border); border-top: none;
-  border-radius: 0 0 12px 12px; margin-bottom: 12px; flex-wrap: wrap;
+/* إطار اسم السورة الاحترافي */
+.surahTitleWrap {
+  padding: 12px 20px;
+  background: var(--card);
+  text-align: center;
 }
-.toolGroup { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
-.toolGroup label { font-size: .8rem; color: var(--text-soft); white-space: nowrap; }
-.select {
-  padding: 5px 8px; border: 1px solid var(--border); border-radius: 7px;
-  font-family: 'Tajawal', sans-serif; font-size: .82rem;
-  background: white; color: var(--text); outline: none; cursor: pointer;
+.surahTitleFrame {
+  display: inline-block;
+  position: relative;
+  border: 1.5px solid var(--gold);
+  border-radius: 8px;
+  padding: 8px 36px;
+  background: rgba(184,151,58,.05);
 }
-body.dark .select { background: #1a2a1e; color: var(--text); }
-.playAllBtn {
-  padding: 6px 14px; background: var(--green); color: white;
-  border: none; border-radius: 8px; font-family: 'Tajawal', sans-serif;
-  font-size: .83rem; cursor: pointer; transition: all .2s; white-space: nowrap;
+.surahTitleFrame::before,
+.surahTitleFrame::after {
+  content: '◆ ◆';
+  position: absolute;
+  top: 50%; transform: translateY(-50%);
+  color: var(--gold); font-size: 7px; opacity: .7;
 }
-.playAllBtn:hover { background: var(--green-light); }
-.fontBtn {
-  width: 30px; height: 30px; border: 1px solid var(--border); border-radius: 7px;
-  background: transparent; cursor: pointer; font-size: .9rem; color: var(--text); transition: all .15s;
-}
-.fontBtn:hover, .fontBtnActive { background: var(--gold-pale); border-color: var(--gold); }
-
-.content { position: relative; z-index: 1; }
-
-/* VERSES */
-.verses { background: var(--card); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
-.verse { padding: 18px 20px; border-bottom: 1px solid rgba(184,151,58,.1); transition: background .15s; }
-.verse:last-child { border-bottom: none; }
-.verse:hover { background: rgba(184,151,58,.04); }
-.playing { background: rgba(45,90,61,.07) !important; border-right: 3px solid var(--green); }
-
-.verseTop { display: flex; align-items: flex-start; gap: 12px; }
-.verseNum {
-  width: 32px; height: 32px; flex-shrink: 0;
-  background: linear-gradient(135deg, var(--gold-pale), rgba(184,151,58,.15));
-  border: 1px solid var(--border); border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-size: .7rem; font-weight: 700; color: var(--brown); margin-top: 4px;
-}
-.verseBody { flex: 1; }
-.verseText {
-  font-family: 'KFGQPC', 'Amiri Quran', 'Noto Naskh Arabic', serif;
-  font-size: 1.75rem;        /* 28px — مناسب لكبار السن */
-  line-height: 2.6;          /* مساحة كافية للتشكيل */
-  color: var(--text);
-  direction: rtl;
-  text-align: right;
-  transition: font-size .25s ease;
-  word-spacing: 0.15em;
-  letter-spacing: 0.02em;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-}
-.verseTrans { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); font-size: .85rem; color: var(--text-soft); line-height: 1.9; direction: rtl; }
-.playBtn {
-  width: 32px; height: 32px; border: 1px solid var(--border); border-radius: 50%;
-  background: transparent; cursor: pointer; font-size: .75rem; color: var(--green);
-  flex-shrink: 0; margin-top: 4px; transition: all .2s;
-  display: flex; align-items: center; justify-content: center;
-}
-.playBtn:hover, .playBtnActive { background: var(--green); color: white; border-color: var(--green); }
-.verseActions { display: flex; gap: 6px; margin-top: 10px; justify-content: flex-end; }
-.actionBtn {
-  padding: 4px 10px; border: 1px solid var(--border); border-radius: 7px;
-  background: transparent; font-family: 'Tajawal', sans-serif; font-size: .73rem;
-  color: var(--text-soft); cursor: pointer; transition: all .15s;
-}
-.actionBtn:hover { background: var(--gold-pale); color: var(--brown); border-color: var(--gold); }
-.bmActive { background: var(--green) !important; color: white !important; border-color: var(--green) !important; }
-
-/* TAFSIR */
-.tafsirList { display: flex; flex-direction: column; gap: 16px; }
-.tafsirItem { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
-.tafsirAyah { font-family: 'Amiri Quran', serif; line-height: 2.6; color: var(--text); direction: rtl; text-align: right; margin-bottom: 12px; }
-.tafsirBox { font-size: .87rem; color: var(--text-soft); line-height: 2; padding: 12px; background: rgba(45,90,61,.07); border-radius: 8px; border-right: 3px solid var(--green); direction: rtl; }
-.tafsirNum { color: var(--gold); margin-left: 6px; }
-
-/* LISTEN */
-.listenTab { display: flex; flex-direction: column; gap: 16px; }
-.listenCard { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 28px; text-align: center; }
-.listenIcon { font-size: 2.5rem; margin-bottom: 10px; }
-.listenCard h3 { font-family: 'Amiri', serif; font-size: 1.4rem; color: var(--brown); margin-bottom: 4px; }
-.listenCard p { color: var(--text-soft); font-size: .87rem; }
-.verseByVerseTitle { font-family: 'Amiri', serif; color: var(--brown); font-size: 1rem; }
-.verseListenGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); gap: 8px; }
-.verseListenBtn {
-  padding: 8px 6px; border: 1px solid var(--border); border-radius: 8px;
-  background: var(--card); font-family: 'Tajawal', sans-serif; font-size: .8rem;
-  color: var(--text-soft); cursor: pointer; transition: all .2s;
-}
-.verseListenBtn:hover { border-color: var(--gold); color: var(--brown); }
-.verseListenActive { background: var(--green) !important; color: white !important; border-color: var(--green) !important; }
-
-/* WORD BY WORD */
-.wordsList { display: flex; flex-direction: column; gap: 20px; }
-.wordVerse { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
-.wordVerseNum { font-size: .75rem; color: var(--gold); font-weight: 700; letter-spacing: 1px; margin-bottom: 8px; }
-.wordVerseText { font-family: 'Amiri Quran', serif; font-size: 1.5rem; line-height: 2.4; color: var(--text); direction: rtl; text-align: right; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px dashed var(--border); }
-.wordGrid { display: flex; flex-wrap: wrap; gap: 8px; direction: rtl; margin-bottom: 12px; }
-.wordCard { padding: 8px 12px; background: var(--parchment); border: 1px solid var(--border); border-radius: 8px; text-align: center; min-width: 60px; }
-.wordAr { font-family: 'Amiri Quran', serif; font-size: 1.2rem; color: var(--brown); line-height: 1.8; }
-.wordEn { font-size: .65rem; color: var(--text-soft); margin-top: 2px; direction: ltr; }
-.wordTafsir { font-size: .84rem; color: var(--text-soft); line-height: 1.9; padding: 10px 12px; background: rgba(45,90,61,.06); border-radius: 8px; border-right: 3px solid var(--green); direction: rtl; }
-
-@media (max-width: 600px) {
-  .page { padding: 12px 12px 40px; }
-  .surahNav { flex-direction: column; gap: 10px; }
-  .tabs { border-radius: 8px 8px 0 0; }
-  .tab { padding: 10px 8px; font-size: .78rem; }
-  .verse { padding: 12px 10px; }
-  .wordGrid { gap: 6px; }
+.surahTitleFrame::before { right: 8px; }
+.surahTitleFrame::after  { left: 8px; }
+.surahName {
+  font-family: 'Amiri Quran', 'Amiri', serif;
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  color: var(--brown); font-weight: 700;
+  display: block;
 }
 
-.currentVerse { border-right: 3px solid var(--gold) !important; background: rgba(184,151,58,.04) !important; }
-
-
-/* === PLAYING VERSE - تمييز واضح جداً === */
-.playing {
-  background: linear-gradient(135deg, rgba(45,90,61,.12), rgba(184,151,58,.08)) !important;
-  border-right: 4px solid var(--green) !important;
-  border-radius: 10px !important;
-  box-shadow: 0 2px 12px rgba(45,90,61,.15) !important;
-  transform: scale(1.005);
-  transition: all .3s ease !important;
+/* معلومات السورة */
+.surahMeta {
+  display: flex; justify-content: center;
+  gap: 10px; flex-wrap: wrap;
+  font-size: .75rem; color: var(--text-soft);
+  padding: 6px 14px 10px;
+  background: var(--card);
 }
-.playing .verseText {
-  color: var(--brown) !important;
+.riwayaBadge {
+  font-size: .65rem; color: var(--green);
+  background: rgba(45,90,61,.1);
+  padding: 2px 8px; border-radius: 10px; font-weight: 600;
 }
 
-/* ─── Font Controls ─── */
-.fontControls {
-  display: flex; flex-direction: column; gap: 8px;
-  padding: 10px 14px; background: var(--card);
-  border: 1px solid var(--border); border-radius: 10px; margin-bottom: 10px;
+/* ══════════════════════════════
+   BISMILLAH
+══════════════════════════════ */
+.bismillah {
+  text-align: center;
+  padding: 12px 16px;
+  background: var(--card);
+  border-bottom: 1px solid var(--border);
 }
-.fontSizeRow { display: flex; align-items: center; gap: 8px; }
-.fontIconBtn {
-  width: 30px; height: 30px; border: 1px solid var(--border);
-  border-radius: 8px; background: var(--parchment);
-  cursor: pointer; color: var(--text-soft); transition: all .2s;
-  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+.bismillahOrnament {
+  font-size: 10px; letter-spacing: 6px;
+  color: var(--gold); opacity: .6;
+  margin-bottom: 2px;
 }
-.fontIconBtn:hover { border-color: var(--gold); color: var(--brown); background: var(--gold-pale); }
-.fontSlider {
-  flex: 1; -webkit-appearance: none; height: 4px;
-  background: linear-gradient(90deg, var(--green), var(--gold));
-  border-radius: 4px; outline: none; cursor: pointer;
-}
-.fontSlider::-webkit-slider-thumb {
-  -webkit-appearance: none; width: 16px; height: 16px;
-  border-radius: 50%; background: var(--green);
-  border: 2px solid white; box-shadow: 0 1px 4px rgba(0,0,0,.2); cursor: pointer;
-}
-.fontSlider::-moz-range-thumb {
-  width: 16px; height: 16px; border-radius: 50%;
-  background: var(--green); border: 2px solid white; cursor: pointer;
-}
-.fontSizeLabel { font-size: .75rem; color: var(--gold); font-weight: 700; min-width: 36px; text-align: center; }
-.fontRow { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-.fontSelect {
-  padding: 5px 8px; border: 1px solid var(--border); border-radius: 8px;
-  font-family: 'Tajawal', sans-serif; font-size: .8rem;
-  background: var(--card); color: var(--text); outline: none; cursor: pointer;
-}
-body.dark .fontSelect { background: #1a2a1e; }
-.transBtn {
-  padding: 5px 12px; border: 1px solid var(--border); border-radius: 8px;
-  font-family: 'Tajawal', sans-serif; font-size: .8rem;
-  background: transparent; color: var(--text-soft); cursor: pointer; transition: all .2s;
-}
-.transBtn:hover { border-color: var(--gold); color: var(--brown); }
-.transBtnOn { background: rgba(45,90,61,.1) !important; border-color: var(--green) !important; color: var(--green) !important; }
-
-/* Translation */
-.verseTranslation {
-  margin-top: 6px;
-  padding: 8px 12px;
-  border-top: 1px dashed rgba(45,90,61,.2);
-  font-family: 'Tajawal', sans-serif;
-  font-size: .85rem;
-  color: var(--text-soft);
-  line-height: 1.8;
-  direction: ltr;
-  text-align: left;
-  background: rgba(45,90,61,.04);
-  border-radius: 6px;
+.bismillahText {
+  font-family: 'Amiri Quran', serif;
+  font-size: clamp(1.2rem, 3.5vw, 1.7rem);
+  color: var(--green); line-height: 2.2;
 }
 
-/* ─── Smooth verse transitions ─── */
-.verse {
-  transition: background .4s ease, border-color .4s ease, transform .3s ease !important;
-}
-.playing {
-  background: linear-gradient(135deg, rgba(45,90,61,.1), rgba(184,151,58,.06)) !important;
-  border-right: 3px solid var(--green) !important;
-  border-radius: 10px !important;
-  transform: scale(1.002) !important;
-}
-
-/* ── Mobile Surah ── */
-@media (max-width: 768px) {
-  .page { padding: 10px 10px 100px; }
-  .surahHeader { padding: 16px 14px; border-radius: 12px; }
-  .surahName { font-size: 1.6rem; }
-  .surahNav { gap: 8px; }
-  .navArrow { font-size: .82rem; padding: 5px 8px; }
-  .bismillah { font-size: 1.3rem; }
-  .tabs { gap: 4px; margin-bottom: 10px; }
-  .tab { padding: 7px 10px; font-size: .78rem; }
-  .fontControls { padding: 8px 10px; gap: 6px; }
-  .fontSizeRow { gap: 6px; }
-  .fontIconBtn { width: 28px; height: 28px; }
-  .fontSelect { font-size: .75rem; padding: 4px 6px; }
-  .transBtn { padding: 4px 8px; font-size: .75rem; }
-  .verse { padding: 12px 10px; }
-  .verseText { line-height: 2.1; }
-  .verseTrans { font-size: .8rem; }
-  .verseTranslation { font-size: .8rem; }
-  .verseNum { width: 26px; height: 26px; font-size: .7rem; }
-  .verseActions { gap: 5px; padding-top: 6px; }
-  .actionBtn { padding: 4px 8px; font-size: .73rem; }
-  .playBtn { width: 32px; height: 32px; font-size: .85rem; }
-  .breadcrumb { font-size: .78rem; margin-bottom: 8px; }
-}
-@media (max-width: 400px) {
-  .verseText { line-height: 2.1; }
-  .tab { padding: 6px 8px; font-size: .72rem; }
-}
-
-/* ── Critical Mobile Fixes ── */
-@media (max-width: 768px) {
-  .page { 
-    padding: 8px 8px 110px; 
-    overflow-x: hidden;
-    max-width: 100%;
-  }
-  .content { overflow-x: hidden; }
-  .verses { overflow-x: hidden; }
-  .verse { 
-    padding: 10px 8px;
-    overflow: hidden;
-    flex-wrap: nowrap;
-  }
-  .verseTop {
-    gap: 6px;
-    overflow: hidden;
-  }
-  .verseBody {
-    min-width: 0;
-    flex: 1;
-    overflow: hidden;
-  }
-  .verseText { 
-    line-height: 2.1;
-    word-break: break-word;
-    overflow-wrap: break-word;
-    width: 100%;
-  }
-  .verseTrans {
-    font-size: .78rem;
-    word-break: break-word;
-  }
-  .verseActions {
-    flex-wrap: wrap;
-    gap: 4px;
-  }
-  .actionBtn {
-    padding: 5px 8px;
-    font-size: .72rem;
-    flex: 1;
-    min-width: 60px;
-    text-align: center;
-  }
-  .playBtn {
-    width: 34px; height: 34px;
-    flex-shrink: 0;
-  }
-  .verseNum {
-    width: 24px; height: 24px;
-    font-size: .65rem;
-    flex-shrink: 0;
-  }
-  .surahHeader { 
-    padding: 14px 12px; 
-    margin-bottom: 10px;
-  }
-  .surahName { font-size: 1.5rem; }
-  .surahMeta { font-size: .72rem; flex-wrap: wrap; gap: 4px; }
-  .tabs { 
-    display: grid; 
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 4px;
-  }
-  .tab { 
-    padding: 8px 4px; 
-    font-size: .72rem;
-    text-align: center;
-  }
-  .fontControls { 
-    padding: 8px 10px; 
-    gap: 6px;
-  }
-  .fontRow { flex-wrap: wrap; gap: 5px; }
-}
-
-@media (max-width: 400px) {
-  .verseText { line-height: 2.1; }
-  .tabs { grid-template-columns: 1fr 1fr 1fr; }
-  .tab { font-size: .66rem; padding: 7px 2px; }
-}
-
-/* Font Steps */
-.fontSteps { display: flex; gap: 4px; flex-wrap: wrap; flex: 1; justify-content: center; }
-.fontStep {
-  padding: 4px 8px; border: 1px solid var(--border);
-  border-radius: 6px; background: var(--card);
-  font-family: 'Tajawal', sans-serif; font-size: .72rem;
-  color: var(--text-soft); cursor: pointer; transition: all .15s;
-}
-.fontStep:hover { border-color: var(--gold); color: var(--brown); }
-.fontStepActive { background: var(--green) !important; color: white !important; border-color: var(--green) !important; font-weight: 700; }
-
-/* Font Steps - compact */
-.fontSteps {
-  display: flex;
-  gap: 3px;
-  flex: 1;
-  justify-content: center;
-  flex-wrap: nowrap;
+/* ══════════════════════════════
+   TABS
+══════════════════════════════ */
+.tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  background: var(--parchment);
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 10px;
+  border-radius: 10px 10px 0 0;
   overflow: hidden;
 }
-.fontStep {
-  padding: 5px 6px;
+.tab {
+  padding: 10px 4px; text-align: center;
+  border: none; background: none;
+  font-family: 'Tajawal', sans-serif;
+  font-size: .8rem; color: var(--text-soft);
+  cursor: pointer; border-bottom: 2px solid transparent;
+  transition: all .2s; white-space: nowrap;
+}
+.tab:hover { color: var(--gold); }
+.tabActive {
+  color: var(--green) !important;
+  border-bottom-color: var(--green) !important;
+  font-weight: 700; background: rgba(45,90,61,.06);
+}
+
+/* ══════════════════════════════
+   READING CONTROLS
+══════════════════════════════ */
+.fontControls {
+  display: flex; flex-direction: column; gap: 7px;
+  padding: 10px 12px;
+  background: var(--card);
   border: 1px solid var(--border);
-  border-radius: 6px;
-  background: var(--card);
-  font-family: 'Tajawal', sans-serif;
-  font-size: .7rem;
-  color: var(--text-soft);
-  cursor: pointer;
-  transition: all .15s;
-  white-space: nowrap;
-  flex: 1;
-  text-align: center;
+  border-radius: 10px; margin-bottom: 10px;
 }
-.fontStep:hover { border-color: var(--gold); color: var(--brown); }
-.fontStepActive {
-  background: var(--green) !important;
-  color: white !important;
-  border-color: var(--green) !important;
-  font-weight: 700;
-}
-
-/* Tafsir note */
-.tafsirNote {
-  padding: 8px 14px; background: var(--gold-pale);
-  border: 1px solid rgba(184,151,58,.3); border-radius: 8px;
-  font-size: .78rem; color: var(--brown); margin-bottom: 12px; font-weight: 600;
-}
-
-/* ── Page Markers ── */
-.pageMarker {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin: 16px 0 8px;
-  opacity: .6;
-}
-.pageMarkerLine {
-  flex: 1;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-}
-.pageMarkerInfo {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: 'Tajawal', sans-serif;
-  font-size: .72rem;
-  color: var(--gold);
-  font-weight: 600;
-  white-space: nowrap;
-  padding: 3px 10px;
-  border: 1px solid rgba(184,151,58,.3);
-  border-radius: 20px;
-  background: var(--gold-pale);
-}
-
-/* ── Beautiful Bismillah ── */
-.bismillah {
-  font-family: 'KFGQPC', 'Amiri Quran', serif;
-  font-size: 1.8rem;
-  text-align: center;
-  color: var(--brown);
-  line-height: 2.5;
-  margin: 12px 0 4px;
-  padding: 10px 20px;
-  background: linear-gradient(135deg, rgba(184,151,58,.06), rgba(45,90,61,.04));
-  border-radius: 12px;
-  border: 1px solid rgba(184,151,58,.15);
-  position: relative;
-}
-.bismillah::before, .bismillah::after {
-  content: '❧';
-  color: var(--gold);
-  font-size: .9rem;
-  opacity: .5;
-  margin: 0 8px;
-}
-
-/* ── Reading Mode ── */
-.readingModeRow {
-  display: flex;
-  gap: 6px;
-  margin-bottom: 8px;
-}
+.readingModeRow { display: flex; gap: 6px; }
 .modeBtn {
-  flex: 1;
-  padding: 7px 12px;
-  border: 1.5px solid var(--border);
-  border-radius: 10px;
+  flex: 1; padding: 7px 8px;
+  border: 1.5px solid var(--border); border-radius: 10px;
   background: var(--card);
   font-family: 'Tajawal', sans-serif;
-  font-size: .82rem;
-  color: var(--text-soft);
-  cursor: pointer;
-  transition: all .2s;
-  font-weight: 500;
+  font-size: .8rem; color: var(--text-soft);
+  cursor: pointer; transition: all .2s;
 }
 .modeBtn:hover { border-color: var(--gold); color: var(--brown); }
 .modeBtnActive {
@@ -467,173 +164,387 @@ body.dark .fontSelect { background: #1a2a1e; }
   border-color: var(--green) !important;
   font-weight: 700;
 }
-
-/* ── Page Mode (صفحة كاملة) ── */
-.pageMode {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 24px 20px;
-  text-align: right;
-  direction: rtl;
-  line-height: 2.8;
+.fontSizeRow { display: flex; align-items: center; gap: 6px; }
+.fontIconBtn {
+  width: 28px; height: 28px;
+  border: 1px solid var(--border); border-radius: 8px;
+  background: var(--parchment); cursor: pointer;
+  color: var(--text-soft); font-size: .85rem;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all .2s;
 }
+.fontIconBtn:hover { border-color: var(--gold); color: var(--brown); background: var(--gold-pale); }
+.fontSteps {
+  display: flex; gap: 3px; flex: 1;
+  justify-content: center; flex-wrap: nowrap;
+}
+.fontStep {
+  flex: 1; padding: 5px 4px; text-align: center;
+  border: 1px solid var(--border); border-radius: 6px;
+  background: var(--card);
+  font-family: 'Tajawal', sans-serif;
+  font-size: .7rem; color: var(--text-soft);
+  cursor: pointer; transition: all .15s; white-space: nowrap;
+}
+.fontStep:hover { border-color: var(--gold); color: var(--brown); }
+.fontStepActive {
+  background: var(--green) !important;
+  color: white !important;
+  border-color: var(--green) !important;
+  font-weight: 700;
+}
+.fontRow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.fontSelect {
+  padding: 5px 8px;
+  border: 1px solid var(--border); border-radius: 8px;
+  font-family: 'Tajawal', sans-serif; font-size: .78rem;
+  background: var(--card); color: var(--text);
+  outline: none; cursor: pointer;
+}
+body.dark .fontSelect { background: #1a2a1e; }
+.transBtn {
+  padding: 5px 10px;
+  border: 1px solid var(--border); border-radius: 8px;
+  font-family: 'Tajawal', sans-serif; font-size: .78rem;
+  background: transparent; color: var(--text-soft);
+  cursor: pointer; transition: all .2s;
+}
+.transBtn:hover { border-color: var(--gold); color: var(--brown); }
+.transBtnOn {
+  background: rgba(45,90,61,.1) !important;
+  border-color: var(--green) !important;
+  color: var(--green) !important;
+}
+
+/* ══════════════════════════════
+   صفحة المصحف — MUSHAF PAGE
+══════════════════════════════ */
+.mushafPage {
+  background: #fffef8;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+body.dark .mushafPage { background: #111e14; }
+
+.mushafText {
+  font-family: 'Amiri Quran', serif;
+  font-size: 1.55rem;
+  line-height: 3.2;
+  color: #1a0e00;
+  text-align: justify;
+  direction: rtl;
+  word-spacing: .1em;
+  padding: 16px 16px 8px;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+}
+body.dark .mushafText { color: #e0d4c0; }
+
+/* ── أرقام الآيات داخل النجمة الذهبية ── */
+.verseNum {
+  display: inline-block;
+  position: relative;
+  width: 28px; height: 28px;
+  text-align: center;
+  vertical-align: middle;
+  margin: 0 3px;
+  flex-shrink: 0;
+}
+.verseNum svg {
+  position: absolute; top: 0; left: 0;
+  width: 28px; height: 28px;
+}
+.verseNum span {
+  position: relative;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 8px; font-weight: 700;
+  line-height: 28px; display: block;
+  color: #8b6340;
+}
+body.dark .verseNum span { color: #c9a84c; }
+.verseNumRing { stroke: #b8973a; fill: none; }
+body.dark .verseNumRing { stroke: #7a6030; }
+
+/* وضع آية بآية */
+.verses {
+  background: #fffef8;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+body.dark .verses { background: #111e14; }
+
+.verse {
+  padding: 16px 14px;
+  border-bottom: 1px solid rgba(184,151,58,.1);
+  transition: background .15s;
+  direction: rtl;
+}
+.verse:last-child { border-bottom: none; }
+.verse:hover { background: rgba(184,151,58,.03); }
+
+/* آية تُشغَّل */
+.playing {
+  background: rgba(45,90,61,.08) !important;
+  border-right: 3px solid var(--green) !important;
+}
+
+.verseTop { display: flex; align-items: flex-start; gap: 10px; }
+.verseNumBadge {
+  width: 28px; height: 28px;
+  flex-shrink: 0; margin-top: 6px;
+  position: relative; display: inline-block;
+}
+.verseNumBadge svg { position: absolute; top: 0; left: 0; }
+.verseNumBadge span {
+  position: relative;
+  font-family: 'Tajawal', sans-serif;
+  font-size: 8px; font-weight: 700;
+  line-height: 28px; display: block;
+  text-align: center; color: #8b6340;
+}
+body.dark .verseNumBadge span { color: #c9a84c; }
+
+.verseBody { flex: 1; min-width: 0; }
+.verseText {
+  font-family: 'Amiri Quran', serif;
+  font-size: 1.75rem;
+  line-height: 2.7;
+  color: #1a0e00;
+  direction: rtl; text-align: right;
+  word-break: break-word;
+  text-rendering: optimizeLegibility;
+}
+body.dark .verseText { color: #e0d4c0; }
+
+.verseTrans {
+  margin-top: 8px; padding-top: 8px;
+  border-top: 1px dashed var(--border);
+  font-size: .84rem; color: var(--text-soft);
+  line-height: 1.9; direction: rtl;
+}
+.verseTranslation {
+  margin-top: 6px; padding: 8px 10px;
+  border-top: 1px dashed rgba(45,90,61,.2);
+  font-size: .83rem; color: var(--text-soft);
+  line-height: 1.8; direction: ltr; text-align: left;
+  background: rgba(45,90,61,.04); border-radius: 6px;
+}
+
+.playBtn {
+  width: 32px; height: 32px;
+  border: 1px solid var(--border); border-radius: 50%;
+  background: transparent; cursor: pointer;
+  font-size: .75rem; color: var(--green);
+  flex-shrink: 0; margin-top: 4px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .2s;
+}
+.playBtn:hover, .playBtnActive {
+  background: var(--green); color: white; border-color: var(--green);
+}
+
+.verseActions {
+  display: flex; gap: 5px; margin-top: 10px;
+  justify-content: flex-end; flex-wrap: wrap;
+}
+.actionBtn {
+  padding: 4px 10px;
+  border: 1px solid var(--border); border-radius: 7px;
+  background: transparent;
+  font-family: 'Tajawal', sans-serif; font-size: .72rem;
+  color: var(--text-soft); cursor: pointer; transition: all .15s;
+}
+.actionBtn:hover { background: var(--gold-pale); color: var(--brown); border-color: var(--gold); }
+.bmActive { background: var(--green) !important; color: white !important; border-color: var(--green) !important; }
+
+/* ── ألوان التجويد ── */
+.tjGhunna  { color: #1a7a40; }
+.tjIkhfa   { color: #c05010; }
+.tjQalqala { color: #7733bb; }
+.tjMadd    { color: #1155aa; }
+body.dark .tjGhunna  { color: #4dbb7a; }
+body.dark .tjIkhfa   { color: #e07840; }
+body.dark .tjQalqala { color: #aa66ee; }
+body.dark .tjMadd    { color: #5599ee; }
+
+/* ══════════════════════════════
+   PAGE MARKER — فاصل الصفحات
+══════════════════════════════ */
+.pageMarker {
+  display: flex; align-items: center;
+  gap: 8px; padding: 10px 16px; opacity: .8;
+}
+.pageMarkerLine {
+  flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+.pageMarkerInfo {
+  display: flex; align-items: center; gap: 5px;
+  font-family: 'Tajawal', sans-serif;
+  font-size: .72rem; color: var(--gold); font-weight: 700;
+  white-space: nowrap; padding: 3px 10px;
+  border: 1px solid rgba(184,151,58,.35); border-radius: 20px;
+  background: rgba(184,151,58,.07);
+}
+
+/* ══════════════════════════════
+   PAGE MODE — وضع الصفحة الكاملة
+══════════════════════════════ */
+.pageMode {
+  background: #fffef8;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 16px;
+  text-align: justify;
+  direction: rtl;
+  line-height: 3.2;
+}
+body.dark .pageMode { background: #111e14; }
+
 .inlineVerse {
   font-family: 'Amiri Quran', serif;
-  color: var(--text);
+  font-size: 1.55rem;
+  color: #1a0e00;
 }
+body.dark .inlineVerse { color: #e0d4c0; }
 .inlineVerse.playing {
   background: rgba(184,151,58,.2);
-  border-radius: 4px;
-  padding: 0 2px;
+  border-radius: 4px; padding: 0 2px;
 }
+
+/* رقم الآية inline */
 .inlineVerseNum {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: var(--gold-pale);
-  border: 1px solid rgba(184,151,58,.3);
-  font-size: .62rem;
-  color: var(--gold);
-  font-weight: 700;
-  margin: 0 3px;
-  vertical-align: middle;
-  font-family: 'Tajawal', sans-serif;
+  display: inline-block; position: relative;
+  width: 26px; height: 26px;
+  text-align: center; vertical-align: middle;
+  margin: 0 2px;
+}
+.inlineVerseNum svg { position: absolute; top: 0; left: 0; }
+.inlineVerseNum span {
+  position: relative; font-family: 'Tajawal', sans-serif;
+  font-size: 8px; font-weight: 700;
+  line-height: 26px; display: block; color: #8b6340;
+}
+body.dark .inlineVerseNum span { color: #c9a84c; }
+
+/* ══════════════════════════════
+   TAFSIR & WORDS TABS
+══════════════════════════════ */
+.tafsirList { display: flex; flex-direction: column; gap: 14px; }
+.tafsirNote {
+  padding: 8px 14px; background: var(--gold-pale);
+  border: 1px solid rgba(184,151,58,.3); border-radius: 8px;
+  font-size: .78rem; color: var(--brown); font-weight: 600; margin-bottom: 4px;
+}
+.tafsirItem {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px;
+}
+.tafsirAyah {
+  font-family: 'Amiri Quran', serif; line-height: 2.6;
+  color: #1a0e00; direction: rtl; text-align: right; margin-bottom: 10px;
+}
+body.dark .tafsirAyah { color: #e0d4c0; }
+.tafsirBox {
+  font-size: .86rem; color: var(--text-soft); line-height: 2;
+  padding: 10px 12px; background: rgba(45,90,61,.07);
+  border-radius: 8px; border-right: 3px solid var(--green); direction: rtl;
+}
+.tafsirNum { color: var(--gold); margin-left: 4px; }
+
+.wordsList { display: flex; flex-direction: column; gap: 18px; }
+.wordVerse {
+  background: var(--card); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px;
+}
+.wordVerseNum { font-size: .75rem; color: var(--gold); font-weight: 700; margin-bottom: 6px; }
+.wordVerseText {
+  font-family: 'Amiri Quran', serif; font-size: 1.4rem;
+  line-height: 2.4; color: #1a0e00; direction: rtl;
+  text-align: right; margin-bottom: 12px;
+  padding-bottom: 10px; border-bottom: 1px dashed var(--border);
+}
+body.dark .wordVerseText { color: #e0d4c0; }
+.wordGrid { display: flex; flex-wrap: wrap; gap: 7px; direction: rtl; margin-bottom: 10px; }
+.wordCard {
+  padding: 7px 10px; background: var(--parchment);
+  border: 1px solid var(--border); border-radius: 8px;
+  text-align: center; min-width: 55px;
+}
+.wordAr { font-family: 'Amiri Quran', serif; font-size: 1.1rem; color: var(--brown); line-height: 1.8; }
+.wordEn { font-size: .63rem; color: var(--text-soft); direction: ltr; }
+.wordTafsir {
+  font-size: .83rem; color: var(--text-soft); line-height: 1.9;
+  padding: 8px 12px; background: rgba(45,90,61,.06);
+  border-radius: 8px; border-right: 3px solid var(--green); direction: rtl;
 }
 
-@media (max-width: 768px) {
-  .pageMode { padding: 16px 12px; }
-  .readingModeRow { gap: 4px; }
-  .modeBtn { font-size: .75rem; padding: 6px 8px; }
-}
-
-/* Riwaya Badge */
-.riwayaBadge {
-  font-size: .65rem; color: var(--green);
-  background: rgba(45,90,61,.1); padding: 2px 8px;
-  border-radius: 10px; font-weight: 600;
-}
-
-/* ── Surah Quick Navigation ── */
-.surahQuickNav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 14px;
-  padding: 8px 12px;
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-}
-.quickNavBtn {
-  font-family: 'Tajawal', sans-serif;
-  font-size: .85rem;
-  color: var(--green);
-  font-weight: 600;
-  padding: 6px 12px;
-  border: 1px solid rgba(45,90,61,.2);
-  border-radius: 8px;
-  transition: all .2s;
-  white-space: nowrap;
-}
-.quickNavBtn:hover { background: rgba(45,90,61,.08); }
-.quickNavHome {
-  font-family: 'Tajawal', sans-serif;
-  font-size: .82rem;
-  color: var(--text-soft);
-  padding: 6px 10px;
-  border-radius: 8px;
-  transition: all .2s;
-}
-.quickNavHome:hover { color: var(--brown); }
-
-/* ── Bottom Nav ── */
-.surahBottomNav {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-top: 20px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
-}
-.bottomNavBtn {
-  font-family: 'Tajawal', sans-serif;
-  font-size: .9rem;
-  color: white;
-  background: var(--green);
-  padding: 10px 20px;
-  border-radius: 10px;
-  font-weight: 700;
-  transition: all .2s;
-}
-.bottomNavBtn:hover { background: var(--green-light); transform: translateY(-1px); }
-
-@media(max-width: 768px) {
-  .surahQuickNav { padding: 6px 8px; }
-  .quickNavBtn { font-size: .78rem; padding: 5px 8px; }
-  .bottomNavBtn { font-size: .82rem; padding: 8px 14px; }
-}
-
-/* Bottom Navigation */
-.surahBottomNav {
-  display: flex; align-items: center; justify-content: space-between;
-  gap: 10px; margin-top: 24px; padding: 16px 0;
-  border-top: 1px solid var(--border);
-}
-.bottomNavBtn {
-  font-family: 'Tajawal', sans-serif; font-size: .9rem;
-  color: white; background: var(--green);
-  padding: 10px 20px; border-radius: 10px; font-weight: 700;
-  transition: all .2s;
-}
-.bottomNavBtn:hover { background: var(--green-light); transform: translateY(-1px); }
-.bottomNavHome {
-  font-family: 'Tajawal', sans-serif; font-size: .82rem;
-  color: var(--text-soft); padding: 8px 14px;
-  border: 1px solid var(--border); border-radius: 8px; transition: all .2s;
-}
-.bottomNavHome:hover { color: var(--brown); border-color: var(--gold); }
-
-@media(max-width: 768px) {
-  .bottomNavBtn { font-size: .8rem; padding: 8px 14px; }
-}
-
-/* ── Sajda Alert ── */
+/* ══════════════════════════════
+   MISC
+══════════════════════════════ */
 .sajdaAlert {
-  background: linear-gradient(135deg, rgba(45,90,61,.1), rgba(184,151,58,.08));
+  background: rgba(45,90,61,.08);
   border: 1px solid var(--green);
-  border-radius: 8px;
-  padding: 7px 14px;
-  font-family: 'Tajawal', sans-serif;
-  font-size: .82rem;
-  color: var(--green);
-  font-weight: 600;
-  margin-bottom: 8px;
-  text-align: center;
+  border-radius: 8px; padding: 6px 12px;
+  font-size: .8rem; color: var(--green);
+  font-weight: 600; margin-bottom: 8px; text-align: center;
 }
-
-/* ── Focus Mode ── */
-.focusModeActive .verseActions,
-.focusModeActive .verseTrans,
-.focusModeActive .verseTranslation {
-  display: none !important;
-}
-
-/* Asbab Al-Nuzul */
 .asbabBox {
-  background: linear-gradient(135deg, rgba(37,99,235,.06), rgba(184,151,58,.06));
+  background: rgba(37,99,235,.05);
   border: 1px solid rgba(37,99,235,.2);
-  border-radius: 10px; padding: 12px 14px; margin-bottom: 8px;
+  border-radius: 10px; padding: 12px; margin-bottom: 8px;
 }
-.asbabTitle { font-size: .82rem; color: #2563eb; font-weight: 700; margin-bottom: 6px; }
-.asbabText { font-size: .82rem; color: var(--text-soft); line-height: 1.8; margin-bottom: 8px; }
-.asbabLink {
-  display: inline-block; font-size: .78rem; color: #2563eb;
+.asbabTitle { font-size: .8rem; color: #2563eb; font-weight: 700; margin-bottom: 6px; }
+.asbabText  { font-size: .8rem; color: var(--text-soft); line-height: 1.8; margin-bottom: 6px; }
+.asbabLink  {
+  display: inline-block; font-size: .76rem; color: #2563eb;
   border: 1px solid rgba(37,99,235,.3); border-radius: 8px;
   padding: 4px 10px; transition: all .2s;
 }
 .asbabLink:hover { background: rgba(37,99,235,.08); }
+
+/* شريط تقدم القراءة */
+.readProgress {
+  position: fixed; top: 56px; left: 0; right: 0;
+  z-index: 998; height: 3px; background: rgba(0,0,0,.07); direction: ltr;
+}
+.readProgressFill {
+  height: 100%; float: right; margin-left: auto;
+  background: linear-gradient(90deg, #2d5a3d, #c9a84c);
+  transition: width .6s ease;
+}
+
+/* ══════════════════════════════
+   MOBILE — الجوال أولاً
+══════════════════════════════ */
+@media (max-width: 768px) {
+  .page { padding: 8px 8px 110px; }
+  .surahNav { padding: 8px 10px; }
+  .navArrow { font-size: .76rem; padding: 5px 8px; }
+  .surahTitleFrame { padding: 6px 28px; }
+  .surahName { font-size: 1.4rem; }
+  .surahMeta { font-size: .7rem; gap: 6px; padding: 5px 10px 8px; }
+  .bismillahText { font-size: 1.2rem; }
+  .tabs { border-radius: 8px 8px 0 0; }
+  .tab { padding: 8px 2px; font-size: .74rem; }
+  .fontControls { padding: 8px 10px; gap: 5px; }
+  .fontRow { gap: 4px; }
+  .transBtn { padding: 4px 7px; font-size: .72rem; }
+  .fontSelect { font-size: .72rem; padding: 4px 5px; }
+  .mushafText { font-size: 1.35rem; padding: 12px 12px 6px; line-height: 3; }
+  .verseText { font-size: 1.5rem; line-height: 2.5; }
+  .verse { padding: 12px 10px; }
+  .verseActions { gap: 4px; }
+  .actionBtn { padding: 4px 7px; font-size: .7rem; flex: 1; min-width: 55px; text-align: center; }
+  .pageMode { padding: 14px 12px; }
+  .inlineVerse { font-size: 1.35rem; }
+}
+
+@media (max-width: 400px) {
+  .surahName { font-size: 1.25rem; }
+  .mushafText { font-size: 1.25rem; }
+  .verseText  { font-size: 1.35rem; }
+  .tab { font-size: .68rem; padding: 7px 1px; }
+}
