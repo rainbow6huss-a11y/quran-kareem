@@ -11,6 +11,7 @@ import { supabase } from '../../lib/supabase';
 import { fetchSurahWithCache } from '../../lib/apiCache';
 import styles from '../../styles/Surah.module.css';
 import TajweedText from '../../components/TajweedText';
+import VerseNumStar from '../../components/VerseNumStar';
 
 export default function SurahPage({
   toggleDark, dark, showToast, user, onAuth,
@@ -283,21 +284,35 @@ export default function SurahPage({
           <>
             {/* رأس السورة */}
             <div className={styles.surahHeader}>
+              {/* شريط التنقل */}
               <div className={styles.surahNav}>
-                {surahNum > 1 && <Link href={`/surah/${surahNum - 1}`} className={styles.navArrow}>› السابقة</Link>}
-                <div>
-                  <h1 className={styles.surahName}>{surah.name}</h1>
-                  <div className={styles.surahMeta}>
-                    <span>📍 {surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'}</span>
-                    <span>📜 {surah.numberOfAyahs} آية</span>
-                    <span>🔢 رقم {surah.number}</span>
-                    <span className={styles.riwayaBadge}>رواية حفص عن عاصم</span>
+                {surahNum > 1
+                  ? <Link href={`/surah/${surahNum - 1}`} className={styles.navArrow}>› السابقة</Link>
+                  : <span />}
+                <div className={styles.surahTitleWrap} style={{flex:1,textAlign:'center'}}>
+                  <div className={styles.surahTitleFrame}>
+                    <h1 className={styles.surahName}>{surah.name}</h1>
                   </div>
                 </div>
-                {surahNum < 114 && <Link href={`/surah/${surahNum + 1}`} className={styles.navArrow}>التالية ‹</Link>}
+                {surahNum < 114
+                  ? <Link href={`/surah/${surahNum + 1}`} className={styles.navArrow}>التالية ‹</Link>
+                  : <span />}
               </div>
+
+              {/* معلومات السورة */}
+              <div className={styles.surahMeta}>
+                <span>📍 {surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'}</span>
+                <span>📜 {surah.numberOfAyahs} آية</span>
+                <span>🔢 رقم {surah.number}</span>
+                <span className={styles.riwayaBadge}>رواية حفص عن عاصم</span>
+              </div>
+
+              {/* البسملة */}
               {surahNum !== 9 && surahNum !== 1 && (
-                <div className={styles.bismillah}>بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+                <div className={styles.bismillah}>
+                  <div className={styles.bismillahOrnament}>❧ ✦ ❧</div>
+                  <div className={styles.bismillahText}>بِسۡمِ ٱللَّهِ ٱلرَّحۡمَـٰنِ ٱلرَّحِیمِ</div>
+                </div>
               )}
             </div>
 
@@ -341,14 +356,24 @@ export default function SurahPage({
                             {v.page && idx > 0 && verses[idx - 1]?.page !== v.page && (
                               <div className={styles.pageMarker}>
                                 <div className={styles.pageMarkerLine}/>
-                                <div className={styles.pageMarkerInfo}>صفحة {v.page} • جزء {v.juz}</div>
+                                <div className={styles.pageMarkerInfo}>
+                                  <span>صفحة {v.page}</span>
+                                  <span>•</span>
+                                  <span>جزء {v.juz}</span>
+                                </div>
                                 <div className={styles.pageMarkerLine}/>
                               </div>
                             )}
-                            <span className={`${styles.inlineVerse} ${playingVerse === v.number ? styles.playing : ''}`} style={fontStyle}>
+                            <span
+                              className={`${styles.inlineVerse} ${playingVerse === v.number ? styles.playing : ''}`}
+                              style={fontStyle}
+                              onClick={() => setPlayingVerse(v.number)}
+                            >
                               {v.text}
                             </span>
-                            <span className={styles.inlineVerseNum}>{v.number}</span>
+                            <span style={{ display:'inline-block', verticalAlign:'middle', margin:'0 2px', color: dark ? '#c9a84c' : '#8b6340' }}>
+                              <VerseNumStar num={v.number} size={26} />
+                            </span>
                             {' '}
                           </span>
                         );
