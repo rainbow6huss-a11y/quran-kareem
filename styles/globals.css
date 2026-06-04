@@ -221,9 +221,7 @@ body.dark {
   --shadow: rgba(0,0,0,.4);
   --gold-pale: rgba(184,151,58,.08);
 }
-body.dark .verseText {
-  color: #e8dcc8 !important;
-}
+
 body.dark nav {
   background: #0f1a10 !important;
   border-bottom-color: rgba(184,151,58,.12) !important;
@@ -237,3 +235,25 @@ body.dark nav {
     display: flex !important;
   }
 }
+
+/* ══ MUSHAF OVERRIDES — لا تحذف ══ */
+.pageMode {
+  background: #fffef5 !important;
+  font-family: 'Amiri Quran', serif !important;
+}
+body.dark .pageMode { background: #111e14 !important; }
+
+/* خط المصحف في وضع الصفحة */
+[class*="inlineVerse"] {
+  font-family: 'Amiri Quran', serif !important;
+  color: #1a0e00 !important;
+}
+body.dark [class*="inlineVerse"] { color: #e8dcc8 !important; }
+
+/* خط المصحف في وضع آية بآية */
+[class*="verseText"] {
+  font-family: 'Amiri Quran', serif !important;
+  color: #1a0e00 !important;
+  line-height: 2.7 !important;
+}
+body.dark [class*="verseText"] { color: #e8dcc8 !important; }
