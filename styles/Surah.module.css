@@ -50,10 +50,11 @@ body.dark .navArrow { color: #5aaa70; border-color: rgba(184,151,58,.2); backgro
 /* إطار اسم السورة */
 .surahTitleWrap { flex: 1; text-align: center; }
 .surahTitleFrame {
-  display: inline-block; position: relative;
+  display: block; position: relative;
   border: 1.5px solid rgba(184,151,58,.7);
-  border-radius: 8px; padding: 7px 36px;
+  border-radius: 8px; padding: 7px 40px;
   background: rgba(184,151,58,.07);
+  max-width: 100%; overflow: hidden;
 }
 .surahTitleFrame::before,
 .surahTitleFrame::after {
@@ -429,8 +430,8 @@ body.dark .wordAr { color: #d4af5a; }
   .page { padding: 8px 8px 80px; }
   .surahNav { padding: 8px 10px; }
   .navArrow { font-size: .75rem; padding: 5px 8px; }
-  .surahTitleFrame { padding: 6px 26px; }
-  .surahName { font-size: 1.3rem; }
+  .surahTitleFrame { padding: 5px 32px; }
+  .surahName { font-size: 1.1rem; }
   .surahMeta { font-size: .7rem; gap: 6px; padding: 5px 10px 8px; }
   .bismillahText { font-size: 1.15rem; }
   .tabs { border-radius: 8px 8px 0 0; }
@@ -448,7 +449,7 @@ body.dark .wordAr { color: #d4af5a; }
 }
 
 @media (max-width: 400px) {
-  .surahName { font-size: 1.2rem; }
+  .surahName { font-size: 1.05rem; }
   .pageMode { padding: 12px 10px; line-height: 3.1; }
   .inlineVerse { font-size: 1.25rem !important; }
   .verseText  { font-size: 1.35rem !important; }
