@@ -60,10 +60,13 @@ export default function SurahPage({
     const f = localStorage.getItem('q_font_family');
     const t = localStorage.getItem('q_show_trans');
     const m = localStorage.getItem('q_reading_mode');
-    if (s) setFontSize(parseFloat(s));
+    // تأكد من قيم سليمة
+    const parsedSize = s ? parseFloat(s) : 1.75;
+    if (parsedSize >= 1.0 && parsedSize <= 2.5) setFontSize(parsedSize);
     if (f) setFontFamily(f);
     if (t !== null) setShowTrans(t === 'true');
-    if (m) setReadingMode(m);
+    // الوضع الافتراضي دائماً صفحة كاملة
+    setReadingMode(m || 'page');
   }, []);
 
   // ─── حفظ آخر موضع ───
@@ -372,7 +375,16 @@ export default function SurahPage({
                               style={{...fontStyle, color: dark ? '#e8dcc8' : '#1a0800'}}
                               onClick={() => setPlayingVerse(v.number)}
                             >
-                              {v.text}
+                              {showTajweed && tajweedData[v.number]
+                                ? <TajweedText
+                                    text={v.text}
+                                    annotations={tajweedData[v.number]}
+                                    fontSize={fontSize}
+                                    fontFamily={fontStyle.fontFamily}
+                                    dark={dark}
+                                  />
+                                : v.text
+                              }
                             </span>
                             <span style={{ display:'inline-block', verticalAlign:'middle', margin:'0 2px', color: dark ? '#c9a84c' : '#8b6340' }}>
                               <VerseNumStar num={v.number} size={22} />
