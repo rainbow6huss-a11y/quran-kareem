@@ -147,7 +147,7 @@ body.dark .tabActive { color: #5aaa70 !important; border-bottom-color: #5aaa70 !
   border: 1px solid rgba(184,151,58,.25);
   border-radius: 12px; margin-bottom: 10px;
 }
-body.dark .fontControls { background: #0d1710; border-color: rgba(184,151,58,.15); }
+body.dark .fontControls { background: #1a2e1e; border-color: rgba(184,151,58,.25); }
 
 .readingModeRow { display: flex; gap: 6px; }
 .modeBtn {
@@ -156,7 +156,7 @@ body.dark .fontControls { background: #0d1710; border-color: rgba(184,151,58,.15
   background: #ede4cc; font-family: 'Tajawal', sans-serif;
   font-size: .8rem; color: #7a5c30; cursor: pointer; transition: all .2s;
 }
-body.dark .modeBtn { background: #0a1209; border-color: rgba(184,151,58,.15); color: #5a8060; }
+body.dark .modeBtn { background: #1e3525; border-color: rgba(184,151,58,.25); color: #a0c8a0; }
 .modeBtn:hover { border-color: #b8973a; }
 .modeBtnActive {
   background: #2d5a3d !important; color: white !important;
@@ -171,7 +171,7 @@ body.dark .modeBtn { background: #0a1209; border-color: rgba(184,151,58,.15); co
   flex-shrink: 0; display: flex; align-items: center; justify-content: center;
   transition: all .2s;
 }
-body.dark .fontIconBtn { background: #0a1209; border-color: rgba(184,151,58,.15); color: #5a8060; }
+body.dark .fontIconBtn { background: #1e3525; border-color: rgba(184,151,58,.25); color: #a0c8a0; }
 .fontIconBtn:hover { border-color: #b8973a; background: rgba(184,151,58,.12); }
 
 .fontSteps { display: flex; gap: 3px; flex: 1; justify-content: center; }
@@ -181,7 +181,7 @@ body.dark .fontIconBtn { background: #0a1209; border-color: rgba(184,151,58,.15)
   background: #faf5e9; font-family: 'Tajawal', sans-serif;
   font-size: .7rem; color: #7a5c30; cursor: pointer; transition: all .15s;
 }
-body.dark .fontStep { background: #0d1710; border-color: rgba(184,151,58,.12); color: #5a8060; }
+body.dark .fontStep { background: #1e3525; border-color: rgba(184,151,58,.22); color: #a0c8a0; }
 .fontStep:hover { border-color: #b8973a; }
 .fontStepActive {
   background: #2d5a3d !important; color: white !important;
@@ -194,14 +194,14 @@ body.dark .fontStep { background: #0d1710; border-color: rgba(184,151,58,.12); c
   font-family: 'Tajawal', sans-serif; font-size: .76rem;
   background: #ede4cc; color: #3d2200; outline: none; cursor: pointer;
 }
-body.dark .fontSelect { background: #0a1209; color: #d4af5a; border-color: rgba(184,151,58,.15); }
+body.dark .fontSelect { background: #1e3525; color: #d4af5a; border-color: rgba(184,151,58,.25); }
 
 .transBtn {
   padding: 5px 10px; border: 1px solid rgba(184,151,58,.25); border-radius: 8px;
   font-family: 'Tajawal', sans-serif; font-size: .76rem;
   background: transparent; color: #7a5c30; cursor: pointer; transition: all .2s;
 }
-body.dark .transBtn { color: #5a8060; border-color: rgba(184,151,58,.15); }
+body.dark .transBtn { color: #a0c8a0; border-color: rgba(184,151,58,.25); }
 .transBtn:hover { border-color: #b8973a; }
 .transBtnOn {
   background: rgba(45,90,61,.1) !important;
