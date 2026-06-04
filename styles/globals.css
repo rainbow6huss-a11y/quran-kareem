@@ -1,10 +1,10 @@
 :root {
   --cream: #faf6ef;
-  --parchment: #f0e8d5;
+  --parchment: #ede4cc;
   --gold: #b8973a;
   --gold-light: #d4af5a;
-  --gold-pale: #f0e0a0;
-  --brown: #5c3d1e;
+  --gold-pale: rgba(184,151,58,.08);
+  --brown: #3d2200;
   --brown-light: #8b6340;
   --text: #2c1a0e;
   --text-soft: #6b4c2a;
@@ -12,12 +12,12 @@
   --green-light: #3d7a55;
   --shadow: rgba(92, 61, 30, 0.15);
   --border: rgba(184, 151, 58, 0.3);
-  --card: rgba(255, 255, 255, 0.7);
+  --card: #faf5e9;
 }
 
 body.dark {
   --cream: #0f1a12;
-  --parchment: #1a2a1e;
+  --parchment: #0a1209;
   --gold: #d4af5a;
   --gold-light: #e8c97a;
   --gold-pale: #3a3010;
@@ -29,7 +29,7 @@ body.dark {
   --green-light: #5aaa70;
   --shadow: rgba(0, 0, 0, 0.4);
   --border: rgba(212, 175, 90, 0.25);
-  --card: rgba(20, 35, 22, 0.8);
+  --card: #0d1710;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -161,7 +161,7 @@ html, body {
 
 @media (max-width: 768px) {
   /* Fix white page issue */
-  #__next { min-height: 100vh; background: var(--parchment, #faf6ef); }
+  #__next { min-height: 100vh; background: var(--parchment, #ede4cc); }
   
   /* Better tap highlight */
   * { -webkit-tap-highlight-color: rgba(184,151,58,.15); }
