@@ -1,22 +1,12 @@
 import { useState, useEffect } from 'react';
-import Head from 'next/head';
+import SeoHead from '../components/SeoHead';
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import { supabase } from '../lib/supabase';
+import { SURAH_NAMES, DAILY_AYAHS, JUZ_STARTS } from '../lib/constants';
+import { fetchSurahListWithCache } from '../lib/apiCache';
 import { SurahListSkeleton } from '../components/Skeleton';
 import styles from '../styles/Home.module.css';
-
-const DAILY_AYAHS = [
-  'إِنَّ مَعَ الْعُسْرِ يُسْرًا ﴿الشرح:٦﴾',
-  'وَمَن يَتَوَكَّلْ عَلَى اللَّهِ فَهُوَ حَسْبُهُ ﴿الطلاق:٣﴾',
-  'فَإِنَّ مَعَ الْعُسْرِ يُسْرًا ﴿الشرح:٥﴾',
-  'وَاللَّهُ غَالِبٌ عَلَىٰ أَمْرِهِ ﴿يوسف:٢١﴾',
-  'رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً ﴿البقرة:٢٠١﴾',
-  'إِنَّ اللَّهَ مَعَ الصَّابِرِينَ ﴿البقرة:١٥٣﴾',
-  'وَلَا تَيْأَسُوا مِن رَّوْحِ اللَّهِ ﴿يوسف:٨٧﴾',
-];
-
-const SURAH_NAMES = ["الفاتحة","البقرة","آل عمران","النساء","المائدة","الأنعام","الأعراف","الأنفال","التوبة","يونس","هود","يوسف","الرعد","إبراهيم","الحجر","النحل","الإسراء","الكهف","مريم","طه","الأنبياء","الحج","المؤمنون","النور","الفرقان","الشعراء","النمل","القصص","العنكبوت","الروم","لقمان","السجدة","الأحزاب","سبأ","فاطر","يس","الصافات","ص","الزمر","غافر","فصلت","الشورى","الزخرف","الدخان","الجاثية","الأحقاف","محمد","الفتح","الحجرات","ق","الذاريات","الطور","النجم","القمر","الرحمن","الواقعة","الحديد","المجادلة","الحشر","الممتحنة","الصف","الجمعة","المنافقون","التغابن","الطلاق","التحريم","الملك","القلم","الحاقة","المعارج","نوح","الجن","المزمل","المدثر","القيامة","الإنسان","المرسلات","النبأ","النازعات","عبس","التكوير","الانفطار","المطففين","الانشقاق","البروج","الطارق","الأعلى","الغاشية","الفجر","البلد","الشمس","الليل","الضحى","الشرح","التين","العلق","القدر","البينة","الزلزلة","العاديات","القارعة","التكاثر","العصر","الهمزة","الفيل","قريش","الماعون","الكوثر","الكافرون","النصر","المسد","الإخلاص","الفلق","الناس"];
 
 export default function Home({ toggleDark, dark, showToast, user, onAuth }) {
   const [surahs, setSurahs] = useState([]);
@@ -27,9 +17,8 @@ export default function Home({ toggleDark, dark, showToast, user, onAuth }) {
   const [khatmaPct, setKhatmaPct] = useState(0);
 
   useEffect(() => {
-    fetch('https://api.alquran.cloud/v1/surah')
-      .then(r => r.json())
-      .then(d => { setSurahs(d.data); setLoading(false); })
+    fetchSurahListWithCache()
+      .then(data => { setSurahs(data); setLoading(false); })
       .catch(() => setLoading(false));
 
     // تحميل آخر قراءة
@@ -63,10 +52,7 @@ export default function Home({ toggleDark, dark, showToast, user, onAuth }) {
 
   return (
     <>
-      <Head>
-        <title>القرآن الكريم</title>
-        <meta name="description" content="قراءة القرآن الكريم مع التفسير والاستماع" />
-      </Head>
+      <SeoHead />
       <Navbar toggleDark={toggleDark} dark={dark} showToast={showToast} onAuth={onAuth} />
 
       <div className={styles.hero}>

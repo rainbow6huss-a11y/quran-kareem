@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Head from 'next/head';
+import SeoHead from '../components/SeoHead';
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import styles from '../styles/Juz.module.css';
@@ -61,7 +61,7 @@ export default function JuzPage({ toggleDark, dark, showToast }) {
 
   return (
     <>
-      <Head><title>الأجزاء الثلاثون - القرآن الكريم</title></Head>
+      <SeoHead title="الأجزاء الثلاثون" description="تصفح القرآن الكريم مقسماً إلى ثلاثين جزءاً" path="/juz" />
       <Navbar toggleDark={toggleDark} dark={dark} showToast={showToast} />
 
       <div className={styles.page}>

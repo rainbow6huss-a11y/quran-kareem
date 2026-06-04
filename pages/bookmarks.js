@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Head from 'next/head';
+import SeoHead from '../components/SeoHead';
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import { supabase } from '../lib/supabase';
@@ -54,7 +54,7 @@ export default function BookmarksPage({ toggleDark, dark, showToast, user, onAut
 
   return (
     <>
-      <Head><title>علاماتي - القرآن الكريم</title></Head>
+      <SeoHead title="علاماتي المحفوظة" description="الآيات الكريمة التي حفظتها للرجوع إليها" path="/bookmarks" />
       <Navbar toggleDark={toggleDark} dark={dark} showToast={showToast} onAuth={onAuth} />
 
       <div className={styles.page}>
