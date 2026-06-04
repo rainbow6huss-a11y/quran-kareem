@@ -109,7 +109,7 @@ a { text-decoration: none; color: inherit; }
 body.dark #__next { background: var(--parchment); }
 
 /* navbar */
-body.dark nav { background: #0a1209 !important; border-color: rgba(184,151,58,.15) !important; }
+body.dark nav { background: var(--parchment) !important; border-color: rgba(184,151,58,.15) !important; }
 
 /* ══════════════════════════════
    نصوص المصحف — ألوان إجبارية
