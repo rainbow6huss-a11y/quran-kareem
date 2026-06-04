@@ -229,7 +229,7 @@ body.dark .pageMode {
 
 .inlineVerse {
   font-family: 'Amiri Quran', serif !important;
-  color: #1a0e00 !important;
+  color: #1a0800 !important;
   cursor: pointer;
   border-radius: 3px; padding: 0 1px;
   transition: background .15s;
@@ -426,7 +426,7 @@ body.dark .wordAr { color: #d4af5a; }
    MOBILE أولاً
 ══════════════════════════════ */
 @media (max-width: 768px) {
-  .page { padding: 8px 8px 120px; }
+  .page { padding: 8px 8px 80px; }
   .surahNav { padding: 8px 10px; }
   .navArrow { font-size: .75rem; padding: 5px 8px; }
   .surahTitleFrame { padding: 6px 26px; }
