@@ -87,7 +87,7 @@ export default function Navbar({ toggleDark, dark, showToast, onAuth }) {
         {/* تحكم */}
         <div className={styles.controls}>
           <Auth onAuth={onAuth} showToast={showToast} />
-          <button className={styles.ctrl} onClick={toggleDark}>{dark ? '☀️' : '🌙'}</button>
+          <button className={`${styles.ctrl} ${styles.darkBtn}`} onClick={toggleDark}>{dark ? '☀️' : '🌙'}</button>
           <button className={`${styles.ctrl} ${styles.shareBtn}`} onClick={shareSite}>📤</button>
           <button className={`${styles.ctrl} ${styles.menuBtn} ${menuOpen ? styles.ctrlActive : ''}`}
             onClick={() => setMenuOpen(v => !v)}>☰</button>
