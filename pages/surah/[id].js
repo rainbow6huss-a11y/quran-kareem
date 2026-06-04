@@ -7,6 +7,7 @@ import { SurahSkeleton } from '../../components/Skeleton';
 import ErrorRetry from '../../components/ErrorRetry';
 import ReadingControls from '../../components/ReadingControls';
 import VerseCard from '../../components/VerseCard';
+import SurahBottomBar from '../../components/SurahBottomBar';
 import { supabase } from '../../lib/supabase';
 import { fetchSurahWithCache } from '../../lib/apiCache';
 import styles from '../../styles/Surah.module.css';
@@ -44,10 +45,11 @@ export default function SurahPage({
   const [translationLang, setTranslationLang] = useState('en.sahih');
   const [showTajweed, setShowTajweed] = useState(false);
   const [focusMode,   setFocusMode]   = useState(false);
-  const [readingMode, setReadingMode] = useState('verse');
+  const [readingMode, setReadingMode] = useState('page');
   const [showAsbab,   setShowAsbab]   = useState(null);
   const [readPct,     setReadPct]     = useState(0);
   const [saving,      setSaving]      = useState(false);
+  const [lastVerse,   setLastVerse]   = useState(1);
 
   const saveTimerRef = useRef(null);
   const observerRef  = useRef(null);
@@ -150,6 +152,7 @@ export default function SurahPage({
           const v = parseInt(e.target.getAttribute('data-verse'));
           if (v) {
             saveLastRead(surahNum, v);
+            setLastVerse(v);
             if (verses.length > 0) setReadPct(Math.round((v / verses.length) * 100));
           }
         }
@@ -366,13 +369,13 @@ export default function SurahPage({
                             )}
                             <span
                               className={`${styles.inlineVerse} ${playingVerse === v.number ? styles.playing : ''}`}
-                              style={fontStyle}
+                              style={{...fontStyle, color: dark ? '#e8dcc8' : '#1a0800'}}
                               onClick={() => setPlayingVerse(v.number)}
                             >
                               {v.text}
                             </span>
                             <span style={{ display:'inline-block', verticalAlign:'middle', margin:'0 2px', color: dark ? '#c9a84c' : '#8b6340' }}>
-                              <VerseNumStar num={v.number} size={26} />
+                              <VerseNumStar num={v.number} size={22} />
                             </span>
                             {' '}
                           </span>
@@ -452,6 +455,21 @@ export default function SurahPage({
           </>
         ) : null}
       </div>
+      {/* الشريط السفلي — موبايل السورة */}
+      <SurahBottomBar
+        dark={dark}
+        surahNum={surahNum}
+        surahName={surah?.name}
+        showTajweed={showTajweed}
+        onToggleTajweed={() => setShowTajweed(v => !v)}
+        playingVerse={playingVerse}
+        onPlayPause={() => setPlayingVerse(v => v ? null : 1)}
+        isBookmarked={isBm(lastVerse)}
+        onToggleBookmark={() => toggleBookmark(lastVerse)}
+        onScrollTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        onPrevSurah={() => router.push(`/surah/${surahNum - 1}`)}
+        onNextSurah={() => router.push(`/surah/${surahNum + 1}`)}
+      />
     </>
   );
 }
