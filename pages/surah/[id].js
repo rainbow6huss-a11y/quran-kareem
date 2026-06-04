@@ -1,15 +1,16 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
-import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Navbar from '../../components/Navbar';
+import SeoHead from '../../components/SeoHead';
 import { SurahSkeleton } from '../../components/Skeleton';
+import ErrorRetry from '../../components/ErrorRetry';
+import ReadingControls from '../../components/ReadingControls';
+import VerseCard from '../../components/VerseCard';
 import { supabase } from '../../lib/supabase';
+import { fetchSurahWithCache } from '../../lib/apiCache';
 import styles from '../../styles/Surah.module.css';
 import TajweedText from '../../components/TajweedText';
-
-// آيات السجدة
-const SAJDA = {7:206,13:15,16:50,17:109,19:58,22:18,25:60,27:26,32:15,38:24,41:38,53:62,84:21,96:19};
 
 export default function SurahPage({
   toggleDark, dark, showToast, user, onAuth,
@@ -20,43 +21,49 @@ export default function SurahPage({
   const { id }   = router.query;
   const surahNum = parseInt(id);
 
+  // ─── بيانات السورة ───
   const [surah,    setSurah]    = useState(null);
   const [verses,   setVerses]   = useState([]);
-  const [wordData, setWordData] = useState({});
-  const [saadiData, setSaadiData] = useState({});
   const [loading,  setLoading]  = useState(true);
-  const [tab,      setTab]      = useState('read');
-  const [fontSize, setFontSize] = useState(1.75);
-  const [bookmarks,setBookmarks]= useState([]);
-  const [showTrans,  setShowTrans]  = useState(true);
-  const [fontFamily, setFontFamily] = useState('amiri-quran');
+  const [error,    setError]    = useState(null);
 
-  // تحميل تفضيلات المستخدم المحفوظة
-  useEffect(() => {
-    const savedMode = localStorage.getItem('q_reading_mode');
-    if (savedMode) setReadingMode(savedMode);
-    const savedSize   = localStorage.getItem('q_font_size');
-    const savedFamily = localStorage.getItem('q_font_family');
-    const savedTrans  = localStorage.getItem('q_show_trans');
-    if (savedSize)   setFontSize(parseFloat(savedSize));
-    if (savedFamily) setFontFamily(savedFamily);
-    if (savedTrans !== null) setShowTrans(savedTrans === 'true');
-  }, []);
-  const [saving,   setSaving]   = useState(false);
-  const [readPct,  setReadPct]  = useState(0);
-  const [readingMode, setReadingMode] = useState('verse');
-  const [showTajweed, setShowTajweed] = useState(false);
-  const [focusMode, setFocusMode] = useState(false);
-  const [asbabData, setAsbabData] = useState({});
-  const [showAsbab, setShowAsbab] = useState(null);
+  // ─── بيانات إضافية ───
+  const [wordData,    setWordData]    = useState({});
+  const [saadiData,   setSaadiData]   = useState({});
   const [tajweedData, setTajweedData] = useState({});
   const [translation, setTranslation] = useState({});
+  const [bookmarks,   setBookmarks]   = useState([]);
+
+  // ─── حالة القراءة ───
+  const [tab,         setTab]         = useState('read');
+  const [fontSize,    setFontSize]    = useState(1.75);
+  const [fontFamily,  setFontFamily]  = useState('amiri-quran');
+  const [showTrans,   setShowTrans]   = useState(true);
   const [showTranslation, setShowTranslation] = useState(false);
   const [translationLang, setTranslationLang] = useState('en.sahih');
+  const [showTajweed, setShowTajweed] = useState(false);
+  const [focusMode,   setFocusMode]   = useState(false);
+  const [readingMode, setReadingMode] = useState('verse');
+  const [showAsbab,   setShowAsbab]   = useState(null);
+  const [readPct,     setReadPct]     = useState(0);
+  const [saving,      setSaving]      = useState(false);
 
   const saveTimerRef = useRef(null);
   const observerRef  = useRef(null);
 
+  // ─── تحميل تفضيلات المستخدم ───
+  useEffect(() => {
+    const s = localStorage.getItem('q_font_size');
+    const f = localStorage.getItem('q_font_family');
+    const t = localStorage.getItem('q_show_trans');
+    const m = localStorage.getItem('q_reading_mode');
+    if (s) setFontSize(parseFloat(s));
+    if (f) setFontFamily(f);
+    if (t !== null) setShowTrans(t === 'true');
+    if (m) setReadingMode(m);
+  }, []);
+
+  // ─── حفظ آخر موضع ───
   const saveLastRead = useCallback(async (sNum, vNum) => {
     localStorage.setItem('q_last_read', JSON.stringify({ surah: sNum, verse: vNum }));
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
@@ -65,78 +72,66 @@ export default function SurahPage({
       setSaving(true);
       try {
         const { data: ex } = await supabase.from('last_read').select('id').eq('user_id', user.id).single();
-        if (ex) await supabase.from('last_read').update({ surah_num: sNum, verse_num: vNum, updated_at: new Date().toISOString() }).eq('user_id', user.id);
-        else    await supabase.from('last_read').insert({ user_id: user.id, surah_num: sNum, verse_num: vNum });
-      } catch(e) {}
+        if (ex) {
+          await supabase.from('last_read')
+            .update({ surah_num: sNum, verse_num: vNum, updated_at: new Date().toISOString() })
+            .eq('user_id', user.id);
+        } else {
+          await supabase.from('last_read').insert({ user_id: user.id, surah_num: sNum, verse_num: vNum });
+        }
+      } catch { /* تجاهل أخطاء الشبكة */ }
       setSaving(false);
     }, 2000);
   }, [user]);
 
+  // ─── تحميل السورة ───
   useEffect(() => {
-    if (!surahNum) return;
-    setLoading(true); setVerses([]); setSurah(null);
+    if (!surahNum || isNaN(surahNum)) return;
+    setLoading(true); setError(null);
+    setVerses([]); setSurah(null);
+    setSaadiData({}); setTajweedData({}); setTranslation({});
+
     const saved = JSON.parse(localStorage.getItem('q_bookmarks') || '[]');
     setBookmarks(saved);
 
-    Promise.all([
-      fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/quran-uthmani`).then(r => r.json()),
-      fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/ar.muyassar`).then(r => r.json()),
-    ]).then(([ar, tafsir]) => {
-      const v = ar.data.ayahs.map((a, i) => ({
-        number: a.numberInSurah,
-        text: a.text,
-        tafsir: tafsir.data?.ayahs?.[i]?.text || '',
-        page: a.page,
-        juz: a.juz,
-        hizb: a.hizbQuarter,
-        sajda: a.sajda,
-      }));
-      // إزالة البسملة من الآية الأولى — البسملة = 4 كلمات أولى
-      let filteredVerses = v;
-      if (ar.data.number !== 1 && ar.data.number !== 9 && v.length > 0) {
-        const firstVerse = v[0];
-        const words = firstVerse.text.trim().split(/\s+/);
-        // البسملة دائماً 4 كلمات أولى في كل سورة عدا الفاتحة والتوبة
-        if (words.length > 4) {
-          const cleanText = words.slice(4).join(' ').trim();
-          filteredVerses = [{ ...firstVerse, text: cleanText }, ...v.slice(1)];
-        }
-      }
-      setSurah(ar.data);
-      setVerses(filteredVerses);
-      setLoading(false);
-      saveLastRead(surahNum, 1);
+    fetchSurahWithCache(surahNum)
+      .then(({ surah: s, verses: v }) => {
+        setSurah(s);
+        setVerses(v);
+        setLoading(false);
+        saveLastRead(surahNum, 1);
 
-      // تحميل بيانات التجويد مسبقاً
-      fetch(`https://raw.githubusercontent.com/cpfair/quran-tajweed/master/output/tajweed.hafs.uthmani-pause-sajdah.json`)
-        .then(r => r.json())
-        .then(d => {
-          const map = {};
-          d.filter(e => e.surah === surahNum).forEach(e => {
-            map[e.ayah] = e.annotations || [];
-          });
-          setTajweedData(map);
-        }).catch(() => {});
+        setAudioSurah?.(surahNum);
+        setAudioName?.(s.name);
+        setAudioVerses?.(v);
 
-      // Feed AudioPlayer in _app
-      setAudioSurah?.(surahNum);
-      setAudioName?.(ar.data.name);
-      setAudioVerses?.(filteredVerses);
+        // تحميل بيانات التجويد
+        fetch('https://raw.githubusercontent.com/cpfair/quran-tajweed/master/output/tajweed.hafs.uthmani-pause-sajdah.json')
+          .then(r => r.json())
+          .then(d => {
+            const map = {};
+            d.filter(e => e.surah === surahNum).forEach(e => { map[e.ayah] = e.annotations || []; });
+            setTajweedData(map);
+          }).catch(() => {});
 
-      // Scroll to hash verse
-      setTimeout(() => {
-        const hash = window.location.hash;
-        if (hash?.startsWith('#v')) {
-          const el = document.querySelector(hash);
-          if (el) {
-            el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            el.style.transition = 'background .3s';
-            el.style.background = 'rgba(184,151,58,.15)';
-            setTimeout(() => { el.style.background = ''; }, 2000);
+        // الانتقال للآية من الرابط
+        setTimeout(() => {
+          const hash = window.location.hash;
+          if (hash?.startsWith('#v')) {
+            const el = document.querySelector(hash);
+            if (el) {
+              el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+              el.style.transition = 'background .3s';
+              el.style.background = 'rgba(184,151,58,.15)';
+              setTimeout(() => { el.style.background = ''; }, 2000);
+            }
           }
-        }
-      }, 800);
-    }).catch(() => setLoading(false));
+        }, 800);
+      })
+      .catch(() => {
+        setError('تعذّر تحميل السورة. تحقق من اتصالك بالإنترنت.');
+        setLoading(false);
+      });
 
     return () => {
       if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
@@ -144,7 +139,7 @@ export default function SurahPage({
     };
   }, [surahNum]);
 
-  // Auto-save on scroll
+  // ─── IntersectionObserver للحفظ التلقائي ───
   useEffect(() => {
     if (!verses.length || tab !== 'read') return;
     if (observerRef.current) observerRef.current.disconnect();
@@ -154,7 +149,6 @@ export default function SurahPage({
           const v = parseInt(e.target.getAttribute('data-verse'));
           if (v) {
             saveLastRead(surahNum, v);
-            // حساب نسبة التقدم
             if (verses.length > 0) setReadPct(Math.round((v / verses.length) * 100));
           }
         }
@@ -169,6 +163,7 @@ export default function SurahPage({
     return () => { if (observerRef.current) observerRef.current.disconnect(); };
   }, [verses, tab]);
 
+  // ─── تحميل الترجمة ───
   useEffect(() => {
     if (!showTranslation || !surahNum || Object.keys(translation).length > 0) return;
     fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/${translationLang}`)
@@ -177,38 +172,38 @@ export default function SurahPage({
         const map = {};
         d.data?.ayahs?.forEach(a => { map[a.numberInSurah] = a.text; });
         setTranslation(map);
-      });
+      }).catch(() => {});
   }, [showTranslation, surahNum, translationLang]);
 
-  useEffect(() => {
-    // Reset translation when surah changes
-    setTranslation({});
-  }, [surahNum]);
-
+  // ─── تحميل التفسير (تبويب التفسير) ───
   useEffect(() => {
     if (tab !== 'tafsir' || !surahNum || Object.keys(saadiData).length > 0) return;
-    // تفسير السعدي - نستخدم ar.muyassar كبديل مع تفسير موسع
     fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/ar.muyassar`)
       .then(r => r.json())
       .then(d => {
         const map = {};
         d.data?.ayahs?.forEach(a => { map[a.numberInSurah] = a.text; });
         setSaadiData(map);
-      });
+      }).catch(() => {});
   }, [tab, surahNum]);
 
+  // ─── تحميل كلمة بكلمة ───
   useEffect(() => {
     if (tab !== 'words' || !surahNum || Object.keys(wordData).length > 0) return;
     fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/en.transliteration`)
-      .then(r => r.json()).then(d => {
+      .then(r => r.json())
+      .then(d => {
         const map = {};
         d.data?.ayahs?.forEach(a => { map[a.numberInSurah] = a.text; });
         setWordData(map);
-      });
+      }).catch(() => {});
   }, [tab, surahNum]);
 
+  // ─── الإجراءات ───
+  function isBm(vNum) { return bookmarks.some(b => b.s === surahNum && b.v === vNum); }
+
   async function toggleBookmark(vNum) {
-    const isBmNow = bookmarks.some(b => b.s === surahNum && b.v === vNum);
+    const isBmNow = isBm(vNum);
     let saved = JSON.parse(localStorage.getItem('q_bookmarks') || '[]');
     if (isBmNow) {
       saved = saved.filter(b => !(b.s === surahNum && b.v === vNum));
@@ -221,8 +216,9 @@ export default function SurahPage({
     localStorage.setItem('q_bookmarks', JSON.stringify(saved));
     setBookmarks(saved);
     if (user) {
-      if (isBmNow) await supabase.from('bookmarks').delete().eq('user_id', user.id).eq('surah_num', surahNum).eq('verse_num', vNum);
-      else {
+      if (isBmNow) {
+        await supabase.from('bookmarks').delete().eq('user_id', user.id).eq('surah_num', surahNum).eq('verse_num', vNum);
+      } else {
         const t = verses.find(v => v.number === vNum)?.text || '';
         await supabase.from('bookmarks').insert({ user_id: user.id, surah_num: surahNum, verse_num: vNum, surah_name: surah?.name, verse_text: t });
       }
@@ -236,16 +232,11 @@ export default function SurahPage({
     showToast('📋 تم النسخ');
   }
 
-  function isBm(vNum) { return bookmarks.some(b => b.s === surahNum && b.v === vNum); }
-
   function shareVerse(vNum) {
     const v = verses.find(x => x.number === vNum);
     if (!v) return;
     const url = `${window.location.origin}/surah/${surahNum}#v${vNum}`;
-    const text = `${v.text}
-
-[${surah?.name} - آية ${vNum}]
-${url}`;
+    const text = `${v.text}\n\n[${surah?.name} - آية ${vNum}]\n${url}`;
     if (navigator.share) {
       navigator.share({ title: `${surah?.name} - آية ${vNum}`, text: v.text, url });
     } else {
@@ -254,275 +245,176 @@ ${url}`;
     }
   }
 
-  if (!surahNum) return null;
+  function toggleAsbab(vNum) {
+    setShowAsbab(prev => prev === vNum ? null : vNum);
+  }
+
+  if (!surahNum || isNaN(surahNum)) return null;
 
   return (
     <>
-      <Head>
-        <title>{surah ? `${surah.name} - القرآن الكريم` : 'جارٍ التحميل...'}</title>
-        {surah && <>
-          <meta name="description" content={`اقرأ ${surah.name} - ${surah.numberOfAyahs} آية - ${surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'}`} />
-          <meta property="og:title" content={`${surah.name} - القرآن الكريم`} />
-          <meta property="og:description" content={`اقرأ واستمع إلى ${surah.name} مع التفسير والترجمة`} />
-          <meta property="og:type" content="website" />
-          <meta name="twitter:card" content="summary" />
-          <meta name="twitter:title" content={`${surah.name} - القرآن الكريم`} />
-        </>}
-      </Head>
+      <SeoHead
+        title={surah ? `${surah.name} — ${surah.numberOfAyahs} آية` : undefined}
+        description={surah ? `اقرأ سورة ${surah.name} — ${surah.numberOfAyahs} آية — ${surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'} مع التفسير والاستماع` : undefined}
+        path={`/surah/${surahNum}`}
+      />
       <Navbar toggleDark={toggleDark} dark={dark} showToast={showToast} onAuth={onAuth} />
 
-      {/* شريط تقدم القراءة — ثابت أعلى الصفحة */}
+      {/* شريط تقدم القراءة */}
       {readPct > 0 && (
-        <div style={{
-          position:'fixed', top:'56px', left:0, right:0, zIndex:998,
-          height:'4px', background:'rgba(0,0,0,.08)',
-          direction:'ltr',
-        }}>
-          <div style={{
-            height:'100%', width:`${readPct}%`,
-            background:'linear-gradient(90deg,#2d5a3d,#c9a84c)',
-            transition:'width .6s ease',
-            marginLeft:'auto',
-            float:'right',
-          }}/>
+        <div style={{ position:'fixed', top:'56px', left:0, right:0, zIndex:998, height:'4px', background:'rgba(0,0,0,.08)', direction:'ltr' }}>
+          <div style={{ height:'100%', width:`${readPct}%`, background:'linear-gradient(90deg,#2d5a3d,#c9a84c)', transition:'width .6s ease', marginLeft:'auto', float:'right' }}/>
         </div>
       )}
-      <div className={styles.page} style={{ paddingBottom: '90px', paddingTop: readPct > 0 ? '10px' : '0' }}>
+
+      <div className={styles.page} style={{ paddingBottom:'90px', paddingTop: readPct > 0 ? '10px' : '0' }}>
         <div className={styles.breadcrumb}>
           <Link href="/">الرئيسية</Link>
           <span>›</span>
           <span>{surah ? surah.name : '...'}</span>
-          {saving && <span style={{color:'var(--gold)',fontSize:'.73rem'}}>• جارٍ الحفظ...</span>}
+          {saving && <span style={{ color:'var(--gold)', fontSize:'.73rem' }}>• جارٍ الحفظ...</span>}
         </div>
 
-
-        {loading ? <SurahSkeleton /> : surah ? (
+        {loading ? (
+          <SurahSkeleton />
+        ) : error ? (
+          <ErrorRetry message={error} onRetry={() => router.replace(router.asPath)} />
+        ) : surah ? (
           <>
+            {/* رأس السورة */}
             <div className={styles.surahHeader}>
               <div className={styles.surahNav}>
-                {surahNum > 1 && <Link href={`/surah/${surahNum-1}`} className={styles.navArrow}>› السابقة</Link>}
+                {surahNum > 1 && <Link href={`/surah/${surahNum - 1}`} className={styles.navArrow}>› السابقة</Link>}
                 <div>
                   <h1 className={styles.surahName}>{surah.name}</h1>
                   <div className={styles.surahMeta}>
-                    <span>📍 {surah.revelationType==='Meccan'?'مكية':'مدنية'}</span>
+                    <span>📍 {surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'}</span>
                     <span>📜 {surah.numberOfAyahs} آية</span>
                     <span>🔢 رقم {surah.number}</span>
                     <span className={styles.riwayaBadge}>رواية حفص عن عاصم</span>
                   </div>
                 </div>
-                {surahNum < 114 && <Link href={`/surah/${surahNum+1}`} className={styles.navArrow}>التالية ‹</Link>}
+                {surahNum < 114 && <Link href={`/surah/${surahNum + 1}`} className={styles.navArrow}>التالية ‹</Link>}
               </div>
-              {surahNum !== 9 && surahNum !== 1 && <div className={styles.bismillah}>بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>}
+              {surahNum !== 9 && surahNum !== 1 && (
+                <div className={styles.bismillah}>بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>
+              )}
             </div>
 
+            {/* التبويبات */}
             <div className={styles.tabs}>
-              {[['read','📖 القراءة'],['tafsir','📚 التفسير'],['words','🔤 كلمة بكلمة']].map(([v,l])=>(
-                <button key={v} className={`${styles.tab} ${tab===v?styles.tabActive:''}`} onClick={()=>setTab(v)}>{l}</button>
+              {[['read','📖 القراءة'],['tafsir','📚 التفسير'],['words','🔤 كلمة بكلمة']].map(([v,l]) => (
+                <button key={v} className={`${styles.tab} ${tab === v ? styles.tabActive : ''}`} onClick={() => setTab(v)}>{l}</button>
               ))}
             </div>
 
-            {tab==='read' && (
-              <div className={styles.fontControls}>
-                {/* وضع القراءة */}
-                <div className={styles.readingModeRow}>
-                  <button
-                    className={`${styles.modeBtn} ${readingMode==='verse'?styles.modeBtnActive:''}`}
-                    onClick={()=>{ setReadingMode('verse'); localStorage.setItem('q_reading_mode','verse'); }}>
-                    📖 آية بآية
-                  </button>
-                  <button
-                    className={`${styles.modeBtn} ${readingMode==='page'?styles.modeBtnActive:''}`}
-                    onClick={()=>{ setReadingMode('page'); localStorage.setItem('q_reading_mode','page'); }}>
-                    📄 صفحة كاملة
-                  </button>
-                </div>
-                <div className={styles.fontSizeRow}>
-                  <button className={styles.fontIconBtn} onClick={()=>{ const v=parseFloat((Math.max(1.1,fontSize-.2)).toFixed(2)); setFontSize(v); localStorage.setItem('q_font_size',String(v)); }}>أ−</button>
-                  <div className={styles.fontSteps}>
-                    {[[1.0,'صغير'],[1.4,'وسط'],[1.8,'كبير'],[2.2,'أكبر']].map(([v,l])=>(
-                      <button key={v}
-                        className={`${styles.fontStep} ${Math.abs(fontSize-v)<0.1?styles.fontStepActive:''}`}
-                        onClick={()=>{ setFontSize(v); localStorage.setItem('q_font_size',String(v)); }}>
-                        {l}
-                      </button>
-                    ))}
-                  </div>
-                  <button className={styles.fontIconBtn} onClick={()=>{ const v=parseFloat((Math.min(2.5,fontSize+.2)).toFixed(2)); setFontSize(v); localStorage.setItem('q_font_size',String(v)); }}>أ+</button>
-                </div>
-                <div className={styles.fontRow}>
-                  <select className={styles.fontSelect} value={fontFamily} onChange={e=>{ setFontFamily(e.target.value); localStorage.setItem('q_font_family', e.target.value); }}>
-                    <option value="amiri-quran">Amiri Quran</option>
-                    <option value="noto-naskh">Noto Naskh</option>
-                    <option value="amiri">Amiri Classic</option>
-                  </select>
-                  <button className={`${styles.transBtn} ${showTrans?styles.transBtnOn:''}`} onClick={()=>setShowTrans(v=>!v)}>
-                    {showTrans ? '📖 إخفاء التفسير' : '📖 التفسير'}
-                  </button>
-                  <button className={`${styles.transBtn} ${showTranslation?styles.transBtnOn:''}`}
-                    onClick={()=>setShowTranslation(v=>!v)}>
-                    {showTranslation ? '🌐 إخفاء الترجمة' : '🌐 ترجمة'}
-                  </button>
-                  <button className={`${styles.transBtn} ${showTajweed?styles.transBtnOn:''}`}
-                    onClick={()=>setShowTajweed(v=>!v)}
-                    style={{background: showTajweed ? '#9333ea' : undefined, color: showTajweed ? 'white' : undefined, borderColor: showTajweed ? '#9333ea' : undefined}}>
-                    🎨 {showTajweed ? 'إخفاء التجويد' : 'تجويد ملون'}
-                  </button>
-                  <button className={`${styles.transBtn} ${focusMode?styles.transBtnOn:''}`}
-                    onClick={()=>setFocusMode(v=>!v)}>
-                    {focusMode ? '👁 إخفاء وضع التركيز' : '🎯 وضع التركيز'}
-                  </button>
-                  {showTranslation && (
-                    <select className={styles.fontSelect} value={translationLang}
-                      onChange={e=>{ setTranslationLang(e.target.value); setTranslation({}); }}>
-                      <option value="en.sahih">English - Sahih</option>
-                      <option value="en.pickthall">English - Pickthall</option>
-                      <option value="fr.hamidullah">Français</option>
-                      <option value="tr.diyanet">Türkçe</option>
-                      <option value="ur.jalandhry">اردو</option>
-                    </select>
-                  )}
-                </div>
-              </div>
+            {/* تحكم القراءة */}
+            {tab === 'read' && (
+              <ReadingControls
+                readingMode={readingMode} setReadingMode={setReadingMode}
+                fontSize={fontSize} setFontSize={setFontSize}
+                fontFamily={fontFamily} setFontFamily={setFontFamily}
+                showTrans={showTrans} setShowTrans={setShowTrans}
+                showTranslation={showTranslation} setShowTranslation={setShowTranslation}
+                translationLang={translationLang} setTranslationLang={setTranslationLang}
+                showTajweed={showTajweed} setShowTajweed={setShowTajweed}
+                focusMode={focusMode} setFocusMode={setFocusMode}
+                onResetTranslation={() => setTranslation({})}
+              />
             )}
 
             <div className={styles.content}>
-              {tab==='read' && (
+              {/* ── تبويب القراءة ── */}
+              {tab === 'read' && (
                 <div className={styles.verses}>
                   {readingMode === 'page' ? (
                     /* وضع الصفحة الكاملة */
                     <div className={styles.pageMode}>
-                      {verses.map((v, idx) => (
-                        <span key={v.number} id={`v${v.number}`} data-verse={v.number}>
-                          {v.page && (idx === 0 || verses[idx-1]?.page !== v.page) && idx > 0 && (
-                            <div className={styles.pageMarker}>
-                              <div className={styles.pageMarkerLine}/>
-                              <div className={styles.pageMarkerInfo}>صفحة {v.page} • جزء {v.juz}</div>
-                              <div className={styles.pageMarkerLine}/>
-                            </div>
-                          )}
-                          <span className={`${styles.inlineVerse} ${playingVerse===v.number?styles.playing:''}`}
-                            style={{fontSize:`${fontSize}rem`, fontFamily: fontFamily==='noto-naskh' ? "'Noto Naskh Arabic', serif" : fontFamily==='amiri' ? "'Amiri', serif" : "'Amiri Quran', serif"}}>
-                            {v.text}
+                      {verses.map((v, idx) => {
+                        const fontStyle = {
+                          fontSize: `${fontSize}rem`,
+                          fontFamily: fontFamily === 'noto-naskh' ? "'Noto Naskh Arabic', serif"
+                            : fontFamily === 'amiri' ? "'Amiri', serif" : "'Amiri Quran', serif",
+                        };
+                        return (
+                          <span key={v.number} id={`v${v.number}`} data-verse={v.number}>
+                            {v.page && idx > 0 && verses[idx - 1]?.page !== v.page && (
+                              <div className={styles.pageMarker}>
+                                <div className={styles.pageMarkerLine}/>
+                                <div className={styles.pageMarkerInfo}>صفحة {v.page} • جزء {v.juz}</div>
+                                <div className={styles.pageMarkerLine}/>
+                              </div>
+                            )}
+                            <span className={`${styles.inlineVerse} ${playingVerse === v.number ? styles.playing : ''}`} style={fontStyle}>
+                              {v.text}
+                            </span>
+                            <span className={styles.inlineVerseNum}>{v.number}</span>
+                            {' '}
                           </span>
-                          <span className={styles.inlineVerseNum}>{v.number}</span>
-                          {' '}
-                        </span>
-                      ))}
+                        );
+                      })}
                     </div>
                   ) : (
-                  /* وضع آية بآية */
-                  <>{verses.map((v, idx) => (
-                    <div key={v.number}>
-                      {/* عرض رقم الصفحة عند بداية كل صفحة جديدة */}
-                      {v.page && (idx === 0 || verses[idx-1]?.page !== v.page) && (
-                        <div className={styles.pageMarker}>
-                          <div className={styles.pageMarkerLine}/>
-                          <div className={styles.pageMarkerInfo}>
-                            <span>صفحة {v.page}</span>
-                            <span>•</span>
-                            <span>جزء {v.juz}</span>
-                            {v.hizb && <span>• حزب {Math.ceil(v.hizb/2)}</span>}
-                          </div>
-                          <div className={styles.pageMarkerLine}/>
-                        </div>
-                      )}
-                    <div id={`v${v.number}`} data-verse={v.number}
-                      className={`${styles.verse} ${playingVerse===v.number?styles.playing:''}`}>
-                      <div className={styles.verseTop}>
-                        <div className={styles.verseNum}>{v.number}</div>
-                        <div className={styles.verseBody}>
-                          <div className={styles.verseText}>
-                            {showTajweed && tajweedData[v.number] ? (
-                              <TajweedText
-                                text={v.text}
-                                annotations={tajweedData[v.number]}
-                                fontSize={fontSize}
-                                fontFamily={fontFamily==='noto-naskh' ? "'Noto Naskh Arabic', serif" : fontFamily==='amiri' ? "'Amiri', serif" : "'Amiri Quran', serif"}
-                                dark={dark}
-                              />
-                            ) : (
-                              <span style={{
-                                fontSize:`${fontSize}rem`,
-                                fontFamily: fontFamily==='noto-naskh' ? "'Noto Naskh Arabic', serif" : fontFamily==='amiri' ? "'Amiri', serif" : "'Amiri Quran', serif"
-                              }}>{v.text}</span>
-                            )}
-                          </div>
-                          {showTrans && v.tafsir && !focusMode && <div className={styles.verseTrans}>{v.tafsir}</div>}
-                          {showTranslation && translation[v.number] && !focusMode && (
-                            <div className={styles.verseTranslation}>{translation[v.number]}</div>
-                          )}
-                        </div>
-                        <button
-                          className={`${styles.playBtn} ${playingVerse===v.number?styles.playBtnActive:''}`}
-                          onClick={()=>setPlayingVerse(v.number)}>
-                          {playingVerse===v.number?'🔊':'▶'}
-                        </button>
-                      </div>
-                      {/* سبب النزول */}
-                      {showAsbab === v.number && (
-                        <div className={styles.asbabBox}>
-                          <div className={styles.asbabTitle}>📜 سبب النزول</div>
-                          <div className={styles.asbabText}>
-                            لمعرفة سبب نزول هذه الآية، يمكنك الرجوع إلى كتب أسباب النزول
-                            مثل كتاب "أسباب النزول" للإمام الواحدي أو تفسير ابن كثير.
-                          </div>
-                          <a href={`https://quran.com/ar/${surahNum}/${v.number}`}
-                            target="_blank" rel="noreferrer"
-                            className={styles.asbabLink}>
-                            🔗 اقرأ في Quran.com
-                          </a>
-                        </div>
-                      )}
-
-                      {/* علامة السجدة */}
-                      {SAJDA[surahNum] === v.number && (
-                        <div className={styles.sajdaAlert}>
-                          ⬇️ آية سجدة — السجود سنة عند التلاوة
-                        </div>
-                      )}
-                      <div className={styles.verseActions}>
-                        <button className={`${styles.actionBtn} ${isBm(v.number)?styles.bmActive:''}`} onClick={()=>toggleBookmark(v.number)}>
-                          {isBm(v.number)?'🔖 محفوظ':'🔖 حفظ'}
-                        </button>
-                        <button className={styles.actionBtn} onClick={()=>copyVerse(v.number)}>📋 نسخ</button>
-                        <button className={styles.actionBtn} onClick={()=>shareVerse(v.number)}>🔗 مشاركة</button>
-                        <button className={styles.actionBtn} onClick={async()=>{
-                          if (showAsbab === v.number) { setShowAsbab(null); return; }
-                          setShowAsbab(v.number);
-                        }}>📜 سبب النزول</button>
-                      </div>
-                    </div>
-                    </div>
-                  ))}</>
+                    /* وضع آية بآية — يستخدم VerseCard */
+                    <>
+                      {verses.map((v, idx) => (
+                        <VerseCard
+                          key={v.number}
+                          verse={v}
+                          prevVerse={verses[idx - 1]}
+                          surahNum={surahNum}
+                          playingVerse={playingVerse}
+                          fontSize={fontSize}
+                          fontFamily={fontFamily}
+                          showTrans={showTrans}
+                          showTranslation={showTranslation}
+                          showTajweed={showTajweed}
+                          focusMode={focusMode}
+                          tajweedData={tajweedData}
+                          translation={translation}
+                          showAsbab={showAsbab}
+                          isBookmarked={isBm(v.number)}
+                          dark={dark}
+                          onPlay={setPlayingVerse}
+                          onToggleBookmark={toggleBookmark}
+                          onCopy={copyVerse}
+                          onShare={shareVerse}
+                          onToggleAsbab={toggleAsbab}
+                        />
+                      ))}
+                    </>
                   )}
                 </div>
               )}
 
-              {tab==='tafsir' && (
+              {/* ── تبويب التفسير ── */}
+              {tab === 'tafsir' && (
                 <div className={styles.tafsirList}>
-                  <div className={styles.tafsirNote}>
-                    📚 تفسير الميسر — مختصر وواضح
-                  </div>
-                  {verses.map(v=>(
+                  <div className={styles.tafsirNote}>📚 تفسير الميسر — مختصر وواضح</div>
+                  {verses.map(v => (
                     <div key={v.number} className={styles.tafsirItem}>
-                      <div className={styles.tafsirAyah} style={{fontSize:`${fontSize}rem`}}>{v.text}</div>
-                      <div className={styles.tafsirBox}><strong className={styles.tafsirNum}>[{v.number}]</strong> {v.tafsir||'التفسير غير متوفر'}</div>
+                      <div className={styles.tafsirAyah} style={{ fontSize:`${fontSize}rem` }}>{v.text}</div>
+                      <div className={styles.tafsirBox}>
+                        <strong className={styles.tafsirNum}>[{v.number}]</strong>{' '}
+                        {saadiData[v.number] || v.tafsir || 'التفسير غير متوفر'}
+                      </div>
                     </div>
                   ))}
                 </div>
               )}
 
-              {tab==='words' && (
+              {/* ── تبويب كلمة بكلمة ── */}
+              {tab === 'words' && (
                 <div className={styles.wordsList}>
-                  {verses.map(v=>(
+                  {verses.map(v => (
                     <div key={v.number} className={styles.wordVerse}>
                       <div className={styles.wordVerseNum}>آية {v.number}</div>
                       <div className={styles.wordVerseText}>{v.text}</div>
                       <div className={styles.wordGrid}>
-                        {v.text.split(' ').map((word,wi)=>(
+                        {v.text.split(' ').map((word, wi) => (
                           <div key={wi} className={styles.wordCard}>
                             <div className={styles.wordAr}>{word}</div>
-                            <div className={styles.wordEn}>{wordData[v.number]?.split(' ')[wi]||'...'}</div>
+                            <div className={styles.wordEn}>{wordData[v.number]?.split(' ')[wi] || '...'}</div>
                           </div>
                         ))}
                       </div>
@@ -533,7 +425,7 @@ ${url}`;
               )}
             </div>
           </>
-        ) : <div className="loading">حدث خطأ في التحميل</div>}
+        ) : null}
       </div>
     </>
   );
