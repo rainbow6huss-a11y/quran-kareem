@@ -390,6 +390,23 @@ export default function SurahPage({
                               <VerseNumStar num={v.number} size={22} />
                             </span>
                             {' '}
+                            {showTranslation && translation[v.number] && (
+                              <span style={{
+                                display: 'block',
+                                fontFamily: "'Tajawal', sans-serif",
+                                fontSize: '0.8rem',
+                                color: dark ? '#8a9e7a' : '#7a5c30',
+                                direction: 'ltr',
+                                textAlign: 'left',
+                                padding: '4px 8px',
+                                margin: '2px 0 6px',
+                                borderRadius: '6px',
+                                background: dark ? 'rgba(45,90,61,.08)' : 'rgba(45,90,61,.04)',
+                                lineHeight: '1.7',
+                              }}>
+                                {translation[v.number]}
+                              </span>
+                            )}
                           </span>
                         );
                       })}
