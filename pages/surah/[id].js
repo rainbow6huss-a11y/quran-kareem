@@ -51,10 +51,12 @@ export default function SurahPage({
   const [readPct,     setReadPct]     = useState(0);
   const [saving,      setSaving]      = useState(false);
   const [lastVerse,   setLastVerse]   = useState(1);
+  const [isAudioPaused, setIsAudioPaused] = useState(false);
 
   const saveTimerRef = useRef(null);
   const observerRef  = useRef(null);
-  const audioRef     = useRef(null); // للتحكم بالصوت من الشريط السفلي
+  const audioRef       = useRef(null);
+  const lastPlayedVerse = useRef(null); // آخر آية شُغِّلت
 
   // ─── تحميل تفضيلات المستخدم ───
   useEffect(() => {
@@ -531,15 +533,20 @@ export default function SurahPage({
         playingVerse={playingVerse}
         onPlayPause={() => {
           const audio = document.querySelector('audio');
-          if (playingVerse && audio) {
+          if (audio && audio.src && audio.src !== window.location.href) {
+            // يوجد صوت محمّل
             if (audio.paused) {
+              // استأنف من نفس المكان
               audio.play().catch(() => {});
+              setIsAudioPaused(false);
             } else {
+              // أوقف مؤقتاً بدون مسح الآية
               audio.pause();
-              setPlayingVerse(null);
+              setIsAudioPaused(true);
             }
           } else {
-            // ابدأ من أول آية
+            // لم يُشغَّل شيء — ابدأ من أول آية
+            setIsAudioPaused(false);
             if (verses.length > 0) setPlayingVerse(verses[0].number);
           }
         }}
