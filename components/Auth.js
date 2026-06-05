@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../lib/supabase';
+import Image from 'next/image';
 import styles from './Auth.module.css';
 
 export default function Auth({ onAuth }) {
@@ -46,7 +47,7 @@ export default function Auth({ onAuth }) {
       <div className={styles.userWrap}>
         <button className={styles.avatar} onClick={() => setShowMenu(v => !v)}>
           {user.user_metadata?.avatar_url
-            ? <img src={user.user_metadata.avatar_url} alt="avatar" className={styles.avatarImg} />
+            ? <img src={user.user_metadata.avatar_url} alt="avatar" className={styles.avatarImg} width={32} height={32} referrerPolicy="no-referrer" />
             : <span>{user.email?.[0]?.toUpperCase()}</span>
           }
         </button>
