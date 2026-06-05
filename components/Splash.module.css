@@ -56,7 +56,8 @@
 .bismillah {
   font-family: 'Amiri Quran', serif;
   font-size: clamp(1.2rem, 3.5vw, 1.8rem);
-  color: #5aaa70;
+  color: #5aaa70 !important;
+  background: transparent !important;
   line-height: 2;
   margin-bottom: 14px;
 }
