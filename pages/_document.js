@@ -10,8 +10,15 @@ export default function Document() {
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="format-detection" content="telephone=no" />
         <link rel="manifest" href="/manifest.json" />
+        {/* Preconnect للخدمات الخارجية */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://api.alquran.cloud" />
+        <link rel="dns-prefetch" href="https://cdn.islamic.network" />
+        <link rel="dns-prefetch" href="https://api.alquran.cloud" />
+        {/* Preload الخط الرئيسي */}
+        <link rel="preload" href="https://fonts.gstatic.com/s/amiriquran/v14/x3dkckHVYrCU5BU15c4BfA.woff2"
+          as="font" type="font/woff2" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet" />
         <style>{`
           @font-face {
