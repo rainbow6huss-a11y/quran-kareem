@@ -30,9 +30,10 @@
 .surahNav {
   display: flex; align-items: center;
   justify-content: space-between;
-  padding: 10px 12px;
+  padding: 8px 10px;
   background: #ede4cc;
   border-bottom: 1px solid rgba(184,151,58,.25);
+  gap: 8px;
 }
 body.dark .surahNav { background: var(--parchment); border-color: rgba(184,151,58,.12); }
 
@@ -48,13 +49,14 @@ body.dark .navArrow { color: #a0d4a0; border-color: rgba(184,151,58,.3); backgro
 .navArrow:hover { background: rgba(184,151,58,.2); border-color: #b8973a; }
 
 /* إطار اسم السورة */
-.surahTitleWrap { flex: 1; text-align: center; }
+.surahTitleWrap { flex: 1; text-align: center; display: flex; align-items: center; justify-content: center; }
 .surahTitleFrame {
-  display: inline-block; position: relative;
-  border: 1.5px solid rgba(184,151,58,.7);
-  border-radius: 30px; padding: 6px 36px;
+  display: inline-flex; align-items: center; justify-content: center;
+  position: relative;
+  border: 1.5px solid rgba(184,151,58,.65);
+  border-radius: 30px; padding: 6px 30px;
   background: rgba(184,151,58,.08);
-  max-width: 220px;
+  max-width: 200px; min-width: 120px;
 }
 .surahTitleFrame::before,
 .surahTitleFrame::after {
