@@ -184,3 +184,14 @@ body.dark [class*="tab"]:not([class*="tabActive"]) { color: #7aaa7a !important; 
 body.dark [class*="surahName"] { color: #f0dca0 !important; }
 [class*="surahName"] { color: #2c1500 !important; }
 body.dark [class*="navArrow"] { color: #a0d4a0 !important; }
+
+/* ── التفسير وكلمة بكلمة — وضع الليل ── */
+body.dark [class*="tafsirItem"]    { background: var(--card) !important; border-color: rgba(184,151,58,.15) !important; }
+body.dark [class*="tafsirNote"]    { background: rgba(184,151,58,.08) !important; color: #c9a84c !important; }
+body.dark [class*="tafsirBox"]     { background: rgba(45,90,61,.15) !important; color: #8a9e7a !important; }
+body.dark [class*="tafsirList"]    { background: transparent !important; }
+body.dark [class*="wordVerse"]     { background: var(--card) !important; border-color: rgba(184,151,58,.15) !important; }
+body.dark [class*="wordCard"]      { background: var(--parchment) !important; border-color: rgba(184,151,58,.15) !important; }
+body.dark [class*="wordTafsir"]    { background: rgba(45,90,61,.15) !important; color: #8a9e7a !important; }
+body.dark [class*="wordGrid"]      { background: transparent !important; }
+body.dark [class*="content"]       { background: transparent !important; }

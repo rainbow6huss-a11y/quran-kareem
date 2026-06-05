@@ -354,15 +354,15 @@ body.dark .tjMadd    { color: #5599ee !important; }
 ══════════════════════════════ */
 .tafsirList { display: flex; flex-direction: column; gap: 14px; }
 .tafsirNote {
-  padding: 8px 14px; background: rgba(184,151,58,.1);
-  border: 1px solid rgba(184,151,58,.25); border-radius: 8px;
-  font-size: .78rem; color: #5c3d1e; font-weight: 600; margin-bottom: 4px;
+  padding: 8px 14px; background: var(--gold-pale);
+  border: 1px solid var(--border); border-radius: 8px;
+  font-size: .78rem; color: var(--brown); font-weight: 600; margin-bottom: 4px;
 }
 .tafsirItem {
-  background: #faf5e9; border: 1px solid rgba(184,151,58,.2);
+  background: var(--card); border: 1px solid var(--border);
   border-radius: 12px; padding: 16px;
 }
-body.dark .tafsirItem { background: var(--card); border-color: rgba(184,151,58,.1); }
+
 .tafsirAyah {
   font-family: 'Amiri Quran', serif; line-height: 2.6;
   color: #1a0e00 !important; direction: rtl; text-align: right; margin-bottom: 10px;
@@ -379,10 +379,10 @@ body.dark .tafsirBox { color: #5a8060; }
 
 .wordsList { display: flex; flex-direction: column; gap: 18px; }
 .wordVerse {
-  background: #faf5e9; border: 1px solid rgba(184,151,58,.2);
+  background: var(--card); border: 1px solid var(--border);
   border-radius: 12px; padding: 16px;
 }
-body.dark .wordVerse { background: var(--card); border-color: rgba(184,151,58,.1); }
+
 .wordVerseNum { font-size: .74rem; color: #b8973a; font-weight: 700; margin-bottom: 5px; }
 .wordVerseText {
   font-family: 'Amiri Quran', serif; font-size: 1.4rem;
@@ -393,11 +393,11 @@ body.dark .wordVerse { background: var(--card); border-color: rgba(184,151,58,.1
 body.dark .wordVerseText { color: #e8dcc8; }
 .wordGrid { display: flex; flex-wrap: wrap; gap: 7px; direction: rtl; margin-bottom: 10px; }
 .wordCard {
-  padding: 7px 10px; background: #ede4cc;
-  border: 1px solid rgba(184,151,58,.25); border-radius: 8px;
+  padding: 7px 10px; background: var(--parchment);
+  border: 1px solid var(--border); border-radius: 8px;
   text-align: center; min-width: 55px;
 }
-body.dark .wordCard { background: var(--parchment); border-color: rgba(184,151,58,.12); }
+
 .wordAr { font-family: 'Amiri Quran', serif; font-size: 1.1rem; color: #3d2200; line-height: 1.8; }
 body.dark .wordAr { color: #d4af5a; }
 .wordEn { font-size: .63rem; color: #8b6340; direction: ltr; }
