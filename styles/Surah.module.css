@@ -365,9 +365,10 @@ body.dark .tjMadd    { color: #5599ee !important; }
 body.dark .tafsirItem { background: var(--card); border-color: rgba(184,151,58,.1); }
 .tafsirAyah {
   font-family: 'Amiri Quran', serif; line-height: 2.6;
-  color: #1a0e00; direction: rtl; text-align: right; margin-bottom: 10px;
+  color: #1a0e00 !important; direction: rtl; text-align: right; margin-bottom: 10px;
+  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
 }
-body.dark .tafsirAyah { color: #e8dcc8; }
+body.dark .tafsirAyah { color: #e8dcc8 !important; }
 .tafsirBox {
   font-size: .85rem; color: #7a5c30; line-height: 2;
   padding: 10px 12px; background: rgba(45,90,61,.06);
