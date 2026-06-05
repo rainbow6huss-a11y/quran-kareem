@@ -134,7 +134,7 @@ body.dark [class*="verse"]:not([class*="verseText"]):not([class*="verseTrans"]):
 body.dark [class*="surahHeader"] { background: #0f1e12 !important; }
 body.dark [class*="surahNav"]    { background: #0f1e12 !important; }
 body.dark [class*="surahMeta"]   { background: #0f1e12 !important; }
-body.dark [class*="bismillah"]   { background: #0f1e12 !important; }
+/* bismillah في صفحة السورة فقط — ليس الـ Splash */
 body.dark [class*="tabs"]        { background: #0f1e12 !important; }
 body.dark [class*="fontControls"]{ background: #1a2e1e !important; border-color: rgba(184,151,58,.25) !important; }
 body.dark [class*="breadcrumb"]  { color: var(--text-soft) !important; }
@@ -162,3 +162,14 @@ body.dark [class*="fontSelect"]  { background: #243d2a !important; color: #d4af5
 body.dark [class*="transBtn"]    { color: #b0d4b0 !important; border-color: rgba(184,151,58,.25) !important; }
 body.dark [class*="tabs"]        { background: #0f1e12 !important; }
 body.dark [class*="tab"]:not([class*="tabActive"]) { color: #7aaa7a !important; }
+
+/* ── Splash — منع أي override على البسملة ── */
+[class*="splash"] [class*="bismillah"] {
+  background: transparent !important;
+  color: #5aaa70 !important;
+}
+/* ── Surah bismillah فقط ── */
+[class*="surahHeader"] [class*="bismillah"],
+[class*="bismillah"][class*="Surah"] {
+  background: var(--parchment) !important;
+}
