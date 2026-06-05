@@ -463,7 +463,7 @@ export default function SurahPage({
                   <div className={styles.tafsirNote}>📚 تفسير الميسر — مختصر وواضح</div>
                   {verses.map(v => (
                     <div key={v.number} className={styles.tafsirItem}>
-                      <div className={styles.tafsirAyah} style={{ fontSize:`${fontSize}rem` }}>{v.text}</div>
+                      <div className={styles.tafsirAyah} style={{ fontSize:`${Math.min(fontSize, 1.5)}rem` }}>{v.text}</div>
                       <div className={styles.tafsirBox}>
                         <strong className={styles.tafsirNum}>[{v.number}]</strong>{' '}
                         {saadiData[v.number] || v.tafsir || 'التفسير غير متوفر'}
@@ -479,7 +479,7 @@ export default function SurahPage({
                   {verses.map(v => (
                     <div key={v.number} className={styles.wordVerse}>
                       <div className={styles.wordVerseNum}>آية {v.number}</div>
-                      <div className={styles.wordVerseText}>{v.text}</div>
+                      <div className={styles.wordVerseText} style={{ color: dark ? '#e8dcc8' : '#1a0e00' }}>{v.text}</div>
                       <div className={styles.wordGrid}>
                         {v.text.split(' ').map((word, wi) => (
                           <div key={wi} className={styles.wordCard}>
