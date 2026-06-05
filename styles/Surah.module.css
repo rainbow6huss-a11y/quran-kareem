@@ -44,17 +44,17 @@ body.dark .surahNav { background: var(--parchment); border-color: rgba(184,151,5
   transition: all .2s; font-family: 'Tajawal', sans-serif;
   white-space: nowrap;
 }
-body.dark .navArrow { color: #5aaa70; border-color: rgba(184,151,58,.2); background: rgba(184,151,58,.05); }
+body.dark .navArrow { color: #a0d4a0; border-color: rgba(184,151,58,.3); background: rgba(184,151,58,.07); }
 .navArrow:hover { background: rgba(184,151,58,.2); border-color: #b8973a; }
 
 /* إطار اسم السورة */
 .surahTitleWrap { flex: 1; text-align: center; }
 .surahTitleFrame {
-  display: block; position: relative;
+  display: inline-block; position: relative;
   border: 1.5px solid rgba(184,151,58,.7);
-  border-radius: 8px; padding: 7px 40px;
-  background: rgba(184,151,58,.07);
-  max-width: 100%; overflow: hidden;
+  border-radius: 30px; padding: 6px 36px;
+  background: rgba(184,151,58,.08);
+  max-width: 220px;
 }
 .surahTitleFrame::before,
 .surahTitleFrame::after {
@@ -64,13 +64,15 @@ body.dark .navArrow { color: #5aaa70; border-color: rgba(184,151,58,.2); backgro
 }
 .surahTitleFrame::before { right: 8px; }
 .surahTitleFrame::after  { left: 8px; }
+body.dark .surahTitleFrame { background: rgba(184,151,58,.06); border-color: rgba(184,151,58,.5); }
 
 .surahName {
   font-family: 'Amiri Quran', 'Amiri', serif;
-  font-size: clamp(1.3rem, 4vw, 1.9rem);
-  color: #3d2200; font-weight: 700; display: block; line-height: 1.5;
+  font-size: clamp(1.1rem, 3.5vw, 1.6rem);
+  color: #2c1500; font-weight: 700; display: block; line-height: 1.5;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-body.dark .surahName { color: #d4af5a; }
+body.dark .surahName { color: #f0dca0; }
 
 .surahMeta {
   display: flex; justify-content: center;
@@ -430,7 +432,7 @@ body.dark .wordAr { color: #d4af5a; }
   .page { padding: 8px 8px 80px; }
   .surahNav { padding: 8px 10px; }
   .navArrow { font-size: .75rem; padding: 5px 8px; }
-  .surahTitleFrame { padding: 5px 32px; }
+  .surahTitleFrame { padding: 5px 28px; max-width: 180px; }
   .surahName { font-size: 1.1rem; }
   .surahMeta { font-size: .7rem; gap: 6px; padding: 5px 10px 8px; }
   .bismillahText { font-size: 1.15rem; }

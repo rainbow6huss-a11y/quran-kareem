@@ -179,3 +179,8 @@ body.dark [class*="tab"]:not([class*="tabActive"]) { color: #7aaa7a !important; 
 @media (max-width: 768px) {
   .desktopOnly { display: none !important; }
 }
+
+/* اسم السورة — وضوح في الوضعين */
+body.dark [class*="surahName"] { color: #f0dca0 !important; }
+[class*="surahName"] { color: #2c1500 !important; }
+body.dark [class*="navArrow"] { color: #a0d4a0 !important; }
