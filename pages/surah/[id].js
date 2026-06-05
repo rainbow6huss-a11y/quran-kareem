@@ -280,17 +280,17 @@ export default function SurahPage({
         <Navbar toggleDark={toggleDark} dark={dark} showToast={showToast} onAuth={onAuth} />
       </div>
 
-      {/* شريط تقدم القراءة — احترافي */}
+      {/* شريط تقدم القراءة — من اليمين لليسار */}
       <div style={{
-        position: 'fixed', top: '52px', left: 0, right: 0,
+        position: 'fixed', top: '60px', left: 0, right: 0,
         zIndex: 999, height: '3px',
         background: dark ? 'rgba(255,255,255,.06)' : 'rgba(0,0,0,.06)',
-        direction: 'ltr',
+        direction: 'rtl',
       }}>
         <div style={{
           height: '100%',
           width: `${readPct}%`,
-          background: 'linear-gradient(90deg, #2d5a3d 0%, #5aaa70 50%, #c9a84c 100%)',
+          background: 'linear-gradient(270deg, #2d5a3d 0%, #5aaa70 50%, #c9a84c 100%)',
           transition: 'width .8s cubic-bezier(.4,0,.2,1)',
           borderRadius: '0 2px 2px 0',
           boxShadow: '0 0 8px rgba(201,168,76,.5)',
@@ -300,12 +300,12 @@ export default function SurahPage({
           <div style={{
             position: 'absolute',
             top: '50%', transform: 'translateY(-50%)',
-            left: `${readPct}%`,
+            right: `${readPct}%`,
             width: '8px', height: '8px',
             borderRadius: '50%',
             background: '#c9a84c',
             boxShadow: '0 0 6px 2px rgba(201,168,76,.6)',
-            transition: 'left .8s cubic-bezier(.4,0,.2,1)',
+            transition: 'right .8s cubic-bezier(.4,0,.2,1)',
           }}/>
         )}
       </div>
