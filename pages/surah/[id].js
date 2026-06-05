@@ -10,7 +10,7 @@ import VerseCard from '../../components/VerseCard';
 import SurahBottomBar from '../../components/SurahBottomBar';
 import SurahNavbar from '../../components/SurahNavbar';
 import { supabase } from '../../lib/supabase';
-import { fetchSurahWithCache, prefetchAdjacentSurahs } from '../../lib/apiCache';
+import { fetchSurahWithCache, prefetchAdjacentSurahs, getCached, setCached } from '../../lib/apiCache';
 import styles from '../../styles/Surah.module.css';
 import TajweedText from '../../components/TajweedText';
 import VerseNumStar from '../../components/VerseNumStar';
@@ -116,13 +116,21 @@ export default function SurahPage({
         setAudioVerses?.(v);
 
         // تحميل بيانات التجويد
-        fetch('https://raw.githubusercontent.com/cpfair/quran-tajweed/master/output/tajweed.hafs.uthmani-pause-sajdah.json')
-          .then(r => r.json())
-          .then(d => {
-            const map = {};
-            d.filter(e => e.surah === surahNum).forEach(e => { map[e.ayah] = e.annotations || []; });
-            setTajweedData(map);
-          }).catch(() => {});
+        // التجويد مع cache
+        const tajweedKey = `tajweed_${surahNum}`;
+        const cachedTajweed = getCached(tajweedKey);
+        if (cachedTajweed) {
+          setTajweedData(cachedTajweed);
+        } else {
+          fetch('https://raw.githubusercontent.com/cpfair/quran-tajweed/master/output/tajweed.hafs.uthmani-pause-sajdah.json')
+            .then(r => r.json())
+            .then(d => {
+              const map = {};
+              d.filter(e => e.surah === surahNum).forEach(e => { map[e.ayah] = e.annotations || []; });
+              setTajweedData(map);
+              setCached(tajweedKey, map);
+            }).catch(() => {});
+        }
 
         // الانتقال للآية من الرابط
         setTimeout(() => {
@@ -177,36 +185,48 @@ export default function SurahPage({
   // ─── تحميل الترجمة ───
   useEffect(() => {
     if (!showTranslation || !surahNum || Object.keys(translation).length > 0) return;
+    const transKey = `trans_${surahNum}_${translationLang}`;
+    const cachedTrans = getCached(transKey);
+    if (cachedTrans) { setTranslation(cachedTrans); return; }
     fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/${translationLang}`)
       .then(r => r.json())
       .then(d => {
         const map = {};
         d.data?.ayahs?.forEach(a => { map[a.numberInSurah] = a.text; });
         setTranslation(map);
+        setCached(transKey, map);
       }).catch(() => {});
   }, [showTranslation, surahNum, translationLang]);
 
   // ─── تحميل التفسير (تبويب التفسير) ───
   useEffect(() => {
     if (tab !== 'tafsir' || !surahNum || Object.keys(saadiData).length > 0) return;
+    const tafsirKey = `tafsir_${surahNum}`;
+    const cachedTafsir = getCached(tafsirKey);
+    if (cachedTafsir) { setSaadiData(cachedTafsir); return; }
     fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/ar.muyassar`)
       .then(r => r.json())
       .then(d => {
         const map = {};
         d.data?.ayahs?.forEach(a => { map[a.numberInSurah] = a.text; });
         setSaadiData(map);
+        setCached(tafsirKey, map);
       }).catch(() => {});
   }, [tab, surahNum]);
 
   // ─── تحميل كلمة بكلمة ───
   useEffect(() => {
     if (tab !== 'words' || !surahNum || Object.keys(wordData).length > 0) return;
+    const wordsKey = `words_${surahNum}`;
+    const cachedWords = getCached(wordsKey);
+    if (cachedWords) { setWordData(cachedWords); return; }
     fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/en.transliteration`)
       .then(r => r.json())
       .then(d => {
         const map = {};
         d.data?.ayahs?.forEach(a => { map[a.numberInSurah] = a.text; });
         setWordData(map);
+        setCached(wordsKey, map);
       }).catch(() => {});
   }, [tab, surahNum]);
 
