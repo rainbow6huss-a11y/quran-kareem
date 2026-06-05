@@ -19,15 +19,17 @@ export default function SurahPage({
   toggleDark, dark, showToast, user, onAuth,
   setAudioSurah, setAudioName, setAudioVerses,
   playingVerse, setPlayingVerse,
+  initialSurah = null,
+  initialVerses = [],
 }) {
   const router   = useRouter();
   const { id }   = router.query;
   const surahNum = parseInt(id);
 
   // ─── بيانات السورة ───
-  const [surah,    setSurah]    = useState(null);
-  const [verses,   setVerses]   = useState([]);
-  const [loading,  setLoading]  = useState(true);
+  const [surah,    setSurah]    = useState(initialSurah);
+  const [verses,   setVerses]   = useState(initialVerses);
+  const [loading,  setLoading]  = useState(!initialSurah);
   const [error,    setError]    = useState(null);
 
   // ─── بيانات إضافية ───
@@ -97,6 +99,21 @@ export default function SurahPage({
   // ─── تحميل السورة ───
   useEffect(() => {
     if (!surahNum || isNaN(surahNum)) return;
+
+    // إذا البيانات موجودة من SSG — استخدمها فوراً
+    if (initialSurah && initialVerses.length > 0) {
+      setSurah(initialSurah);
+      setVerses(initialVerses);
+      setLoading(false);
+      setAudioSurah?.(surahNum);
+      setAudioName?.(initialSurah.name);
+      setAudioVerses?.(initialVerses);
+      prefetchAdjacentSurahs(surahNum);
+      // حفظ في cache أيضاً
+      setCached(`surah_${surahNum}`, { surah: initialSurah, verses: initialVerses });
+      return;
+    }
+
     setLoading(true); setError(null);
     setVerses([]); setSurah(null);
     setSaadiData({}); setTajweedData({}); setTranslation({});
@@ -578,4 +595,79 @@ export default function SurahPage({
       />
     </>
   );
+}
+
+// ══════════════════════════════════════════════
+// SSG — يجلب بيانات السور وقت البناء على Vercel
+// المستخدم يفتح الصفحة فوراً بدون انتظار API
+// ══════════════════════════════════════════════
+
+export async function getStaticPaths() {
+  // pre-render أكثر السور شيوعاً فوراً، والباقي عند الطلب
+  const popularSurahs = [1, 2, 3, 18, 36, 55, 56, 67, 78, 112, 113, 114];
+  return {
+    paths: popularSurahs.map(id => ({ params: { id: String(id) } })),
+    fallback: 'blocking', // باقي السور تُبنى عند أول طلب ثم تُحفظ
+  };
+}
+
+export async function getStaticProps({ params }) {
+  const surahNum = parseInt(params.id);
+
+  if (!surahNum || surahNum < 1 || surahNum > 114) {
+    return { notFound: true };
+  }
+
+  try {
+    const [arRes, tafsirRes] = await Promise.all([
+      fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/quran-uthmani`),
+      fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/ar.muyassar`),
+    ]);
+
+    if (!arRes.ok) throw new Error('API error');
+
+    const [arJson, tafsirJson] = await Promise.all([
+      arRes.json(),
+      tafsirRes.json(),
+    ]);
+
+    const verses = arJson.data.ayahs.map((a, i) => ({
+      number: a.numberInSurah,
+      text: a.text,
+      tafsir: tafsirJson.data?.ayahs?.[i]?.text || '',
+      page: a.page,
+      juz: a.juz,
+      hizb: a.hizbQuarter,
+      sajda: !!a.sajda,
+    }));
+
+    // إزالة البسملة من الآية الأولى
+    let filteredVerses = verses;
+    if (surahNum !== 1 && surahNum !== 9 && verses.length > 0) {
+      const words = verses[0].text.trim().split(/\s+/);
+      if (words.length > 4) {
+        filteredVerses = [
+          { ...verses[0], text: words.slice(4).join(' ').trim() },
+          ...verses.slice(1),
+        ];
+      }
+    }
+
+    return {
+      props: {
+        initialSurah: arJson.data,
+        initialVerses: filteredVerses,
+      },
+      revalidate: 60 * 60 * 24 * 7, // إعادة بناء كل أسبوع
+    };
+  } catch {
+    // عند الفشل — الصفحة تعمل بالـ client-side fetch كالعادة
+    return {
+      props: {
+        initialSurah: null,
+        initialVerses: [],
+      },
+      revalidate: 60,
+    };
+  }
 }
