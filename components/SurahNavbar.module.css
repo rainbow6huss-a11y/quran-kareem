@@ -1,0 +1,82 @@
+/* ══════════════════════════════
+   SurahNavbar — شريط السورة
+   يظهر فقط في صفحة السورة
+══════════════════════════════ */
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: #ede4cc;
+  border-bottom: 1px solid rgba(184,151,58,.25);
+  box-shadow: 0 2px 12px rgba(92,61,30,.08);
+  direction: rtl;
+  gap: 10px;
+}
+
+.dark {
+  background: var(--parchment, #0f1e12);
+  border-bottom-color: rgba(184,151,58,.15);
+  box-shadow: 0 2px 12px rgba(0,0,0,.2);
+}
+
+/* ── أزرار الأيقونات ── */
+.iconBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(184,151,58,.3);
+  background: rgba(184,151,58,.08);
+  color: #5c3d1e;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all .2s;
+  flex-shrink: 0;
+}
+.dark .iconBtn {
+  border-color: rgba(184,151,58,.2);
+  background: rgba(184,151,58,.06);
+  color: #c9a84c;
+}
+.iconBtn:hover {
+  background: rgba(184,151,58,.18);
+  border-color: #b8973a;
+}
+
+/* ── Pill اسم السورة ── */
+.surahPill {
+  flex: 1;
+  text-align: center;
+}
+
+.pillName {
+  display: inline-block;
+  font-family: 'Amiri Quran', 'Amiri', serif;
+  font-size: clamp(.95rem, 3vw, 1.25rem);
+  color: #3d2200;
+  font-weight: 700;
+  background: rgba(184,151,58,.1);
+  border: 1px solid rgba(184,151,58,.5);
+  border-radius: 30px;
+  padding: 5px 22px;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dark .pillName {
+  color: #d4af5a;
+  background: rgba(184,151,58,.08);
+  border-color: rgba(184,151,58,.3);
+}
+
+/* ── Desktop: إخفاء هذا الـ navbar وإظهار الأصلي ── */
+@media (min-width: 769px) {
+  .nav { display: none; }
+}
