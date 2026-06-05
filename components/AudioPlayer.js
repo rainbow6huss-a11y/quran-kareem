@@ -117,6 +117,7 @@ export default function AudioPlayer({ surahNum, surahName, verses, playingVerse,
 
     activeVerse.current  = vNum;
     isPlayingRef.current = true;
+    setPlayerVisible(true);
     onVerseChange?.(vNum);
 
     setLoading(true); setBuffering(false);
