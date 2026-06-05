@@ -58,3 +58,14 @@ export function HomeSkeleton() {
     </div>
   );
 }
+
+// ── SurahListSkeleton — alias للصفحة الرئيسية ──
+export function SurahListSkeleton() {
+  return (
+    <div className={styles.homeWrap}>
+      {[...Array(12)].map((_, i) => (
+        <div key={i} className={`${styles.bone} ${styles.surahCard}`} />
+      ))}
+    </div>
+  );
+}
