@@ -1,80 +1,98 @@
-/* Shimmer animation */
-@keyframes shimmer {
-  0%   { background-position: -600px 0; }
-  100% { background-position: 600px 0; }
-}
+/* ── Skeleton Loading ── */
+.wrap { padding: 12px; direction: rtl; }
 
-.block {
+/* ── تأثير shimmer ── */
+.bone {
   background: linear-gradient(
     90deg,
-    var(--border) 25%,
-    rgba(184,151,58,0.12) 50%,
-    var(--border) 75%
+    rgba(184,151,58,.08) 25%,
+    rgba(184,151,58,.18) 50%,
+    rgba(184,151,58,.08) 75%
   );
-  background-size: 600px 100%;
-  animation: shimmer 1.6s ease-in-out infinite;
-  border-radius: 6px;
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+body.dark .bone {
+  background: linear-gradient(
+    90deg,
+    rgba(184,151,58,.06) 25%,
+    rgba(184,151,58,.12) 50%,
+    rgba(184,151,58,.06) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
 }
 
-/* Surah page skeleton */
-.wrap { padding: 0; }
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
 
+/* ── Header ── */
 .header {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  padding: 24px 20px;
-  margin-bottom: 14px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
+  display: flex; align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  background: rgba(184,151,58,.04);
+  border-radius: 12px 12px 0 0;
+  margin-bottom: 4px; gap: 10px;
 }
-.title    { width: 200px; height: 36px; }
-.meta     { width: 260px; height: 16px; }
-.bismillah{ width: 320px; height: 28px; margin-top: 6px; }
+.navBtn  { width: 64px; height: 34px; border-radius: 8px; flex-shrink: 0; }
+.title   { flex: 1; height: 36px; border-radius: 24px; max-width: 200px; margin: 0 auto; }
 
-.verse {
-  display: flex;
-  gap: 12px;
-  padding: 18px 16px;
-  border-bottom: 1px solid rgba(184,151,58,0.08);
-  align-items: flex-start;
+/* ── Meta ── */
+.metaRow {
+  display: flex; gap: 8px; justify-content: center;
+  padding: 8px 12px 12px; flex-wrap: wrap;
 }
-.num {
-  width: 32px; height: 32px;
-  border-radius: 50% !important;
-  flex-shrink: 0;
-  margin-top: 4px;
-}
-.verseBody { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-.line { height: 22px; }
-.long   { width: 100%; }
-.medium { width: 75%; }
-.short  { width: 50%; }
-.tafsir { width: 85%; height: 14px; margin-top: 4px; opacity: 0.6; }
 
-/* Surah list skeleton */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 10px;
-  margin-top: 16px;
+/* ── Bismillah ── */
+.bismillahSk {
+  display: flex; justify-content: center;
+  padding: 12px; margin-bottom: 8px;
 }
-.card {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  background: var(--card);
-  border: 1px solid var(--border);
+.bismillahLine { width: 220px; height: 32px; border-radius: 6px; }
+
+/* ── Tabs ── */
+.tabs {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 0; margin-bottom: 10px;
+  background: rgba(184,151,58,.04);
+  border-radius: 10px 10px 0 0; overflow: hidden;
+}
+.tab { height: 38px; border-radius: 0; margin: 0; }
+
+/* ── Controls ── */
+.controls {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  padding: 10px; margin-bottom: 10px;
+  background: rgba(184,151,58,.04);
+  border-radius: 10px;
+}
+.btn { height: 32px; flex: 1; min-width: 60px; border-radius: 8px; }
+
+/* ── Verses ── */
+.verses {
+  padding: 12px;
+  background: rgba(184,151,58,.03);
   border-radius: 12px;
+  display: flex; flex-direction: column; gap: 16px;
 }
-.cardNum  { width: 36px; height: 36px; border-radius: 50% !important; flex-shrink: 0; }
-.cardInfo { flex: 1; display: flex; flex-direction: column; gap: 6px; }
-.cardName { width: 80px; height: 16px; }
-.cardMeta { width: 120px; height: 12px; opacity: 0.6; }
+.verseLine {
+  display: flex; align-items: center; gap: 10px;
+}
+.verseNum { width: 28px; height: 28px; border-radius: 50%; flex-shrink: 0; }
 
-@media(max-width: 600px) {
-  .grid { grid-template-columns: 1fr 1fr; }
+/* ── Home skeleton ── */
+.homeWrap {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 10px; padding: 12px;
+}
+.surahCard { height: 80px; border-radius: 12px; }
+
+@media (max-width: 768px) {
+  .title   { max-width: 150px; }
+  .bismillahLine { width: 170px; }
 }
