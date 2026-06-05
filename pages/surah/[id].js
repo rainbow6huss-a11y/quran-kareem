@@ -109,8 +109,23 @@ export default function SurahPage({
       setAudioName?.(initialSurah.name);
       setAudioVerses?.(initialVerses);
       prefetchAdjacentSurahs(surahNum);
-      // حفظ في cache أيضاً
       setCached(`surah_${surahNum}`, { surah: initialSurah, verses: initialVerses });
+
+      // تحميل التجويد حتى مع SSG
+      const tajweedKeySsg = `tajweed_${surahNum}`;
+      const cachedTajweedSsg = getCached(tajweedKeySsg);
+      if (cachedTajweedSsg) {
+        setTajweedData(cachedTajweedSsg);
+      } else {
+        fetch('https://raw.githubusercontent.com/cpfair/quran-tajweed/master/output/tajweed.hafs.uthmani-pause-sajdah.json')
+          .then(r => r.json())
+          .then(d => {
+            const map = {};
+            d.filter(e => e.surah === surahNum).forEach(e => { map[e.ayah] = e.annotations || []; });
+            setTajweedData(map);
+            setCached(tajweedKeySsg, map);
+          }).catch(() => {});
+      }
       return;
     }
 
@@ -369,7 +384,7 @@ export default function SurahPage({
               {/* شريط التنقل */}
               <div className={styles.surahNav}>
                 {surahNum > 1
-                  ? <Link href={`/surah/${surahNum - 1}`} className={styles.navArrow}>› السابقة</Link>
+                  ? <button className={styles.navArrow} onClick={() => router.replace(`/surah/${surahNum - 1}`)}>› السابقة</button>
                   : <span />}
                 <div className={styles.surahTitleWrap} style={{flex:1,textAlign:'center'}}>
                   <div className={styles.surahTitleFrame}>
@@ -377,7 +392,7 @@ export default function SurahPage({
                   </div>
                 </div>
                 {surahNum < 114
-                  ? <Link href={`/surah/${surahNum + 1}`} className={styles.navArrow}>التالية ‹</Link>
+                  ? <button className={styles.navArrow} onClick={() => router.replace(`/surah/${surahNum + 1}`)}>التالية ‹</button>
                   : <span />}
               </div>
 
@@ -590,8 +605,8 @@ export default function SurahPage({
         isBookmarked={isBm(lastVerse)}
         onToggleBookmark={() => toggleBookmark(lastVerse)}
         onScrollTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-        onPrevSurah={() => router.push(`/surah/${surahNum - 1}`)}
-        onNextSurah={() => router.push(`/surah/${surahNum + 1}`)}
+        onPrevSurah={() => router.replace(`/surah/${surahNum - 1}`)}
+        onNextSurah={() => router.replace(`/surah/${surahNum + 1}`)}
       />
     </>
   );
