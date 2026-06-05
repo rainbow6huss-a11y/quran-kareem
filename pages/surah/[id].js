@@ -10,7 +10,7 @@ import VerseCard from '../../components/VerseCard';
 import SurahBottomBar from '../../components/SurahBottomBar';
 import SurahNavbar from '../../components/SurahNavbar';
 import { supabase } from '../../lib/supabase';
-import { fetchSurahWithCache } from '../../lib/apiCache';
+import { fetchSurahWithCache, prefetchAdjacentSurahs } from '../../lib/apiCache';
 import styles from '../../styles/Surah.module.css';
 import TajweedText from '../../components/TajweedText';
 import VerseNumStar from '../../components/VerseNumStar';
