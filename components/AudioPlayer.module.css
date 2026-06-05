@@ -155,7 +155,7 @@ body.dark .sel { background: #1a2a1e; }
 /* ═══ MOBILE ═══ */
 @media (max-width: 768px) {
   .player { bottom: 62px; }
-  .inner { padding: 6px 8px; gap: 6px; }
+  .inner { padding: 6px 8px; gap: 6px; flex-wrap: wrap; }
   .surahLabel { font-size: .75rem; max-width: 85px; }
   .verseLabel { display: none; }
   .time { display: none; }
@@ -163,7 +163,7 @@ body.dark .sel { background: #1a2a1e; }
   .mainBtn { width: 38px; height: 38px; font-size: .9rem; }
   .ctrl { width: 26px; height: 26px; font-size: .7rem; }
   .opt { width: 26px; height: 26px; }
-  .sel { max-width: 72px; font-size: .65rem; }
+  .sel { max-width: 120px; font-size: .7rem; display: block !important; }
   .minBtn { width: 24px; height: 24px; font-size: .6rem; }
 }
 
