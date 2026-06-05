@@ -280,12 +280,35 @@ export default function SurahPage({
         <Navbar toggleDark={toggleDark} dark={dark} showToast={showToast} onAuth={onAuth} />
       </div>
 
-      {/* شريط تقدم القراءة */}
-      {readPct > 0 && (
-        <div style={{ position:'fixed', top:'56px', left:0, right:0, zIndex:998, height:'4px', background:'rgba(0,0,0,.08)', direction:'ltr' }}>
-          <div style={{ height:'100%', width:`${readPct}%`, background:'linear-gradient(90deg,#2d5a3d,#c9a84c)', transition:'width .6s ease', marginLeft:'auto', float:'right' }}/>
-        </div>
-      )}
+      {/* شريط تقدم القراءة — احترافي */}
+      <div style={{
+        position: 'fixed', top: '52px', left: 0, right: 0,
+        zIndex: 999, height: '3px',
+        background: dark ? 'rgba(255,255,255,.06)' : 'rgba(0,0,0,.06)',
+        direction: 'ltr',
+      }}>
+        <div style={{
+          height: '100%',
+          width: `${readPct}%`,
+          background: 'linear-gradient(90deg, #2d5a3d 0%, #5aaa70 50%, #c9a84c 100%)',
+          transition: 'width .8s cubic-bezier(.4,0,.2,1)',
+          borderRadius: '0 2px 2px 0',
+          boxShadow: '0 0 8px rgba(201,168,76,.5)',
+        }}/>
+        {/* نقطة متوهجة في نهاية الشريط */}
+        {readPct > 0 && readPct < 100 && (
+          <div style={{
+            position: 'absolute',
+            top: '50%', transform: 'translateY(-50%)',
+            left: `${readPct}%`,
+            width: '8px', height: '8px',
+            borderRadius: '50%',
+            background: '#c9a84c',
+            boxShadow: '0 0 6px 2px rgba(201,168,76,.6)',
+            transition: 'left .8s cubic-bezier(.4,0,.2,1)',
+          }}/>
+        )}
+      </div>
 
       <div className={styles.page} style={{ paddingBottom:'90px', paddingTop: readPct > 0 ? '10px' : '0' }}>
         <div className={styles.breadcrumb}>
