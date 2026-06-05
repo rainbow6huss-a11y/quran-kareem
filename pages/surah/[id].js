@@ -8,6 +8,7 @@ import ErrorRetry from '../../components/ErrorRetry';
 import ReadingControls from '../../components/ReadingControls';
 import VerseCard from '../../components/VerseCard';
 import SurahBottomBar from '../../components/SurahBottomBar';
+import SurahNavbar from '../../components/SurahNavbar';
 import { supabase } from '../../lib/supabase';
 import { fetchSurahWithCache } from '../../lib/apiCache';
 import styles from '../../styles/Surah.module.css';
@@ -265,7 +266,19 @@ export default function SurahPage({
         description={surah ? `اقرأ سورة ${surah.name} — ${surah.numberOfAyahs} آية — ${surah.revelationType === 'Meccan' ? 'مكية' : 'مدنية'} مع التفسير والاستماع` : undefined}
         path={`/surah/${surahNum}`}
       />
-      <Navbar toggleDark={toggleDark} dark={dark} showToast={showToast} onAuth={onAuth} />
+      {/* Navbar الموبايل — pill اسم السورة */}
+      <SurahNavbar
+        surahName={surah?.name}
+        surahNum={surahNum}
+        toggleDark={toggleDark}
+        dark={dark}
+        showToast={showToast}
+        onAuth={onAuth}
+      />
+      {/* Navbar الديسكتوب — يظهر فقط على الشاشات الكبيرة */}
+      <div className="desktopOnly">
+        <Navbar toggleDark={toggleDark} dark={dark} showToast={showToast} onAuth={onAuth} />
+      </div>
 
       {/* شريط تقدم القراءة */}
       {readPct > 0 && (
