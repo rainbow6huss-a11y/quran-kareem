@@ -131,12 +131,12 @@ body.dark [class*="verses"]      { background: #111e14 !important; }
 body.dark [class*="verse"]:not([class*="verseText"]):not([class*="verseTrans"]):not([class*="verseNum"]):not([class*="verseTop"]):not([class*="verseBody"]):not([class*="verseActions"]):not([class*="verseTranslation"]) {
   background: transparent;
 }
-body.dark [class*="surahHeader"] { background: #0d1710 !important; }
-body.dark [class*="surahNav"]    { background: #0a1209 !important; }
-body.dark [class*="surahMeta"]   { background: #0d1710 !important; }
-body.dark [class*="bismillah"]   { background: #0a1209 !important; }
-body.dark [class*="tabs"]        { background: #0a1209 !important; }
-body.dark [class*="fontControls"]{ background: #1e3525 !important; border-color: rgba(184,151,58,.3) !important; }
+body.dark [class*="surahHeader"] { background: #0f1e12 !important; }
+body.dark [class*="surahNav"]    { background: #0f1e12 !important; }
+body.dark [class*="surahMeta"]   { background: #0f1e12 !important; }
+body.dark [class*="bismillah"]   { background: #0f1e12 !important; }
+body.dark [class*="tabs"]        { background: #0f1e12 !important; }
+body.dark [class*="fontControls"]{ background: #1a2e1e !important; border-color: rgba(184,151,58,.25) !important; }
 body.dark [class*="breadcrumb"]  { color: var(--text-soft) !important; }
 
 /* ── ألوان التجويد — ثابتة في الوضعين ── */

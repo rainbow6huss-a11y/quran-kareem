@@ -34,7 +34,7 @@
   background: #ede4cc;
   border-bottom: 1px solid rgba(184,151,58,.25);
 }
-body.dark .surahNav { background: #0a1209; border-color: rgba(184,151,58,.12); }
+body.dark .surahNav { background: var(--parchment); border-color: rgba(184,151,58,.12); }
 
 .navArrow {
   padding: 6px 12px;
@@ -79,7 +79,7 @@ body.dark .surahName { color: #d4af5a; }
   padding: 6px 12px 10px;
   background: #f5eedc;
 }
-body.dark .surahMeta { color: #5a8060; background: #0d1710; }
+body.dark .surahMeta { color: #7aaa7a; background: var(--parchment); }
 
 .riwayaBadge {
   font-size: .64rem; color: #2d5a3d;
@@ -96,7 +96,7 @@ body.dark .riwayaBadge { color: #5aaa70; background: rgba(45,90,61,.2); }
   background: #f0e8d5;
   border-top: 1px solid rgba(184,151,58,.2);
 }
-body.dark .bismillah { background: #0a1209; border-color: rgba(184,151,58,.1); }
+body.dark .bismillah { background: var(--parchment); border-color: rgba(184,151,58,.1); }
 
 .bismillahOrnament {
   font-size: 9px; letter-spacing: 5px;
@@ -119,7 +119,7 @@ body.dark .bismillahText { color: #5aaa70; }
   margin-bottom: 10px;
   border-radius: 10px 10px 0 0; overflow: hidden;
 }
-body.dark .tabs { background: #0f1e12; border-color: rgba(184,151,58,.2); }
+body.dark .tabs { background: var(--parchment); border-color: rgba(184,151,58,.2); }
 
 .tab {
   padding: 9px 4px; text-align: center;
@@ -147,7 +147,7 @@ body.dark .tabActive { color: #5aaa70 !important; border-bottom-color: #5aaa70 !
   border: 1px solid rgba(184,151,58,.25);
   border-radius: 12px; margin-bottom: 10px;
 }
-body.dark .fontControls { background: #1e3525; border-color: rgba(184,151,58,.3); }
+body.dark .fontControls { background: #1a2e1e; border-color: rgba(184,151,58,.3); }
 
 .readingModeRow { display: flex; gap: 6px; }
 .modeBtn {
@@ -358,7 +358,7 @@ body.dark .tjMadd    { color: #5599ee !important; }
   background: #faf5e9; border: 1px solid rgba(184,151,58,.2);
   border-radius: 12px; padding: 16px;
 }
-body.dark .tafsirItem { background: #0d1710; border-color: rgba(184,151,58,.1); }
+body.dark .tafsirItem { background: var(--card); border-color: rgba(184,151,58,.1); }
 .tafsirAyah {
   font-family: 'Amiri Quran', serif; line-height: 2.6;
   color: #1a0e00; direction: rtl; text-align: right; margin-bottom: 10px;
@@ -377,7 +377,7 @@ body.dark .tafsirBox { color: #5a8060; }
   background: #faf5e9; border: 1px solid rgba(184,151,58,.2);
   border-radius: 12px; padding: 16px;
 }
-body.dark .wordVerse { background: #0d1710; border-color: rgba(184,151,58,.1); }
+body.dark .wordVerse { background: var(--card); border-color: rgba(184,151,58,.1); }
 .wordVerseNum { font-size: .74rem; color: #b8973a; font-weight: 700; margin-bottom: 5px; }
 .wordVerseText {
   font-family: 'Amiri Quran', serif; font-size: 1.4rem;
@@ -392,7 +392,7 @@ body.dark .wordVerseText { color: #e8dcc8; }
   border: 1px solid rgba(184,151,58,.25); border-radius: 8px;
   text-align: center; min-width: 55px;
 }
-body.dark .wordCard { background: #0a1209; border-color: rgba(184,151,58,.12); }
+body.dark .wordCard { background: var(--parchment); border-color: rgba(184,151,58,.12); }
 .wordAr { font-family: 'Amiri Quran', serif; font-size: 1.1rem; color: #3d2200; line-height: 1.8; }
 body.dark .wordAr { color: #d4af5a; }
 .wordEn { font-size: .63rem; color: #8b6340; direction: ltr; }
