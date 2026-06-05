@@ -54,6 +54,7 @@ export default function SurahPage({
 
   const saveTimerRef = useRef(null);
   const observerRef  = useRef(null);
+  const audioRef     = useRef(null); // للتحكم بالصوت من الشريط السفلي
 
   // ─── تحميل تفضيلات المستخدم ───
   useEffect(() => {
@@ -528,7 +529,20 @@ export default function SurahPage({
         showTajweed={showTajweed}
         onToggleTajweed={() => setShowTajweed(v => !v)}
         playingVerse={playingVerse}
-        onPlayPause={() => setPlayingVerse(v => v ? null : 1)}
+        onPlayPause={() => {
+          const audio = document.querySelector('audio');
+          if (playingVerse && audio) {
+            if (audio.paused) {
+              audio.play().catch(() => {});
+            } else {
+              audio.pause();
+              setPlayingVerse(null);
+            }
+          } else {
+            // ابدأ من أول آية
+            if (verses.length > 0) setPlayingVerse(verses[0].number);
+          }
+        }}
         isBookmarked={isBm(lastVerse)}
         onToggleBookmark={() => toggleBookmark(lastVerse)}
         onScrollTop={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
