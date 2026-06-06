@@ -1,5 +1,5 @@
 const SURAH_COUNT = 114;
-const BASE_URL = 'https://quran-kareem-pi.vercel.app';
+const BASE_URL = 'https://www.quranfarah.com';
 
 function generateSitemap() {
   const staticPages = [
