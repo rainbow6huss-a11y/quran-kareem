@@ -21,7 +21,7 @@ export default function ContactPage({ toggleDark, dark, showToast, onAuth }) {
 
   return (
     <>
-      <Head><title>اتصل بنا - القرآن الكريم</title></Head>
+      <Head><title>اتصل بنا — قرآن فرح</title></Head>
       <Navbar toggleDark={toggleDark} dark={dark} showToast={showToast} onAuth={onAuth} />
 
       <div className={styles.page}>
@@ -34,14 +34,9 @@ export default function ContactPage({ toggleDark, dark, showToast, onAuth }) {
         {/* Info Cards */}
         <div className={styles.infoGrid}>
           <div className={styles.infoCard}>
-            <div className={styles.infoIcon}>📧</div>
-            <div className={styles.infoTitle}>البريد الإلكتروني</div>
-            <div className={styles.infoValue}>rainbow6huss@gmail.com</div>
-          </div>
-          <div className={styles.infoCard}>
             <div className={styles.infoIcon}>🌐</div>
             <div className={styles.infoTitle}>الموقع</div>
-            <div className={styles.infoValue}>quran-kareem-pi.vercel.app</div>
+            <div className={styles.infoValue}>www.quranfarah.com</div>
           </div>
           <div className={styles.infoCard}>
             <div className={styles.infoIcon}>⏰</div>
