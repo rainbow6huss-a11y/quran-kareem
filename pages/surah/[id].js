@@ -451,13 +451,13 @@ export default function SurahPage({
                         };
                         return (
                           <span key={v.number} id={`v${v.number}`} data-verse={v.number}>
-                            {v.page && idx > 0 && verses[idx - 1]?.page !== v.page && (
+                            {v.juz > 0 && idx > 0 && verses[idx - 1]?.juz !== v.juz && (
                               <div className={styles.pageMarker}>
                                 <div className={styles.pageMarkerLine}/>
                                 <div className={styles.pageMarkerInfo}>
-                                  <span>صفحة {v.page}</span>
+                                  <span>الجزء {v.juz}</span>
                                   <span>•</span>
-                                  <span>جزء {v.juz}</span>
+                                  <span>آية {v.number}</span>
                                 </div>
                                 <div className={styles.pageMarkerLine}/>
                               </div>
