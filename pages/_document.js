@@ -19,6 +19,18 @@ export default function Document() {
         {/* Preload الخط الرئيسي */}
         <link rel="preload" href="https://fonts.gstatic.com/s/amiriquran/v14/x3dkckHVYrCU5BU15c4BfA.woff2"
           as="font" type="font/woff2" crossOrigin="anonymous" />
+
+        {/* Google Analytics — ضع Measurement ID الخاص بك */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-FFEV26DJZH"/>
+        <script dangerouslySetInnerHTML={{__html: `
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+          gtag('config', 'G-FFEV26DJZH', {
+            page_title: document.title,
+            page_location: window.location.href,
+          });
+        `}}/>
         <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;600;700&family=Noto+Naskh+Arabic:wght@400;700&display=swap" rel="stylesheet" />
         <style>{`
           @font-face {
