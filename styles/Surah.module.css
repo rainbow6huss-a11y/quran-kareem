@@ -446,8 +446,8 @@ body.dark .wordAr { color: #d4af5a; }
   .fontRow { gap: 4px; }
   .transBtn { padding: 4px 7px; font-size: .71rem; }
   .fontSelect { font-size: .71rem; padding: 4px 5px; }
-  .pageMode { padding: 16px 12px; line-height: 3.3; }
-  .inlineVerse { font-size: 1.4rem !important; }
+  .pageMode { padding: 18px 14px; line-height: 3.5; }
+  .inlineVerse { font-size: 1.45rem !important; }
   .verseText { font-size: 1.5rem !important; line-height: 2.5 !important; }
   .verse { padding: 12px 10px; }
   .verseActions { gap: 4px; }
