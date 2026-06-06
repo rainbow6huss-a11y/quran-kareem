@@ -8,7 +8,7 @@ import { getAllSurahs } from '../lib/quranData';
 import { SurahListSkeleton } from '../components/Skeleton';
 import styles from '../styles/Home.module.css';
 
-export default function Home({ toggleDark, dark, showToast, user, onAuth }) {
+export default function Home({ toggleDark, dark, showToast, user, onAuth, initialSurahs = [] }) {
   const [surahs, setSurahs] = useState([]);
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
@@ -17,7 +17,7 @@ export default function Home({ toggleDark, dark, showToast, user, onAuth }) {
   const [khatmaPct, setKhatmaPct] = useState(0);
 
   useEffect(() => {
-    setSurahs(getAllSurahs());
+    setSurahs(initialSurahs.length > 0 ? initialSurahs : getAllSurahs());
     setLoading(false);
 
     // تحميل آخر قراءة
@@ -162,4 +162,11 @@ export default function Home({ toggleDark, dark, showToast, user, onAuth }) {
       </div>
     </>
   );
+}
+
+export async function getStaticProps() {
+  const { getAllSurahs } = require('../lib/quranData');
+  return {
+    props: { initialSurahs: getAllSurahs() },
+  };
 }
