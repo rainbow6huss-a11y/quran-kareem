@@ -11,6 +11,7 @@ import SurahBottomBar from '../../components/SurahBottomBar';
 import SurahNavbar from '../../components/SurahNavbar';
 import { supabase } from '../../lib/supabase';
 import { fetchSurahWithCache, prefetchAdjacentSurahs, getCached, setCached } from '../../lib/apiCache';
+import { getSurah } from '../../lib/quranData';
 import styles from '../../styles/Surah.module.css';
 import TajweedText from '../../components/TajweedText';
 import VerseNumStar from '../../components/VerseNumStar';
@@ -618,11 +619,13 @@ export default function SurahPage({
 // ══════════════════════════════════════════════
 
 export async function getStaticPaths() {
-  // pre-render أكثر السور شيوعاً فوراً، والباقي عند الطلب
-  const popularSurahs = [1, 2, 3, 18, 36, 55, 56, 67, 78, 112, 113, 114];
+  // بناء كل السور الـ 114 مسبقاً على Vercel — كل سورة تفتح فورياً
+  const allSurahs = Array.from({ length: 114 }, (_, i) => ({
+    params: { id: String(i + 1) }
+  }));
   return {
-    paths: popularSurahs.map(id => ({ params: { id: String(id) } })),
-    fallback: 'blocking', // باقي السور تُبنى عند أول طلب ثم تُحفظ
+    paths: allSurahs,
+    fallback: false,
   };
 }
 
@@ -634,55 +637,19 @@ export async function getStaticProps({ params }) {
   }
 
   try {
-    const [arRes, tafsirRes] = await Promise.all([
-      fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/quran-uthmani`),
-      fetch(`https://api.alquran.cloud/v1/surah/${surahNum}/ar.muyassar`),
-    ]);
-
-    if (!arRes.ok) throw new Error('API error');
-
-    const [arJson, tafsirJson] = await Promise.all([
-      arRes.json(),
-      tafsirRes.json(),
-    ]);
-
-    const verses = arJson.data.ayahs.map((a, i) => ({
-      number: a.numberInSurah,
-      text: a.text,
-      tafsir: tafsirJson.data?.ayahs?.[i]?.text || '',
-      page: a.page,
-      juz: a.juz,
-      hizb: a.hizbQuarter,
-      sajda: !!a.sajda,
-    }));
-
-    // إزالة البسملة من الآية الأولى
-    let filteredVerses = verses;
-    if (surahNum !== 1 && surahNum !== 9 && verses.length > 0) {
-      const words = verses[0].text.trim().split(/\s+/);
-      if (words.length > 4) {
-        filteredVerses = [
-          { ...verses[0], text: words.slice(4).join(' ').trim() },
-          ...verses.slice(1),
-        ];
-      }
-    }
+    // ← بيانات محلية — فورية 0ms بدون أي API خارجي
+    const { surah, verses } = getSurah(surahNum);
 
     return {
       props: {
-        initialSurah: arJson.data,
-        initialVerses: filteredVerses,
+        initialSurah: surah,
+        initialVerses: verses,
       },
-      revalidate: 60 * 60 * 24 * 7, // إعادة بناء كل أسبوع
+      // لا revalidate — البيانات ثابتة محلياً
     };
   } catch {
-    // عند الفشل — الصفحة تعمل بالـ client-side fetch كالعادة
     return {
-      props: {
-        initialSurah: null,
-        initialVerses: [],
-      },
-      revalidate: 60,
+      props: { initialSurah: null, initialVerses: [] },
     };
   }
 }
