@@ -17,7 +17,6 @@ export default function Home({ toggleDark, dark, showToast, user, onAuth }) {
   const [khatmaPct, setKhatmaPct] = useState(0);
 
   useEffect(() => {
-    // بيانات محلية فورية
     setSurahs(getAllSurahs());
     setLoading(false);
 
