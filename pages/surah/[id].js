@@ -633,9 +633,15 @@ export async function getStaticProps({ params }) {
   const surahNum = parseInt(params.id);
   if (!surahNum || surahNum < 1 || surahNum > 114) return { notFound: true };
   try {
-    // بيانات محلية بخط عثمان طه الأصلي — فورية 0ms
-    const { surah, verses } = getSurah(surahNum);
-    return { props: { initialSurah: surah, initialVerses: verses } };
+    // قراءة مباشرة من الملف — أسرع من require()
+    const fs = require('fs');
+    const path = require('path');
+    const filePath = path.join(process.cwd(), 'data', 'surahs', `${surahNum}.json`);
+    const raw = fs.readFileSync(filePath, 'utf-8');
+    const { surah, verses } = JSON.parse(raw);
+    return {
+      props: { initialSurah: surah, initialVerses: verses },
+    };
   } catch {
     return { props: { initialSurah: null, initialVerses: [] } };
   }
