@@ -49,3 +49,29 @@
   .card { padding: 12px 10px; }
   .juzNum { font-size: 1.5rem; }
 }
+
+/* ── تحسينات الأجزاء ── */
+.lastReadBanner {
+  display: block; margin: 10px 0;
+  padding: 10px 14px; background: rgba(45,90,61,.1);
+  border: 1px solid rgba(45,90,61,.25); border-radius: 10px;
+  font-size: .82rem; color: var(--green); font-weight: 600;
+  text-align: center; transition: all .2s;
+}
+.lastReadBanner:hover { background: rgba(45,90,61,.15); }
+.viewToggle { display: flex; gap: 6px; margin-top: 10px; }
+.viewBtn {
+  padding: 5px 14px; border: 1px solid var(--border); border-radius: 8px;
+  font-family: 'Tajawal', sans-serif; font-size: .78rem;
+  background: transparent; color: var(--text-soft); cursor: pointer; transition: all .2s;
+}
+.viewActive { background: var(--green) !important; color: white !important; border-color: var(--green) !important; }
+.cardCurrent { border-color: var(--green) !important; box-shadow: 0 0 0 2px rgba(45,90,61,.2); }
+.currentBadge {
+  position: absolute; top: -8px; right: 10px;
+  background: var(--green); color: white;
+  font-size: .65rem; padding: 2px 8px; border-radius: 10px; font-weight: 700;
+}
+.pagesInfo { font-size: .7rem; color: var(--text-soft); margin-top: 2px; }
+.currentTag { font-size: .7rem; color: var(--green); font-weight: 700; }
+.juzGroupCurrent { border-color: rgba(45,90,61,.4) !important; background: rgba(45,90,61,.04) !important; }

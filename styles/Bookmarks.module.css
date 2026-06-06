@@ -29,3 +29,21 @@
 @media(max-width: 600px) {
   .page { padding: 16px 12px 40px; }
 }
+
+/* ── تحسينات العلامات ── */
+.headerTop { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.headerActions { display: flex; gap: 8px; }
+.shareBtn {
+  padding: 6px 14px; border: 1px solid var(--border); border-radius: 8px;
+  background: transparent; font-family: 'Tajawal', sans-serif;
+  font-size: .78rem; color: var(--green); cursor: pointer; transition: all .2s;
+}
+.shareBtn:hover { background: rgba(45,90,61,.1); }
+.filterRow { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+.filterBtn {
+  padding: 4px 12px; border: 1px solid var(--border); border-radius: 20px;
+  font-family: 'Tajawal', sans-serif; font-size: .75rem;
+  background: transparent; color: var(--text-soft); cursor: pointer; transition: all .15s;
+}
+.filterActive { background: var(--green) !important; color: white !important; border-color: var(--green) !important; }
+.verseLoading { font-size: .78rem; color: var(--text-soft); font-style: italic; padding: 4px 0; }

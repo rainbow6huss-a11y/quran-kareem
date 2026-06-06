@@ -141,3 +141,22 @@
   color: var(--text-soft); cursor: pointer; transition: all .2s;
 }
 .resetKhatmaBtn:hover { border-color: #e55; color: #e55; }
+
+/* ── جدول اليوم ── */
+.todaySchedule {
+  margin-top: 12px; padding: 12px;
+  background: rgba(184,151,58,.05); border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.scheduleTitle { font-size: .8rem; color: var(--gold); font-weight: 700; margin-bottom: 8px; }
+.scheduleList { display: flex; flex-direction: column; gap: 4px; max-height: 180px; overflow-y: auto; }
+.scheduleItem {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 10px; background: var(--card);
+  border: 1px solid var(--border); border-radius: 8px;
+  font-size: .78rem; transition: all .15s;
+}
+.scheduleItem:hover { background: rgba(45,90,61,.08); border-color: var(--green); }
+.scheduleNum { width: 24px; height: 24px; border-radius: 50%; background: var(--gold-pale); color: var(--gold); font-size: .7rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.scheduleName { flex: 1; color: var(--text); font-family: 'Amiri', serif; }
+.scheduleArrow { color: var(--green); font-size: .8rem; }

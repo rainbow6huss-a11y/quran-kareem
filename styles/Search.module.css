@@ -92,3 +92,8 @@
   0%, 100% { transform: scale(1); }
   50% { transform: scale(1.15); }
 }
+
+/* ── سجل البحث ── */
+.historyRow { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; flex-wrap: wrap; }
+.historyBtn { background: rgba(45,90,61,.08) !important; border-color: rgba(45,90,61,.2) !important; color: var(--green) !important; }
+.sugRow { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
