@@ -20,7 +20,7 @@ export default function VerseCard({
   };
 
   const isSajda    = SAJDA_VERSES[surahNum] === verse.number;
-  const pageChanged = verse.page && (!prevVerse || prevVerse.page !== verse.page);
+  const pageChanged = verse.page && verse.page > 0 && (!prevVerse || prevVerse.page !== verse.page);
 
   return (
     <div>
