@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import { supabase } from '../lib/supabase';
 import { SURAH_NAMES, DAILY_AYAHS, JUZ_STARTS } from '../lib/constants';
-import { fetchSurahListWithCache } from '../lib/apiCache';
+import { getAllSurahs } from '../lib/quranData';
 import { SurahListSkeleton } from '../components/Skeleton';
 import styles from '../styles/Home.module.css';
 
@@ -17,9 +17,9 @@ export default function Home({ toggleDark, dark, showToast, user, onAuth }) {
   const [khatmaPct, setKhatmaPct] = useState(0);
 
   useEffect(() => {
-    fetchSurahListWithCache()
-      .then(data => { setSurahs(data); setLoading(false); })
-      .catch(() => setLoading(false));
+    // بيانات محلية فورية
+    setSurahs(getAllSurahs());
+    setLoading(false);
 
     // تحميل آخر قراءة
     loadLastRead();

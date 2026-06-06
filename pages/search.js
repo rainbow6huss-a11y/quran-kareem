@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import { SURAH_NAMES } from '../lib/constants';
 import { getCached, setCached } from '../lib/apiCache';
+import { searchVerses } from '../lib/quranData';
 import styles from '../styles/Search.module.css';
 
 function normalizeArabic(text) {
