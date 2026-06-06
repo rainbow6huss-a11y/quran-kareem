@@ -7,7 +7,7 @@ export default function Splash() {
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    if (sessionStorage.getItem('splashShown')) {
+    if (typeof window !== 'undefined' && sessionStorage.getItem('splashShown')) {
       setVisible(false);
       return;
     }
@@ -27,7 +27,7 @@ export default function Splash() {
     setFading(true);
     setTimeout(() => {
       setVisible(false);
-      sessionStorage.setItem('splashShown', 'true');
+      if (typeof window !== 'undefined') sessionStorage.setItem('splashShown', 'true');
     }, 600);
   }
 
