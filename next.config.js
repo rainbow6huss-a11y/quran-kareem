@@ -1,9 +1,11 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   reactStrictMode: true,
 
   // ── ضغط الصفحات ──
   compress: true,
+  swcMinify: true,
 
   // ── تحسين الصور ──
   images: {
