@@ -272,6 +272,22 @@ export default function KhatmaPage({ toggleDark, dark, showToast, user, onAuth }
             </Link>
           )}
 
+          {/* جدول اليوم التفصيلي */}
+          {todaySurahs.length > 0 && !todayDone && (
+            <div className={styles.todaySchedule}>
+              <div className={styles.scheduleTitle}>📋 سور اليوم ({todaySurahs.length} سورة)</div>
+              <div className={styles.scheduleList}>
+                {todaySurahs.map(n => (
+                  <Link key={n} href={`/surah/${n}`} className={styles.scheduleItem}>
+                    <span className={styles.scheduleNum}>{n}</span>
+                    <span className={styles.scheduleName}>{SURAH_NAMES[n-1]}</span>
+                    <span className={styles.scheduleArrow}>←</span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className={styles.wirdActions}>
             <button className={`${styles.completeBtn} ${todayDone?styles.completeBtnDone:''}`}
               onClick={completeTodayWird} disabled={todayDone}>

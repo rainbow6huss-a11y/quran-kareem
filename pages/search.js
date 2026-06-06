@@ -3,25 +3,98 @@ import SeoHead from '../components/SeoHead';
 import Link from 'next/link';
 import Navbar from '../components/Navbar';
 import { SURAH_NAMES } from '../lib/constants';
+import { getCached, setCached } from '../lib/apiCache';
 import styles from '../styles/Search.module.css';
 
-// تطبيع النص العربي — إزالة التشكيل والهمزات
 function normalizeArabic(text) {
   return text
-    .replace(/[ً-ٰٟ]/g, '') // إزالة التشكيل
-    .replace(/[أإآا]/g, 'ا')               // توحيد الألف
-    .replace(/[ىي]/g, 'ي')                 // توحيد الياء
-    .replace(/ة/g, 'ه')                    // توحيد التاء المربوطة
+    .replace(/[ً-ٰٟ]/g, '')
+    .replace(/[أإآا]/g, 'ا')
+    .replace(/[ىي]/g, 'ي')
+    .replace(/ة/g, 'ه')
     .replace(/\s+/g, ' ').trim();
 }
 
+// تمييز نص البحث بلون ذهبي
+function Highlight({ text, query }) {
+  if (!query || !text) return <>{text}</>;
+  const normalized = normalizeArabic(query);
+  const parts = text.split(new RegExp(`(${normalized})`, 'gi'));
+  return (
+    <>
+      {parts.map((p, i) =>
+        normalizeArabic(p) === normalized
+          ? <mark key={i} className={styles.mark}>{p}</mark>
+          : p
+      )}
+    </>
+  );
+}
+
 export default function SearchPage({ toggleDark, dark, showToast, onAuth }) {
-  const [listening, setListening] = useState(false);
+  const [query,    setQuery]    = useState('');
+  const [results,  setResults]  = useState([]);
+  const [loading,  setLoading]  = useState(false);
+  const [searched, setSearched] = useState(false);
+  const [total,    setTotal]    = useState(0);
+  const [history,  setHistory]  = useState([]);
+  const [listening,setListening]= useState(false);
+  const inputRef    = useRef(null);
+  const debounceRef = useRef(null);
+
+  // تحميل سجل البحث
+  useEffect(() => {
+    inputRef.current?.focus();
+    const h = JSON.parse(localStorage.getItem('q_search_history') || '[]');
+    setHistory(h);
+  }, []);
+
+  // بحث فوري مع debounce 400ms
+  useEffect(() => {
+    if (!query.trim() || query.trim().length < 2) {
+      setResults([]); setSearched(false); return;
+    }
+    if (debounceRef.current) clearTimeout(debounceRef.current);
+    debounceRef.current = setTimeout(() => search(query.trim()), 400);
+    return () => clearTimeout(debounceRef.current);
+  }, [query]);
+
+  async function search(q) {
+    setLoading(true); setSearched(false);
+    const cacheKey = `search_${normalizeArabic(q)}`;
+    const cached = getCached(cacheKey);
+    if (cached) {
+      setResults(cached.matches);
+      setTotal(cached.count);
+      setSearched(true);
+      setLoading(false);
+      return;
+    }
+    try {
+      const normalizedQ = normalizeArabic(q);
+      const res  = await fetch(`https://api.alquran.cloud/v1/search/${encodeURIComponent(normalizedQ)}/all/ar`);
+      const data = await res.json();
+      const matches = data.data?.matches || [];
+      const count   = data.data?.count   || 0;
+      setResults(matches);
+      setTotal(count);
+      setSearched(true);
+      setCached(cacheKey, { matches, count });
+      // حفظ في السجل
+      if (matches.length > 0) {
+        const h = [q, ...history.filter(x => x !== q)].slice(0, 5);
+        setHistory(h);
+        localStorage.setItem('q_search_history', JSON.stringify(h));
+      }
+    } catch {
+      showToast('حدث خطأ في البحث');
+    }
+    setLoading(false);
+  }
 
   function startVoiceSearch() {
     if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-      showToast('⚠️ المتصفح لا يدعم البحث الصوتي');
-      return;
+      showToast('⚠️ المتصفح لا يدعم البحث الصوتي'); return;
     }
     const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
     const recognition = new SR();
@@ -30,61 +103,9 @@ export default function SearchPage({ toggleDark, dark, showToast, onAuth }) {
     recognition.interimResults = false;
     setListening(true);
     recognition.start();
-    recognition.onresult = (e) => {
-      const text = e.results[0][0].transcript;
-      setQuery(text);
-      setListening(false);
-    };
-    recognition.onerror = () => {
-      setListening(false);
-      showToast('حدث خطأ في البحث الصوتي');
-    };
-    recognition.onend = () => setListening(false);
-  }
-  const [query, setQuery]       = useState('');
-  const [results, setResults]   = useState([]);
-  const [loading, setLoading]   = useState(false);
-  const [searched, setSearched] = useState(false);
-  const [total, setTotal]       = useState(0);
-  const inputRef = useRef(null);
-  const debounceRef = useRef(null);
-
-  useEffect(() => {
-    inputRef.current?.focus();
-  }, []);
-
-  useEffect(() => {
-    if (!query.trim() || query.trim().length < 2) {
-      setResults([]); setSearched(false); return;
-    }
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => search(query.trim()), 500);
-    return () => clearTimeout(debounceRef.current);
-  }, [query]);
-
-  async function search(q) {
-    setLoading(true); setSearched(false);
-    try {
-      const normalizedQ = normalizeArabic(q);
-      // بحث في نصوص الآيات
-      const res = await fetch(`https://api.alquran.cloud/v1/search/${encodeURIComponent(normalizedQ)}/all/ar`);
-      const data = await res.json();
-      const matches = data.data?.matches || [];
-      setResults(matches);
-      setTotal(data.data?.count || 0);
-      setSearched(true);
-    } catch(e) {
-      showToast('حدث خطأ في البحث');
-    }
-    setLoading(false);
-  }
-
-  function highlight(text, q) {
-    if (!q) return text;
-    const parts = text.split(new RegExp(`(${q})`, 'g'));
-    return parts.map((p, i) =>
-      p === q ? <mark key={i} className={styles.mark}>{p}</mark> : p
-    );
+    recognition.onresult = e => { setQuery(e.results[0][0].transcript); setListening(false); };
+    recognition.onerror  = () => { setListening(false); showToast('حدث خطأ في البحث الصوتي'); };
+    recognition.onend    = () => setListening(false);
   }
 
   return (
@@ -94,11 +115,11 @@ export default function SearchPage({ toggleDark, dark, showToast, onAuth }) {
 
       <div className={styles.page}>
         <div className={styles.header}>
-          <h1 className={styles.title}>🔍 البحث في القرآن الكريم</h1>
+          <h1 className={styles.title}>البحث في القرآن الكريم</h1>
           <p className={styles.sub}>ابحث في نصوص الآيات الكريمة</p>
         </div>
 
-        {/* Search Box */}
+        {/* صندوق البحث */}
         <div className={styles.searchWrap}>
           <div className={styles.searchBox}>
             <svg className={styles.searchIcon} viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
@@ -124,18 +145,28 @@ export default function SearchPage({ toggleDark, dark, showToast, onAuth }) {
             </button>
           </div>
 
-          {/* Quick suggestions */}
+          {/* اقتراحات + سجل البحث */}
           {!query && (
             <div className={styles.suggestions}>
-              <span className={styles.sugLabel}>اقتراحات:</span>
-              {['الرحمن','الصبر','الجنة','التوبة','الإخلاص'].map(s => (
-                <button key={s} className={styles.sugBtn} onClick={() => setQuery(s)}>{s}</button>
-              ))}
+              {history.length > 0 && (
+                <div className={styles.historyRow}>
+                  <span className={styles.sugLabel}>🕐 أخيراً:</span>
+                  {history.map(h => (
+                    <button key={h} className={`${styles.sugBtn} ${styles.historyBtn}`} onClick={() => setQuery(h)}>{h}</button>
+                  ))}
+                </div>
+              )}
+              <div className={styles.sugRow}>
+                <span className={styles.sugLabel}>اقتراحات:</span>
+                {['الرحمن','الصبر','الجنة','التوبة','الإخلاص','البر','النور'].map(s => (
+                  <button key={s} className={styles.sugBtn} onClick={() => setQuery(s)}>{s}</button>
+                ))}
+              </div>
             </div>
           )}
         </div>
 
-        {/* Results */}
+        {/* حالة التحميل */}
         {loading && (
           <div className={styles.loadingWrap}>
             <div className="loader" />
@@ -143,19 +174,21 @@ export default function SearchPage({ toggleDark, dark, showToast, onAuth }) {
           </div>
         )}
 
+        {/* رأس النتائج */}
         {searched && !loading && (
           <div className={styles.resultsHeader}>
             {total > 0
-              ? <span>وُجد <strong>{total}</strong> نتيجة لـ "<strong>{query}</strong>"</span>
-              : <span>لم يُعثر على نتائج لـ "<strong>{query}</strong>"</span>}
+              ? <span>وُجد <strong>{total}</strong> نتيجة لـ &quot;<strong>{query}</strong>&quot;</span>
+              : <span>لم يُعثر على نتائج لـ &quot;<strong>{query}</strong>&quot;</span>}
           </div>
         )}
 
+        {/* النتائج */}
         {results.length > 0 && (
           <div className={styles.results}>
             {results.slice(0, 50).map((r, i) => {
-              const surahNum = r.surah?.number;
-              const verseNum = r.numberInSurah;
+              const surahNum  = r.surah?.number;
+              const verseNum  = r.numberInSurah;
               const surahName = SURAH_NAMES[surahNum - 1] || r.surah?.name;
               return (
                 <Link key={i} href={`/surah/${surahNum}#v${verseNum}`} className={styles.result}>
@@ -164,15 +197,13 @@ export default function SearchPage({ toggleDark, dark, showToast, onAuth }) {
                     <span className={styles.resultVerse}>آية {verseNum}</span>
                   </div>
                   <div className={styles.resultText}>
-                    {highlight(r.text, query)}
+                    <Highlight text={r.text} query={query} />
                   </div>
                 </Link>
               );
             })}
             {total > 50 && (
-              <div className={styles.moreResults}>
-                + {total - 50} نتيجة أخرى — دقق بحثك للحصول على نتائج أدق
-              </div>
+              <div className={styles.moreResults}>+ {total - 50} نتيجة أخرى — دقق بحثك للحصول على نتائج أدق</div>
             )}
           </div>
         )}
