@@ -1,10 +1,6 @@
 import Head from 'next/head';
 import { SITE_NAME, SITE_DESC, SITE_URL } from '../lib/constants';
 
-/**
- * SeoHead — مكوّن موحد للـ SEO في كل الصفحات
- * الاستخدام: <SeoHead title="..." description="..." />
- */
 export default function SeoHead({
   title,
   description,
@@ -26,16 +22,23 @@ export default function SeoHead({
       <meta property="og:description" content={desc} />
       <meta property="og:url" content={url} />
       <meta property="og:type" content={type} />
-      <meta property="og:site_name" content={SITE_NAME} />
+      <meta property="og:site_name" content="قرآن فرح" />
       <meta property="og:locale" content="ar_SA" />
+      <meta property="og:image" content={`${SITE_URL}/og-image.png`} />
 
       {/* Twitter */}
-      <meta name="twitter:card" content="summary" />
+      <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={fullTitle} />
       <meta name="twitter:description" content={desc} />
+      <meta name="twitter:image" content={`${SITE_URL}/og-image.png`} />
 
-      {/* Arabic / RTL */}
+      {/* SEO إضافي */}
+      <meta name="robots" content="index, follow" />
+      <meta name="googlebot" content="index, follow" />
       <meta httpEquiv="content-language" content="ar" />
+      <meta name="language" content="Arabic" />
+      <meta name="author" content="قرآن فرح" />
+      <meta name="keywords" content="القرآن الكريم, قراءة القرآن, تفسير القرآن, استماع القرآن, قرآن فرح, مصحف, آيات قرآنية" />
     </Head>
   );
 }
