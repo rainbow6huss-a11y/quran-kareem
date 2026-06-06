@@ -40,6 +40,8 @@ const nextConfig = {
 
   // ── Webpack optimization ──
   webpack(config, { dev, isServer }) {
+    // دعم JSON كبير الحجم
+    config.module.rules.push({ test: /\.json$/, type: 'json' });
     if (!dev && !isServer) {
       // تقسيم الـ chunks بشكل أذكى
       config.optimization.splitChunks = {
