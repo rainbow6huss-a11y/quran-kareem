@@ -451,13 +451,13 @@ export default function SurahPage({
                         };
                         return (
                           <span key={v.number} id={`v${v.number}`} data-verse={v.number}>
-                            {v.juz > 0 && idx > 0 && verses[idx - 1]?.juz !== v.juz && (
+                            {v.page > 0 && idx > 0 && verses[idx - 1]?.page !== v.page && (
                               <div className={styles.pageMarker}>
                                 <div className={styles.pageMarkerLine}/>
                                 <div className={styles.pageMarkerInfo}>
-                                  <span>الجزء {v.juz}</span>
-                                  <span>•</span>
-                                  <span>آية {v.number}</span>
+                                  {v.page > 0 && <span>صفحة {v.page}</span>}
+                                  {v.page > 0 && v.juz > 0 && <span>•</span>}
+                                  {v.juz > 0 && <span>جزء {v.juz}</span>}
                                 </div>
                                 <div className={styles.pageMarkerLine}/>
                               </div>
@@ -619,37 +619,24 @@ export default function SurahPage({
 // ══════════════════════════════════════════════
 
 export async function getStaticPaths() {
-  // بناء كل السور الـ 114 مسبقاً على Vercel — كل سورة تفتح فورياً
+  // بناء كل السور الـ 114 مسبقاً — كل سورة تفتح فورياً
   const allSurahs = Array.from({ length: 114 }, (_, i) => ({
     params: { id: String(i + 1) }
   }));
   return {
     paths: allSurahs,
-    fallback: false,
+    fallback: 'blocking',
   };
 }
 
 export async function getStaticProps({ params }) {
   const surahNum = parseInt(params.id);
-
-  if (!surahNum || surahNum < 1 || surahNum > 114) {
-    return { notFound: true };
-  }
-
+  if (!surahNum || surahNum < 1 || surahNum > 114) return { notFound: true };
   try {
-    // ← بيانات محلية — فورية 0ms بدون أي API خارجي
+    // بيانات محلية بخط عثمان طه الأصلي — فورية 0ms
     const { surah, verses } = getSurah(surahNum);
-
-    return {
-      props: {
-        initialSurah: surah,
-        initialVerses: verses,
-      },
-      // لا revalidate — البيانات ثابتة محلياً
-    };
+    return { props: { initialSurah: surah, initialVerses: verses } };
   } catch {
-    return {
-      props: { initialSurah: null, initialVerses: [] },
-    };
+    return { props: { initialSurah: null, initialVerses: [] } };
   }
 }
