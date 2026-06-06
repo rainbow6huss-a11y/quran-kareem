@@ -258,6 +258,7 @@ body.dark .inlineVerse { color: #e8dcc8 !important; }
   flex: 1; height: 1px;
   background: linear-gradient(90deg, transparent, rgba(184,151,58,.5), transparent);
 }
+.pageMarkerInfo:empty { display: none; }
 .pageMarkerInfo {
   display: flex; align-items: center; gap: 5px;
   font-family: 'Tajawal', sans-serif;
