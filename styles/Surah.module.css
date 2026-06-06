@@ -54,9 +54,9 @@ body.dark .navArrow { color: #a0d4a0; border-color: rgba(184,151,58,.3); backgro
   display: inline-flex; align-items: center; justify-content: center;
   position: relative;
   border: 1.5px solid rgba(184,151,58,.65);
-  border-radius: 30px; padding: 6px 30px;
+  border-radius: 30px; padding: 8px 44px;
   background: rgba(184,151,58,.08);
-  max-width: 200px; min-width: 120px;
+  max-width: 320px; min-width: 150px;
 }
 .surahTitleFrame::before,
 .surahTitleFrame::after {
@@ -70,9 +70,9 @@ body.dark .surahTitleFrame { background: rgba(184,151,58,.06); border-color: rgb
 
 .surahName {
   font-family: 'Amiri Quran', 'Amiri', serif;
-  font-size: clamp(1.1rem, 3.5vw, 1.6rem);
-  color: #2c1500; font-weight: 700; display: block; line-height: 1.5;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font-size: clamp(1.15rem, 3.5vw, 1.7rem);
+  color: #2c1500; font-weight: 700; display: block; line-height: 1.6;
+  white-space: nowrap; overflow: visible;
 }
 body.dark .surahName { color: #f0dca0; }
 
@@ -436,8 +436,8 @@ body.dark .wordAr { color: #d4af5a; }
   .page { padding: 8px 8px 80px; }
   .surahNav { padding: 8px 10px; }
   .navArrow { font-size: .75rem; padding: 5px 8px; }
-  .surahTitleFrame { padding: 5px 28px; max-width: 180px; }
-  .surahName { font-size: 1.1rem; }
+  .surahTitleFrame { padding: 6px 36px; max-width: 260px; }
+  .surahName { font-size: 1.15rem; }
   .surahMeta { font-size: .7rem; gap: 6px; padding: 5px 10px 8px; }
   .bismillahText { font-size: 1.15rem; }
   .tabs { border-radius: 8px 8px 0 0; }
@@ -455,7 +455,7 @@ body.dark .wordAr { color: #d4af5a; }
 }
 
 @media (max-width: 400px) {
-  .surahName { font-size: 1.05rem; }
+  .surahName { font-size: 1.1rem; }
   .pageMode { padding: 12px 10px; line-height: 3.1; }
   .inlineVerse { font-size: 1.25rem !important; }
   .verseText  { font-size: 1.35rem !important; }
