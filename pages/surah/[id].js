@@ -49,7 +49,7 @@ export default function SurahPage({
   const [translationLang, setTranslationLang] = useState('en.sahih');
   const [showTajweed, setShowTajweed] = useState(false);
   const [focusMode,   setFocusMode]   = useState(false);
-  const [readingMode, setReadingMode] = useState('page');
+  const [readingMode, setReadingMode] = useState('page'); // المصحف الكامل افتراضياً
   const [showAsbab,   setShowAsbab]   = useState(null);
   const [readPct,     setReadPct]     = useState(0);
   const [saving,      setSaving]      = useState(false);
